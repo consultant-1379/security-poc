@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: eric-enm-rwxpvc-sentinel
+  labels:
+    app.kubernetes.io/name: "{{ .Values.service.name }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-enm-rwxpvc.chart" . }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.global.rwx.sentinelSize }}
+  storageClassName: {{ .Values.global.rwx.storageClass | quote }}

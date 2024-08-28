@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: lcmserv
+      port:
+        number: 443
+  path: /license-control-monitoring-service/
+  pathType: ImplementationSpecific

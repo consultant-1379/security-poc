@@ -1,0 +1,196 @@
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /element-manager-services/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /cabinetviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /locales/en-us/cabinetviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /help/en-us/cabinetviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /desktop/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /locales/en-us/desktop/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /help/en-us/desktop/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /elementmanager/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /locales/en-us/elementmanager/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /help/en-us/elementmanager/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /emcli/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /locales/en-us/emcli/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /help/en-us/emcli/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /emgui/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /locales/en-us/emgui/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /help/en-us/emgui/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /nmtoolbox/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /locales/en-us/nmtoolbox/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /help/en-us/nmtoolbox/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /remotedesktop/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /locales/en-us/remotedesktop/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /help/en-us/remotedesktop/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /winfiolgui/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /locales/en-us/winfiolgui/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /help/en-us/winfiolgui/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /rdesktop-session-management-web/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /locales/en-us/rdesktop-session-management-web/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elementmanager
+      port:
+        number: 443
+  path: /help/en-us/rdesktop-session-management-web/
+  pathType: ImplementationSpecific

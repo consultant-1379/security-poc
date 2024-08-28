@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>pki-manager-event-notification</artifactId>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<version>1.0.5-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>pki-manager-event-notification-cdps</artifactId>
+	<name>[${project.parent.artifactId}] CDPS Event Notification Handling</name>
+	<properties>
+		<sonar.tests>src/test/java</sonar.tests>
+		<consolidated.jacoco.path>${project.basedir}/../target/jacoco.exec</consolidated.jacoco.path>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-cdps-model-deploy-model</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pki-manager-local-service-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+</project>

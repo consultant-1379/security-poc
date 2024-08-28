@@ -1,0 +1,18 @@
+global.properties: |
+  COM_INF_LDAP_ROOT_SUFFIX={{ .Values.global.enmProperties.COM_INF_LDAP_ROOT_SUFFIX }}
+  COM_INF_LDAP_ADMIN_ACCESS={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_ACCESS }}
+  COM_INF_LDAP_ADMIN_CN={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_CN }}
+  COM_INF_LDAP_PORT={{ .Values.global.enmProperties.COM_INF_LDAP_PORT }}
+  DDC_ON_CLOUD=TRUE
+  LDAP_ADMIN_CN={{ .Values.global.enmProperties.LDAP_ADMIN_CN }}
+  LDAP_ADMIN_PASSWORD={{ .Values.global.enmProperties.LDAP_ADMIN_PASSWORD }}
+  UI_PRES_SERVER={{ template "eric-enm-common-helmchart-library.enmHost" . }}
+  postgresql01_admin_password={{ .Values.global.enmProperties.postgresql01_admin_password }}
+  svc_CM_vip_ipaddress={{ .Values.global.vips.cm_vip_address}}
+  svc_CM_vip_ipv6address={{ .Values.global.vips.cm_vip_ipv6address }}
+  svc_FM_vip_ipv6address={{ .Values.global.vips.fm_vip_ipv6address }}
+  enforcedUserHardening={{ .Values.global.enmProperties.enforcedUserHardening }}
+  itservices_service_IPs={{ .Values.global.vips.itservices_0_vip_address }},{{ .Values.global.vips.itservices_1_vip_address }}
+  web_host_default={{ template "eric-enm-common-helmchart-library.enmHost" . }}
+  wpserv=wpserv
+  default_security_admin_password={{ .Values.global.enmProperties.default_security_admin_password }}

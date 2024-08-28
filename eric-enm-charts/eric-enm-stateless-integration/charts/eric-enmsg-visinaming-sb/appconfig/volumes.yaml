@@ -1,0 +1,24 @@
+- name: gp
+  configMap:
+    name: gpcloud
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dlms
+  persistentVolumeClaim:
+    claimName: dlms
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: shared
+  persistentVolumeClaim:
+    claimName: home

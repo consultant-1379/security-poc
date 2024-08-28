@@ -1,0 +1,1 @@
+UPDATE entity SET subject_alt_name=REPLACE(subject_alt_name, 'CN=COMUser', CONCAT('CN=',name)) WHERE id IN (SELECT entity.id FROM entity, entity_category WHERE subject_alt_name LIKE '%CN=COMUser%' AND entity_category.name ='USER-SLS' AND entity_category.id = entity.entity_category_id);

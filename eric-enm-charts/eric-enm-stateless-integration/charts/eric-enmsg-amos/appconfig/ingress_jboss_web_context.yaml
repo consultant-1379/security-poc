@@ -1,0 +1,77 @@
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /amos-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /terminal-websocket/vm/healthcheck
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /advancedmoscripting/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /locales/en-us/advancedmoscripting/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /help/en-us/advancedmoscripting/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /amos/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /locales/en-us/amos/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /help/en-us/amos/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /shell/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /locales/en-us/shell/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: amos
+      port:
+        number: 443
+  path: /help/en-us/shell/
+  pathType: ImplementationSpecific

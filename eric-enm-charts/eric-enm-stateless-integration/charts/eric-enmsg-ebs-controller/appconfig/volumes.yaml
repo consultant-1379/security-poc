@@ -1,0 +1,18 @@
+- name: gp
+  configMap:
+    name: gpebscontroller
+- name: pmic1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pmic2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: hcdumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt

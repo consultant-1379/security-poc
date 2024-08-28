@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>pki-ra-scep-model</artifactId>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>pki-ra-scep-model-jar</artifactId>
+	<packaging>jar</packaging>
+	<name>[${project.parent.artifactId}] JAR module</name>
+
+	<dependencies>
+	    <dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-core-api</artifactId>
+			<version>3.2.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-cache-api</artifactId>
+			<version>3.2.0</version>
+			<scope>provided</scope>
+		</dependency>	
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-modeled-eventbus-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<!-- This invokes the Annotation Processor. It runs against all the compiled 
+				classes part of this jar module. -->
+			<plugin>
+				<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+				<artifactId>modeling-annotation-processor-jar</artifactId>
+				<!-- Inside plugin element, the version of the AP must be explicitly 
+					specified. Be sure it is the same as denoted by the BOM. -->
+				<version>${version.modeling.sdk.annoproc}</version>
+				<dependencies>
+				<dependency>
+					<groupId>com.ericsson.nms.mediation</groupId>
+					<artifactId>core-mediation-api</artifactId>
+					<version>${version.mediation.sdk}</version>
+				</dependency>
+				</dependencies>				
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>annoproc</goal>
+						</goals>
+						<configuration>
+							<classesRoot>${project.build.directory}/classes</classesRoot>
+							<modelBuildDir>../pki-ra-scep-model-deploy-model/model-build</modelBuildDir>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			
+			<plugin>
+				<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+				<artifactId>model-processing-jar</artifactId>
+				<!-- Inside plugin element, the version of the MP must be explicitly 
+					specified. Be sure it is the same as denoted by the BOM. -->
+				<version>${version.modeling.sdk.modelproc}</version>
+				<executions>
+					<execution>
+						<id>process-models</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>modelproc</goal>
+						</goals>
+						<configuration>
+							<modelBuildDir>model-build</modelBuildDir>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-handwritten-models-to-processed-models</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<includeEmptyDirs>false</includeEmptyDirs>
+							<outputDirectory>model-build/etc/model</outputDirectory>
+							<resources>
+								<resource>
+									<directory>etc/model</directory>
+									<includes>
+										<include>**/*.xml</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+		</plugins>
+	</build>
+</project>

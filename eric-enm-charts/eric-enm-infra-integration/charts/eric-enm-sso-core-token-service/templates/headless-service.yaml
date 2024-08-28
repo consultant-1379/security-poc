@@ -1,0 +1,12 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enm-sso-core-token-service.service") -}}
+{{- define "eric-enm-sso-core-token-service.service" -}}
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9600"
+    prometheus.io/path: "/metrics/prometheus_http_anonymous"
+spec:
+  clusterIP: None
+  ports:
+{{ .Files.Get "appconfig/servicePorts.txt" | indent 4 }}
+{{- end -}}

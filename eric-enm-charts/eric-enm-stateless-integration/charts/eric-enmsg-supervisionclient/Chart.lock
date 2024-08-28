@@ -1,0 +1,6 @@
+dependencies:
+- name: eric-enm-common-helmchart-library
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.18.0-5
+digest: sha256:7efe4de5dd9ad3169246d2defca9e277138eb633c5a0085ea65a9490d1bf9726
+generated: "2022-05-25T17:03:03.273001152Z"

@@ -1,0 +1,2 @@
+- name: VIPS
+  value: {{ template "eric-net-ingress-l4.vips" .Values.global.vips }}

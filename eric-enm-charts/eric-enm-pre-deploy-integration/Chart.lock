@@ -1,0 +1,21 @@
+dependencies:
+- name: eric-enm-globalproperties
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.1.0-52
+- name: eric-enm-rwxpvc
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.4.0-46
+- name: eric-enm-serviceroles
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.1.0-11
+- name: eric-net-ingress-l4-crd
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.1.0-33
+- name: eric-enm-troubleshooting-utils
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.27.9-1
+- name: eric-oss-ingress-controller-nx
+  repository: https://arm.epk.ericsson.se/artifactory/proj-eric-oss-ingress-ctr-nx-drop-helm
+  version: 1.1.0-15
+digest: sha256:230d615ac6a5cf833afc5cb06dacba18b8dde22359881e0dc49239809030361f
+generated: "2022-06-21T13:04:22.897026803Z"

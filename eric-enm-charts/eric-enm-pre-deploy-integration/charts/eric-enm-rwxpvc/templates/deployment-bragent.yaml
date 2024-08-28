@@ -1,0 +1,99 @@
+{{- if .Values.brAgent.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.service.name }}-bragent
+  labels:
+    app: {{ .Values.service.name }}-bragent
+    app.kubernetes.io/name: {{ .Values.service.name }}-bragent
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ template "eric-enm-rwxpvc.chart" . }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.service.name }}-bragent
+      app.kubernetes.io/name: {{ .Values.service.name }}-bragent
+      app.kubernetes.io/instance: {{.Release.Name | quote }}
+  replicas: {{ .Values.brAgent.replicas_rwxpvc_bragent }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.service.name }}-bragent
+        app.kubernetes.io/name: {{ .Values.service.name }}-bragent
+        app.kubernetes.io/version: {{ template "eric-enm-rwxpvc.chart" . }}
+        app.kubernetes.io/instance: {{.Release.Name | quote }}
+        adpbrlabelkey: {{ template "eric-enm-rwxpvc.name" . }}
+    {{- if .Values.brAgent.backupTypeList }}
+      annotations:
+        backupType: {{- template "eric-enm-rwxpvc.backupTypes" . }}
+    {{- end }}
+    spec:
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+      nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
+{{- end }}
+      containers:
+        - name: {{ .Values.service.name }}-bragent
+          image: {{ template "eric-enm-rwxpvc.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "brAgent" "name" }}:{{ index .Values "images" "brAgent" "tag" }}
+          command: [{{ .Values.images.brAgent.entrypoint | quote }}]
+          imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+          volumeMounts:
+          {{- if .Values.brAgent.backupDataModelConfig }}
+            - name: selective-backup-config
+              mountPath: "/etc/bragent/data"
+              readOnly: true
+          {{- end }}
+            - name: rwxpvc-bragent-config
+              mountPath: "/etc/bragent/agent"
+              readOnly: true
+            {{- if eq .Values.log.output "file" }}
+            {{- include "eric-enm-rwxpvc.logshipper-storage-path" . | indent 12 }}
+            {{- end }}
+{{ .Files.Get "appconfig/volumeMounts.txt" | indent 12 }}
+          resources:
+            requests:
+              memory: {{ .Values.resources.brAgent.requests.memory | quote }}
+              cpu: {{ .Values.resources.brAgent.requests.cpu | quote }}
+              ephemeral-storage: {{ index .Values "resources" "brAgent" "requests" "ephemeral-storage" | quote }}
+            limits:
+              memory: {{ .Values.resources.brAgent.limits.memory | quote }}
+              cpu: {{ .Values.resources.brAgent.limits.cpu | quote }}
+              ephemeral-storage: {{ index .Values "resources" "brAgent" "limits" "ephemeral-storage" | quote }}
+          env:
+            - name: TZ
+              value: {{ .Values.global.timezone }}
+            - name: LOGDIR
+              value: "/logs"
+            - name: LOGFILE
+              value: "eric-enm-rwxpvc-bragent.log"
+        {{- if eq .Values.log.output "file" }}
+        {{- include "eric-enm-rwxpvc.logshipper-container" . | indent 8 }}
+        {{- end }}
+      volumes:
+      {{- if .Values.brAgent.backupDataModelConfig }}
+        - name: selective-backup-config
+          configMap:
+            name: {{ .Values.brAgent.backupDataModelConfig | quote }}
+      {{- end }}
+        - name: rwxpvc-bragent-config
+          configMap:
+            name: {{ .Values.service.name }}-bragent-config
+        {{- if eq .Values.log.output "file" }}
+        {{- include "eric-enm-rwxpvc.logshipper-volume" . | indent 8 }}
+        {{- end }}
+{{ .Files.Get "appconfig/volumes.txt" | indent 8 }}
+{{- if include "eric-enm-rwxpvc.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-enm-rwxpvc.pullSecrets" . }}
+{{- end }}
+{{- end }}

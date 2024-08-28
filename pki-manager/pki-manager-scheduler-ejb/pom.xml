@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>pki-manager</artifactId>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<version>1.0.5-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>pki-manager-scheduler-ejb</artifactId>
+	<packaging>ejb</packaging>
+
+	<name>[${project.parent.artifactId}] Scheduler EJB module</name>
+
+	<properties>
+		<version.maven-ejb-plugin>2.3</version.maven-ejb-plugin>
+		<sonar.tests>src/test/java</sonar.tests>
+		<consolidated.jacoco.path>${project.basedir}/../target/jacoco.exec</consolidated.jacoco.path>
+	</properties>
+
+	<build>
+		<!-- DO NOT DELETE RESOURCE FILTERING. FILTERING IS REQUIRED BY SERVICE 
+			FRAMEWORK. YOU CAN EXCLUDE FILES YOU DO NOT WANT TO BE FILTERED. -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ejb-plugin</artifactId>
+				<version>${version.maven-ejb-plugin}</version>
+				<configuration>
+					<ejbVersion>${version.ejb}</ejbVersion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>${version.jboss-as-maven-plugin}</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>javax.ejb-api</artifactId>
+			<version>${version.javax.ejb.api}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>javax.persistence</artifactId>
+			<version>2.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-config-api</artifactId>
+			<scope>provided</scope>
+			<!-- no need to specify version if imported Service Framework JBoss BOM -->
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-configuration-listener-jar</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-crlmanagement-jar</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pki-credentialsmanagement-jar</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+        <dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-profilemanagement-jar</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pki-core-certificatemanagement-api</artifactId>
+			<version>${version.pki.core.api}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-ejb</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-local-service-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+</project>

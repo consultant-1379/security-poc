@@ -1,0 +1,168 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.5
+  creationTimestamp: null
+  name: ericingresses.routing.ericingress.ericsson.com
+spec:
+  group: routing.ericingress.ericsson.com
+  names:
+    kind: EricIngress
+    listKind: EricIngressList
+    plural: ericingresses
+    singular: ericingress
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.virtualServices[*].virtualService
+      name: Virtual-Service
+      type: string
+    - jsonPath: .status.virtualServices[*].realBackends
+      name: Backends
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: EricIngress is the Schema for the ericingresses API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: EricIngressSpec defines the desired state of EricIngress
+            properties:
+              backends:
+                description: Backend services
+                properties:
+                  config:
+                    items:
+                      description: Config lb to service endpoint
+                      properties:
+                        algo:
+                          enum:
+                          - rr
+                          - sh
+                          - lc
+                          - wrr
+                          - wlc
+                          - lblc
+                          - lblcr
+                          - dh
+                          - seq
+                          - nq
+                          - ovf
+                          type: string
+                        mode:
+                          enum:
+                          - nat
+                          - tun
+                          - dr
+                          - NAT
+                          - TUN
+                          - DR
+                          type: string
+                        portRange:
+                          description: PortRange defines a set of ranges for vip and
+                            svc
+                          properties:
+                            svcPortRange:
+                              description: Range defines the start and end of the
+                                vip/svc port range
+                              properties:
+                                end:
+                                  type: integer
+                                start:
+                                  type: integer
+                              type: object
+                            vipPortRange:
+                              description: Range defines the start and end of the
+                                vip/svc port range
+                              properties:
+                                end:
+                                  type: integer
+                                start:
+                                  type: integer
+                              type: object
+                          type: object
+                        ports:
+                          description: Ports define a single vip or svc port
+                          properties:
+                            svcPort:
+                              type: integer
+                            vipPort:
+                              type: integer
+                          type: object
+                        protocol:
+                          enum:
+                          - tcp
+                          - udp
+                          - TCP
+                          - UDP
+                          type: string
+                      required:
+                      - algo
+                      - mode
+                      - protocol
+                      type: object
+                    type: array
+                  name:
+                    type: string
+                required:
+                - config
+                - name
+                type: object
+              virtualServiceIP:
+                type: string
+            required:
+            - backends
+            - virtualServiceIP
+            type: object
+          status:
+            description: EricIngressStatus defines the observed state of EricIngress
+            properties:
+              changeId:
+                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                  of cluster Important: Run "make" to regenerate code after modifying
+                  this file'
+                type: integer
+              virtualServices:
+                items:
+                  properties:
+                    algo:
+                      type: string
+                    mode:
+                      type: string
+                    protocol:
+                      type: string
+                    realBackends:
+                      items:
+                        type: string
+                      type: array
+                    virtualService:
+                      type: string
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

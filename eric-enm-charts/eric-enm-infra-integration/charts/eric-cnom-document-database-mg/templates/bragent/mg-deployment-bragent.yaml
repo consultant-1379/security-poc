@@ -1,0 +1,69 @@
+{{- if .Values.brAgent.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eric-cnom-document-database-mg.name" . }}-bragent
+  labels:
+    app.kubernetes.io/name: {{ include "eric-cnom-document-database-mg.name" . }}
+    app.kubernetes.io/version: {{ include "eric-cnom-document-database-mg.version" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  annotations:
+    {{- include "eric-cnom-document-database-mg.product-info" . | nindent 4 }}
+    {{- with .Values.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "eric-cnom-document-database-mg.name" . }}-bragent
+      app.kubernetes.io/instance: {{.Release.Name | quote }}
+  strategy:
+    type: {{ .Values.updateStrategy.bragent.type | quote }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "eric-cnom-document-database-mg.name" . }}-bragent
+        app.kubernetes.io/version: {{ include "eric-cnom-document-database-mg.version" . }}
+        app.kubernetes.io/instance: {{.Release.Name | quote }}
+        adpbrlabelkey: {{ include "eric-cnom-document-database-mg.name" . }}-bragent
+      {{- if .Values.brAgent.backupTypeList }}
+      annotations:
+        backupType: {{ join ";" .Values.brAgent.backupTypeList | quote }}
+      {{- end}}
+    spec:
+      {{- if include "eric-cnom-document-database-mg.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ include "eric-cnom-document-database-mg.pullSecrets" . }}
+      {{- end }}
+      containers:
+      - name: {{ include "eric-cnom-document-database-mg.name" . }}-bragent
+        image: {{ include "eric-cnom-document-database-mg.registryUrl" . }}{{ include "eric-cnom-document-database-mg.repoPath" . }}{{ index .Values "images" "brAgent" "name" }}:{{ index .Values "images" "brAgent" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy | quote }}
+        env:
+        {{- if .Values.usePassword }}
+        {{- if .Values.mongodbUsername }}
+        - name: MONGODB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ if .Values.existingSecret }}{{ .Values.existingSecret }}{{- else }}{{ include "eric-cnom-document-database-mg.name" . }}{{- end }}
+              key: mongodb-user
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ if .Values.existingSecret }}{{ .Values.existingSecret }}{{- else }}{{ include "eric-cnom-document-database-mg.name" . }}{{- end }}
+              key: mongodb-password
+        - name: MONGODB_DATABASE
+          value: "admin"
+        {{- end }}
+        {{- end }}
+        resources: {{- toYaml .Values.resources.brAgent | nindent 10 }}
+        volumeMounts:
+        - name: {{ include "eric-cnom-document-database-mg.name" . }}-bragent-config
+          mountPath: "/etc/bragent/agent"
+          readOnly: true
+      volumes:
+        - name: {{ include "eric-cnom-document-database-mg.name" . }}-bragent-config
+          configMap:
+            name: {{ include "eric-cnom-document-database-mg.name" . }}-bragent-config
+{{- end }}

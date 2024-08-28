@@ -1,0 +1,245 @@
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /oss/shm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /shm-workflows-war-1.68.1/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /camunda-shmcoreserv/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /oss/fa/shm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /nhcservice/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /oss/fa/nhc/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /nhc/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /locales/en-us/nhc/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /help/en-us/nhc/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /generatehcreport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /locales/en-us/generatehcreport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /help/en-us/generatehcreport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /nhclibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /locales/en-us/nhclibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /help/en-us/nhclibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /reportdetails/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /locales/en-us/reportdetails/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /help/en-us/reportdetails/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /reportlogs/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /locales/en-us/reportlogs/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /help/en-us/reportlogs/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /ruleexecutiondetails/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /locales/en-us/ruleexecutiondetails/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /help/en-us/ruleexecutiondetails/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /reportcomparison/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /locales/en-us/reportcomparison/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /help/en-us/reportcomparison/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /healthcheckprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /locales/en-us/healthcheckprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /help/en-us/healthcheckprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /generatehcprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /locales/en-us/generatehcprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /help/en-us/generatehcprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /degradationreport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmcoreserv
+      port:
+        number: 443
+  path: /locales/en-us/degradationreport/
+  pathType: ImplementationSpecific

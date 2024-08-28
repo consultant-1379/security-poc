@@ -1,0 +1,19 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg-vault-service.service") -}}
+{{- define "eric-enmsg-vault-service.service" -}}
+spec:
+  clusterIP: None
+metadata:
+  labels:
+    service: {{ .Values.service.name }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9600"
+{{- end }}
+---
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg-vault-service.service2") -}}
+{{- define "eric-enmsg-vault-service.service2" -}}
+spec:
+  clusterIP: None
+metadata:
+  name: {{ index .Values.service.additionalServiceNames  0}}
+{{- end -}}

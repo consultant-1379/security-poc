@@ -1,0 +1,3 @@
+preStop:
+  exec:
+    command: [ "/bin/sh", "/ericsson/3pp/jboss/bin/jboss stop" ]

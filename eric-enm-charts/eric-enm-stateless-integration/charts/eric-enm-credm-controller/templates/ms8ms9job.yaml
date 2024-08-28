@@ -1,0 +1,85 @@
+{{- if .Values.images.ericCredmControllerCronjob.enabled -}}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ .Values.service.name }}-{{ .Values.ms8ms9Parameters.cronjobname }}
+  labels:
+{{ include "eric-enm-credm-controller.labels" . | indent 4 }}
+  annotations:
+{{- include "eric-enm-credm-controller.product-info" . | indent 4 }}
+spec:
+  schedule: "0 0 30 2 0"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 30
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+#          ttlSecondsAfterFinished: 600
+{{- if include "eric-enm-credm-controller.pullSecrets" . }}
+          imagePullSecrets:
+            - name: {{ template "eric-enm-credm-controller.pullSecrets" . }}
+{{- end }}
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+          nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 12 }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+{{ toYaml .Values.global.nodeSelector | indent 12 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.tolerations .Values.global.tolerations }}
+          tolerations:
+{{- if .Values.tolerations }}
+{{ toYaml .Values.tolerations | indent 12 }}
+{{- end }}
+{{- if .Values.global.tolerations }}
+{{ toYaml .Values.global.tolerations | indent 12 }}
+{{- end }}
+{{- end }}
+          # give job the permissions
+          serviceAccountName: {{ template "eric-enm-credm-controller.serviceAccountName" . }}
+          containers:
+           - name: {{ .Values.service.name }}-{{ .Values.ms8ms9Parameters.jobname }}
+             image: {{ template "eric-enm-credm-controller.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "eric-enm-credm-controller" "name" }}:{{ index .Values "images" "eric-enm-credm-controller" "tag" }}
+
+             imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+{{- if or .Values.resources.requests.enabled .Values.resources.limits.enabled }}
+             resources:
+{{- if  .Values.resources.requests.enabled }}
+               requests:
+{{- if  .Values.resources.requests.memory }}
+                 memory: {{ .Values.resources.requests.memory | quote }}
+{{- end }}
+{{- if  .Values.resources.requests.cpu }}
+                 cpu: {{ .Values.resources.requests.cpu | quote }}
+{{- end }}
+{{- end }}
+{{- if  .Values.resources.limits.enabled }}
+               limits:
+{{- if  .Values.resources.limits.memory }}
+                 memory: {{ .Values.resources.limits.memory | quote }}
+{{- end }}
+{{- if  .Values.resources.limits.cpu }}
+                 cpu: {{ .Values.resources.limits.cpu | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+             command: ["/credm/scripts/runms8ms9.sh"]
+             env:
+{{ tpl (.Files.Get "appconfig/envvars/controllerenv.yaml") . | indent 14 }}
+             volumeMounts:
+             - name: gpmap
+               mountPath: {{ .Values.gpMaps.mountPath }}
+          volumes:
+          - name: gpmap
+            configMap:
+{{- if .Values.gpMaps.enabled }}
+              name: {{ .Values.gpMaps.name }}
+{{- else }}
+              name: gpcloud
+{{- end }}
+
+{{- end -}}

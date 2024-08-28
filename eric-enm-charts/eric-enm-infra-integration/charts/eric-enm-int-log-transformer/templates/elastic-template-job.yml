@@ -1,0 +1,73 @@
+{{- if .Values.elasticsearch_template.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ default "eric-enm-elasticsearch-mapping-job" .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade,post-rollback
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": before-hook-creation, hook-succeeded
+spec:
+  backoffLimit: 6
+  activeDeadlineSeconds: 10800
+  template:
+    spec:
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+      nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.tolerations .Values.global.tolerations }}
+      tolerations:
+{{- if .Values.tolerations }}
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.global.tolerations }}
+{{ toYaml .Values.global.tolerations | indent 8 }}
+{{- end }}
+{{- end }}
+      initContainers:
+      - name: eric-enm-elasticsearch-mapping-job-wait
+        image: {{ template "eric-enm-int-log-transformer.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "waitInitContainer" "name" }}:{{ index .Values "images" "waitInitContainer" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+        command: {{ index .Values "images" "waitInitContainer" "command" }}
+      containers:
+      - name: eric-enm-elasticsearch-mapping-job
+        image: {{ template "eric-enm-int-log-transformer.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "eric-enm-int-log-transformer" "name" }}:{{ index .Values "images" "eric-enm-int-log-transformer" "tag" }}
+        resources:
+          requests:
+            memory: "25Mi"
+            cpu: "50m"
+          limits:
+            memory: "25Mi"
+            cpu: "50m"
+        command:
+          - "curl"
+        args:
+          - "--trace-ascii"
+          - "-"
+          - "--retry"
+          - "3"
+          - "-XPUT"
+          - "-H"
+          - "Content-Type: application/json"
+          - {{ printf "http://%s:%s/_component_template/%s" .Values.elasticsearch_template.host .Values.elasticsearch_template.port .Values.elasticsearch_template.componentTemplateName | quote }}
+          - "-d"
+          - |-
+{{ .Files.Get .Values.elasticsearch_template.componentTemplateFile | indent 13 }}
+          - "--next"
+          - "-XPUT"
+          - "-H"
+          - "Content-Type: application/json"
+          - {{ printf "http://%s:%s/_index_template/%s" .Values.elasticsearch_template.host .Values.elasticsearch_template.port .Values.elasticsearch_template.indexTemplateName | quote }}
+          - "-d"
+          - |-
+{{ .Files.Get .Values.elasticsearch_template.indexTemplateFile | indent 13 }}
+      imagePullSecrets:
+        - name: {{ template "eric-enm-int-log-transformer.pullSecrets" . }}
+      restartPolicy: Never
+{{- end }}

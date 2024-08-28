@@ -1,0 +1,5 @@
+apiVersion: v2
+appVersion: "1.0"
+description: A Helm chart for ICL4 CRD
+name: eric-net-ingress-l4-crd
+version: 1.1.0-33

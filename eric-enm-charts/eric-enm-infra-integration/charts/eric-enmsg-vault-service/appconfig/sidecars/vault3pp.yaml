@@ -1,0 +1,66 @@
+{{- if .Values.vault3pp.enabled }}
+name:  vault3pp
+image: {{ template "eric-enm-common-helmchart-library.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "vault3pp" "name" }}:{{ index .Values "images" "vault3pp" "tag" }}
+imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+lifecycle:
+  preStop:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - echo "execute preStop. Kill vault3pp"; pkill vault
+{{- if or .Values.resources.vault3pp.enabled }}
+resources:
+  requests:
+    memory: {{ .Values.resources.vault3pp.requests.memory | quote }}
+    cpu: {{ .Values.resources.vault3pp.requests.cpu | quote }}
+{{- if index .Values "resources" "vault3pp" "requests" "ephemeral-storage" }}
+    ephemeral-storage: {{ index .Values "resources" "vault3pp" "requests" "ephemeral-storage" | quote }}
+{{- end }}
+  limits:
+    memory: {{ .Values.resources.vault3pp.limits.memory | quote }}
+    cpu: {{ .Values.resources.vault3pp.limits.cpu | quote }}
+{{- if index .Values "resources" "vault3pp" "limits" "ephemeral-storage" }}
+    ephemeral-storage: {{ index .Values "resources" "vault3pp" "limits" "ephemeral-storage" | quote }}
+{{- end }}
+{{- end }}
+env:
+  - name: UI_PRES_SERVER
+    value: {{ template "eric-enm-common-helmchart-library.enmHost" . }}
+  - name: web_host_default
+    value: {{ template "eric-enm-common-helmchart-library.enmHost" . }}
+  - name: TZ
+    value: {{ .Values.global.timezone }}
+  - name: VAULT_3PP_LOG_LEVEL
+    value: {{ .Values.vault3pp.logLevel }}
+volumeMounts:
+  - name: dumps
+    mountPath: /ericsson/enm/dumps
+startupProbe:
+  exec:
+    command:
+      - /vault_health_check.sh
+      - startup
+  initialDelaySeconds: 10
+  timeoutSeconds: 15
+  periodSeconds: 30
+  failureThreshold: 20
+livenessProbe:
+  exec:
+    command:
+      - /vault_health_check.sh
+      - liveness
+  initialDelaySeconds: 30
+  timeoutSeconds: 15
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  exec:
+    command:
+      - /vault_health_check.sh
+      - readiness
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 15
+  failureThreshold: 2
+{{- end }}

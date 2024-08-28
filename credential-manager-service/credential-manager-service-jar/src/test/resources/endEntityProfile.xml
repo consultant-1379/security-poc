@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+	<Entity-Profiles>
+
+		<EntityProfile Name="credMCLI_EP">
+
+		<Category>
+               <Name>UNDEFINED</Name>
+         </Category>
+
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>credMCLI</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+
+			<SubjectAltNameValues>
+
+				<SubjectAltNameValue>
+					<Type>OTHER_NAME</Type>
+					<Value xsi:type="OtherName">
+						<TypeId>1.6.5.1.8</TypeId>
+						<Value>value</Value>
+					</Value>
+				</SubjectAltNameValue>
+
+				<SubjectAltNameValue>
+					<Type>EDI_PARTY_NAME</Type>
+					<Value xsi:type="EdiPartyName">
+						<NameAssigner>nameAssigner</NameAssigner>
+						<PartyName>partyName</PartyName>
+					</Value>
+				</SubjectAltNameValue>
+
+				<SubjectAltNameValue>
+					<Type>IP_ADDRESS</Type>
+					<Value xsi:type="SubjectAltNameString"> 
+						<StringValue>1.1.1.1</StringValue>
+					</Value>
+				</SubjectAltNameValue>
+
+			</SubjectAltNameValues>
+
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+
+			<CertificateProfileName>credMCLI_CP</CertificateProfileName>
+
+			<TrustProfileName>ENM Management CA</TrustProfileName>
+
+			<CertificateExtensions>
+
+				<CertificateExtension xsi:type="SubjectKeyIdentifier">
+					<Critical>false</Critical>
+					<KeyIdentifierAlgorithm>160-BIT_SHA-1</KeyIdentifierAlgorithm>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="AuthorityInformationAccess">
+					<Critical>false</Critical>
+					<AccessDescription>
+						<AccessMethod>CA_ISSUER</AccessMethod>
+						<AccessLocation>access location path</AccessLocation>
+					</AccessDescription>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="BasicConstraints">
+					<Critical>true</Critical>
+					<CA>true</CA>
+					<PathLenConstraint>3</PathLenConstraint>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="CRLDistributionPoints">
+					<Critical>true</Critical>
+					<CRLDistributionPoint xsi:type="CRLDistributionPoint">
+                        <DistributionPointName xsi:type="DistributionPointName">
+                            <NameRelativeToCRLIssuer>nameRelativeToCRLIssuer</NameRelativeToCRLIssuer>
+                        </DistributionPointName>
+                        <ReasonFlag>SUPERSEDED</ReasonFlag>
+                        <CRLIssuer>CRLIssuer</CRLIssuer>
+                    </CRLDistributionPoint>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="AuthorityKeyIdentifier">
+					<Critical>false</Critical>
+					<ByKeyIdentifier>true</ByKeyIdentifier>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="KeyUsage">
+					<Critical>true</Critical>
+					<KeyUsageType>NON_REPUDIATION</KeyUsageType>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="ExtendedKeyUsage">
+					<Critical>true</Critical>
+					<KeyPurposeId>ID_KP_CLIENT_AUTH</KeyPurposeId>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="SubjectAltName">
+					<Critical>true</Critical>
+					<SupportedSubjectAltNameField>OTHER_NAME</SupportedSubjectAltNameField>
+					<SupportedSubjectAltNameField>IP_ADDRESS</SupportedSubjectAltNameField>
+					<SupportedSubjectAltNameField>EDI_PARTY_NAME</SupportedSubjectAltNameField>
+				</CertificateExtension>
+
+			</CertificateExtensions>
+		</EntityProfile>
+
+<EntityProfile Name="testProfile1">
+
+		<Category>
+               <Name>UNDEFINED</Name>
+         </Category>
+
+
+			<SubjectAltNameValues>
+
+				<SubjectAltNameValue>
+					<Type>OTHER_NAME</Type>
+					<Value xsi:type="OtherName">
+						<TypeId>1.6.5.1.8</TypeId>
+						<Value>value</Value>
+					</Value>
+				</SubjectAltNameValue>
+
+				<SubjectAltNameValue>
+					<Type>EDI_PARTY_NAME</Type>
+					<Value xsi:type="EdiPartyName">
+						<NameAssigner>nameAssigner</NameAssigner>
+						<PartyName>partyName</PartyName>
+					</Value>
+				</SubjectAltNameValue>
+
+				<!-- <SubjectAltNameValue> <Type>SUBJECT_ALT_NAME</Type> <Value xsi:type="SubjectAltNameString"> 
+					<StringValue>subjectaltnamevalue</StringValue> </Value> </SubjectAltNameValue> -->
+
+			</SubjectAltNameValues>
+
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+
+			<CertificateProfileName>credMCLI_CP</CertificateProfileName>
+
+			<TrustProfileName>ENM Management CA</TrustProfileName>
+
+			<CertificateExtensions>
+
+				<CertificateExtension xsi:type="SubjectKeyIdentifier">
+					<Critical>false</Critical>
+					<KeyIdentifierAlgorithm>160-BIT_SHA-1</KeyIdentifierAlgorithm>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="AuthorityInformationAccess">
+					<Critical>false</Critical>
+					<AccessDescription>
+						<AccessMethod>CA_ISSUER</AccessMethod>
+						<AccessLocation>access location path</AccessLocation>
+					</AccessDescription>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="BasicConstraints">
+					<Critical>true</Critical>
+					<CA>true</CA>
+					<PathLenConstraint>3</PathLenConstraint>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="CRLDistributionPoints">
+					<Critical>true</Critical>
+					<CRLDistributionPoint xsi:type="CRLDistributionPoint">
+                        <DistributionPointName xsi:type="DistributionPointName">
+                            <NameRelativeToCRLIssuer>nameRelativeToCRLIssuer</NameRelativeToCRLIssuer>
+                        </DistributionPointName>
+                        <ReasonFlag>SUPERSEDED</ReasonFlag>
+                        <CRLIssuer>CRLIssuer</CRLIssuer>
+                    </CRLDistributionPoint>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="AuthorityKeyIdentifier">
+					<Critical>false</Critical>
+					<ByAuthorityCertIssuerAndSerialNumber>true</ByAuthorityCertIssuerAndSerialNumber>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="KeyUsage">
+					<Critical>true</Critical>
+					<KeyUsageType>NON_REPUDIATION</KeyUsageType>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="ExtendedKeyUsage">
+					<Critical>true</Critical>
+					<KeyPurposeId>ID_KP_CLIENT_AUTH</KeyPurposeId>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="SubjectAltName">
+					<Critical>true</Critical>
+					<SupportedSubjectAltNameField>OTHER_NAME</SupportedSubjectAltNameField>
+					<SupportedSubjectAltNameField>IP_ADDRESS</SupportedSubjectAltNameField>
+					<SupportedSubjectAltNameField>EDI_PARTY_NAME</SupportedSubjectAltNameField>
+				</CertificateExtension>
+
+			</CertificateExtensions>
+		</EntityProfile>
+
+<EntityProfile Name="entityProfile">
+
+			<Category>
+				<Name></Name>
+			</Category>
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>?</Value>
+					</SubjectEntry>
+					<SubjectEntry>
+						<Type>ORGANIZATION_UNIT</Type>
+						<Value>BUCI_DUAC_NAM</Value>
+					</SubjectEntry>
+					<SubjectEntry>
+						<Type>ORGANIZATION</Type>
+						<Value>ERICSSON</Value>
+					</SubjectEntry>
+					<SubjectEntry>
+						<Type>COUNTRY_NAME</Type>
+						<Value>SE</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+
+
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+
+			<CertificateProfileName>credMCLI_CP</CertificateProfileName>
+
+			<CertificateExtensions>
+
+				<CertificateExtension xsi:type="SubjectKeyIdentifier">
+					<Critical>false</Critical>
+					<KeyIdentifierAlgorithm>160-BIT_SHA-1</KeyIdentifierAlgorithm>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="AuthorityInformationAccess">
+					<Critical>false</Critical>
+					<AccessDescription>
+						<AccessMethod>CA_ISSUER</AccessMethod>
+						<AccessLocation>access location path</AccessLocation>
+					</AccessDescription>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="BasicConstraints">
+					<Critical>true</Critical>
+					<CA>true</CA>
+					<PathLenConstraint>3</PathLenConstraint>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="AuthorityKeyIdentifier">
+					<Critical>false</Critical>
+					<ByKeyIdentifier>true</ByKeyIdentifier>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="KeyUsage">
+					<Critical>true</Critical>
+					<KeyUsageType>NON_REPUDIATION</KeyUsageType>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="ExtendedKeyUsage">
+					<Critical>true</Critical>
+					<KeyPurposeId>ID_KP_CLIENT_AUTH</KeyPurposeId>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="SubjectAltName">
+					<Critical>true</Critical>
+					<SupportedSubjectAltNameField>OTHER_NAME</SupportedSubjectAltNameField>
+					<SupportedSubjectAltNameField>IP_ADDRESS</SupportedSubjectAltNameField>
+					<SupportedSubjectAltNameField>EDI_PARTY_NAME</SupportedSubjectAltNameField>
+				</CertificateExtension>
+
+			</CertificateExtensions>
+		</EntityProfile>
+
+	</Entity-Profiles>
+</Profiles>
+
+
+
+

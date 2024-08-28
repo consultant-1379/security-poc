@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 8282
+  path: /ulsaservice-websocket/
+  pathType: ImplementationSpecific

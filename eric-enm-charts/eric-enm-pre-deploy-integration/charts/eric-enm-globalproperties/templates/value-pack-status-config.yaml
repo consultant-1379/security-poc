@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: value-pack-status
+data:
+  value_pack.properties: |
+    {{- range $key, $val := .Values.global.tags }}
+    {{- if hasPrefix "value_pack" $key }}
+    {{ $key }}={{ $val }}
+    {{- end }}
+    {{- end }}

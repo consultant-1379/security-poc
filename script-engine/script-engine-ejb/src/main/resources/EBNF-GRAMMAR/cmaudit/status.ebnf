@@ -1,0 +1,3 @@
+"cmaudit" (* slogan = "Command set to manage Configuration Audit jobs" *) WS "status" (* slogan = "Return status of all jobs instances" *) [ WS JOB_ID_TARGET ]
+
+JOB_ID_TARGET ::= ( "-j" (* hide = "true" *) | "--jobid" (* slogan = "Option to specify the Job Id to execute command on, e.g. '123'. TIP : -j is the shorthand option for --jobid" *)  ) WS <job_id>

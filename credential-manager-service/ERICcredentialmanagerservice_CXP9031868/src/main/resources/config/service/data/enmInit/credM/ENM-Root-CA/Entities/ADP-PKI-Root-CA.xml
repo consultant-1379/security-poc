@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PKIEntities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="EntitiesSchema.xsd">
+
+	<CA-Entities>
+		<CAEntity Name="ADP_PKI_Root_CA">
+		
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>ADP_PKI_Root_CA</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			
+			<EntityProfileName>ADP_PKI_Root_CA_EP</EntityProfileName>
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+			<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+			
+			<RootCA>true</RootCA>
+				
+			<CACRL>
+				<PublishCRLToCDPS>true</PublishCRLToCDPS>
+				<CRLGenerationInfo>
+				<Version>V2</Version>
+				<SignatureAlgorithm>
+					<Name>SHA256withRSA</Name>
+					<KeySize>2048</KeySize>
+				</SignatureAlgorithm>
+				<ValidityPeriod>P30D</ValidityPeriod>
+				<SkewCrlTime>PT30M</SkewCrlTime>
+				<OverlapPeriod>P1D</OverlapPeriod>
+				<CrlExtensions>
+					<CRLNumber>
+						<Critical>false</Critical>
+					</CRLNumber>
+					<AuthorityKeyIdentifier>
+						<Critical>false</Critical>
+						<ByAuthorityCertIssuerAndSerialNumber>true</ByAuthorityCertIssuerAndSerialNumber>
+					</AuthorityKeyIdentifier>
+				</CrlExtensions>
+				</CRLGenerationInfo>		
+			</CACRL>
+			
+		</CAEntity>
+	</CA-Entities>
+</PKIEntities>

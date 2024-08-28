@@ -1,0 +1,70 @@
+- backend:
+    service:
+      name: nodeplugins
+      port:
+        number: 443
+  path: /ect/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodeplugins
+      port:
+        number: 443
+  path: /api/rest/validator/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodeplugins
+      port:
+        number: 443
+  path: /api/rest/generator/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodeplugins
+      port:
+        number: 443
+  path: /configuration-generator/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodeplugins
+      port:
+        number: 443
+  path: /locales/en-us/configuration-generator/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodeplugins
+      port:
+        number: 443
+  path: /help/en-us/configuration-generator/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodeplugins
+      port:
+        number: 443
+  path: /ai/v1/RadioNode/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodeplugins
+      port:
+        number: 443
+  path: /ai/RadioNode/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodeplugins
+      port:
+        number: 443
+  path: /ai/v1/Controller6610/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodeplugins
+      port:
+        number: 443
+  path: /ai/Controller6610/
+  pathType: ImplementationSpecific

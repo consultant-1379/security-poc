@@ -1,0 +1,23 @@
+{{- if and .Values.brAgent.enabled (eq (include "{{.Chart.Name}}.restore.state" .) "ongoing") }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "{{.Chart.Name}}.name" . }}-bragent
+  labels:
+    app: {{ template "{{.Chart.Name}}.name" . }}
+    app.kubernetes.io/name: {{ template "{{.Chart.Name}}.name" . }}
+    chart: {{ template "{{.Chart.Name}}.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ template "{{.Chart.Name}}.version" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    component: bragent
+spec:
+  ports:
+  - port: 10000
+    protocol: TCP
+    name: grpc
+  selector:
+    app.kubernetes.io/name: {{ template "{{.Chart.Name}}.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    component: bragent
+{{- end }}

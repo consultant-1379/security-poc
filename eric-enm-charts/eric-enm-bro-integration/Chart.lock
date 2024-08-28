@@ -1,0 +1,12 @@
+dependencies:
+- name: eric-ctrl-bro
+  repository: https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-adp-gs-all-helm/
+  version: 5.5.0+49
+- name: eric-enm-version-configmap
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.16.0-1
+- name: eric-ctrl-brocli
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.0.30-1
+digest: sha256:e95a9de9e37a60c779f6e93ecded8432b74d135fa5b197d04c00fee4bf3973ca
+generated: "2022-06-21T12:56:28.594641233Z"

@@ -1,0 +1,5 @@
+apiVersion: v2
+appVersion: "1.0"
+description: A Helm chart for eric-enm-version-configmap
+name: eric-enm-version-configmap
+version: 1.16.0-1

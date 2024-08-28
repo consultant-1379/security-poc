@@ -1,0 +1,8 @@
+apiVersion: v1
+appVersion: 4.0.7
+description: ADP graph database based on Neo4J
+maintainers:
+- email: PDLENIGMAE@pdl.internal.ericsson.com
+  name: ENM Team Enigma
+name: eric-data-graph-database-nj
+version: 0.0.1-227

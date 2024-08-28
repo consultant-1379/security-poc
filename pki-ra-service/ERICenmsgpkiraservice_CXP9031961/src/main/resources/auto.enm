@@ -1,0 +1,7 @@
+/ericsson/tor/data                      -rw,soft,no_root_squash     nasservice:/vx/enm-data
+/etc/opt/ericsson/ERICmodeldeployment   -rw,soft,no_root_squash     nasservice:/vx/enm-mdt
+/ericsson/pmic                          -rw,soft,no_root_squash     nasservice:/vx/enm-pm1
+/ericsson/symvol			-rw,soft,no_root_squash     nasservice:/vx/enm-pmlinks-1
+/var/ericsson/ddc_data 			-rw,soft,no_root_squash     nasservice:/vx/enm-ddc
+/ericsson/tor/logstash 			-rw,soft,no_root_squash     nasservice:/vx/enm-logstash
+

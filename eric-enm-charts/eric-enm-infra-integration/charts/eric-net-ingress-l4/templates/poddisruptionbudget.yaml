@@ -1,0 +1,13 @@
+{{- if .Values.podDisruptionBudget -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: "{{ template "eric-net-ingress-l4.fullname" . }}"
+  labels:
+    {{- include "eric-net-ingress-l4.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: "{{ template "eric-net-ingress-l4.fullname" . }}"
+{{ toYaml .Values.podDisruptionBudget | indent 2 }}
+{{- end -}}

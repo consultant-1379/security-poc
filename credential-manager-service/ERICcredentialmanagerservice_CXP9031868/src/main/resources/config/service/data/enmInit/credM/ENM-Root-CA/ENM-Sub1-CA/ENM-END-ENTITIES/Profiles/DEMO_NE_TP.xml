@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+<Trust-Profiles>	
+
+	<TrustProfile Name="IPSEC_NE_CHAIN_TP">
+		<InternalCA>DEMO_Root_CA</InternalCA>
+		<InternalCA>DEMO_NE_IPsec_CA</InternalCA>
+	</TrustProfile>	
+
+	<TrustProfile Name="OAM_NE_TP">
+		<InternalCA>DEMO_OAM_CA</InternalCA>
+	</TrustProfile>	
+	<TrustProfile Name="OAM_NE_CHAIN_TP">
+		<InternalCA>DEMO_Root_CA</InternalCA>
+		<InternalCA>DEMO_OAM_CA</InternalCA>
+		<InternalCA>DEMO_NE_OAM_CA</InternalCA>
+	</TrustProfile>
+
+</Trust-Profiles>	
+</Profiles>

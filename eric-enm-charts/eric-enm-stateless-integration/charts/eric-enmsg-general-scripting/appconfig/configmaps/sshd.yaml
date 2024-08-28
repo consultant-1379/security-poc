@@ -1,0 +1,4 @@
+sshd.properties: |
+  {{- if .Values.sshdConfig.MaxStartups }}
+  MaxStartups={{ .Values.sshdConfig.MaxStartups }}
+  {{- end }}

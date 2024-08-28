@@ -1,0 +1,19 @@
+- name: gp
+  configMap:
+    name: gpopenidm
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: home
+  persistentVolumeClaim:
+    claimName: home
+- name: openidm-credentials-data
+  secret:
+    secretName: openidm-admin-password
+    optional: true

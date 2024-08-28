@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+	<sub-deployment name="pki-ra-scep-ejb-${project.version}.jar">
+		<exclusions>
+			<module name="org.hibernate" />
+		</exclusions>
+		<dependencies>
+			<module name="org.hibernate" />
+		</dependencies>
+	</sub-deployment>
+
+	<deployment>
+		<dependencies>
+			<module name="org.bouncycastle" slot="main" export="true" />
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure>

@@ -1,0 +1,14 @@
+- name: gp
+  mountPath: /gp
+- name: data
+  mountPath: /ericsson/tor/data
+- name: custom
+  mountPath: /ericsson/custom
+- name: dumps
+  mountPath: /ericsson/enm/dumps
+##- name: eric-enm-sso-core-token-service
+##  mountPath: /opt/ericsson/sso/opends/db
+- name: eric-enm-sso-core-token-service-config
+  mountPath: /opt/ericsson/sso/opends/config
+- name: eric-enm-sso-core-token-service-changelog
+  mountPath: /opt/ericsson/sso/opends/changelogDb

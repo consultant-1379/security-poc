@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.seName }}-bragent-cm
+  labels:
+    app.kubernetes.io/name: {{ template "eric-enmsg-elasticsearch.name" . }}
+    app.kubernetes.io/version: {{ template "eric-enmsg-elasticsearch.chart" . }}
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+data:
+  config.yaml: |
+    agent:
+      registration:
+        name: {{ .Values.seName }}
+        preCmd: "/opt/elasticsearch/check_connectivity.sh"
+        {{- if .Values.brAgent.backupTypeList }}
+        scopes: {{- template "eric-enmsg-elasticsearch.backupTypes" . }}
+        {{- end }}
+    backup:
+      paths:
+        - path: /opt/opensearch/repository/backup_repo
+      preCmd: /opt/elasticsearch/createsnap.sh
+      postCmd: /opt/elasticsearch/cleanup.sh
+    restore:
+      preCmd: /opt/elasticsearch/preparerestore.sh
+      postCmd: /opt/elasticsearch/restoresnap.sh
+      cleanupCmd: /opt/elasticsearch/cleanup.sh
+    softwareVersion:
+      description: {{ .Values.seName }}-Search-Engine
+      productName: {{ .Values.seName }}
+      productNumber: CXC 201 2530/3
+      productionDate: 2021-04-29T07:26:57Z
+      revision: 1.0.0
+      type: Database
+    bro:
+      host: {{ .Values.brAgent.broServiceName | quote }}

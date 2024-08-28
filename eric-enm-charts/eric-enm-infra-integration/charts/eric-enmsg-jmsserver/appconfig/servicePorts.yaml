@@ -1,0 +1,7 @@
+- port: 5445
+  name: jms
+- port: 4447
+  name: message
+- name: metrics
+  port: 9600
+  targetPort: 9600

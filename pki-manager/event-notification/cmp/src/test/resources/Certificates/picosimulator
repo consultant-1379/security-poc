@@ -1,0 +1,30 @@
+#!/bin/bash
+
+JAVA_HOME=/usr/jdk/latest
+
+##################
+# CLASSPATH
+##################
+CLASSPATH="."
+for jfile in $(ls *.jar) ; do 
+    CLASSPATH=${CLASSPATH}:${jfile}
+done
+
+JAVAFLAGS=""
+
+##################
+# REMOTEDEBUG
+REMOTEDEBUG_S="-Xdebug -Xrunjdwp:transport=dt_socket,address=8002,server=y,suspend=y"
+REMOTEDEBUG_NS="-Xdebug -Xrunjdwp:transport=dt_socket,address=8002,server=y,suspend=n"
+##################
+
+##################
+# MAIN class
+##################
+                MAIN=se.ericsson.security.cmpclient.PicoSimulator
+                #JAVAFLAGS="$REMOTEDEBUG_S $JAVAFLAGS"
+
+##################
+# Launch
+##################
+exec "${JAVA_HOME}/bin/java" -cp "${CLASSPATH}" ${JAVAFLAGS} "${MAIN}" ${ARG} "$@"

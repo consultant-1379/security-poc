@@ -1,0 +1,6 @@
+- name: visinaming-sb
+  port: 59001
+  targetPort: 59001
+- name: metrics
+  port: 9600
+  targetPort: 9600

@@ -1,0 +1,105 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "{{ .Values.hcDumpsCleanupJob.name }}-job"
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  concurrencyPolicy:  {{ .Values.hcDumpsCleanupJob.concurrencyPolicy }}
+  failedJobsHistoryLimit: {{ .Values.hcDumpsCleanupJob.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: {{ template "pre-deploy-integration.name" . }}
+            cron: {{ .Values.hcDumpsCleanupJob.name }}
+        spec:
+{{- if include "pre-deploy-integration.pullSecrets" . }}
+          imagePullSecrets:
+            - name: {{ template "pre-deploy-integration.pullSecrets" . }}
+{{- end }}
+          containers:
+            - image: "{{ .Values.global.registry.url }}/{{ .Values.images.repoPath }}/{{ index .Values "images" "eric-enm-sles" "name" }}:{{ index .Values "images" "eric-enm-sles" "tag" }}"
+              imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+              name: {{ .Values.hcDumpsCleanupJob.name }}
+              command:
+                - '/bin/sh'
+                - '-c'
+              args:
+                - |
+                  /sbin/rsyslogd
+                  LOG_TAG="hcdumps_cleanup_job"
+                  _LOGGER=/bin/logger
+                  info() {
+                    $_LOGGER -s -t ${LOG_TAG} -p user.info "$*"
+                  }
+                  error() {
+                    $_LOGGER -s -t ${LOG_TAG} -p user.err "$*"
+                  }
+                  info "Starting Cleanup Job for ${PVC_NAME} PVC"
+
+                  hcdumps_disk_used_mb=$(du -sh /ericsson/enm/dumps/ --block-size=1M | awk '{print $1}')
+                  hcdumps_disk_used_80_percent=$(echo $((${PVC_SIZE//Gi/}*80*1024/100)))
+                  hcdumps_disk_used_70_percent=$(echo $((${PVC_SIZE//Gi/}*70*1024/100)))
+                  hcdumps_disk_used_100_percent=$(echo $((${PVC_SIZE//Gi/}*1024)))
+
+                  info "${PVC_NAME} PVC storage : ${hcdumps_disk_used_mb}Mi used out of ${hcdumps_disk_used_100_percent}Mi."
+
+                  if [[ ${hcdumps_disk_used_mb} -gt ${hcdumps_disk_used_80_percent} ]];
+                  then
+                    info "Initiated cleanup of ${PVC_NAME} PVC"
+                    cd /ericsson/enm/dumps;
+                    while [[ $(du -sh /ericsson/enm/dumps/ --block-size=1M | awk '{print $1}') -gt ${hcdumps_disk_used_70_percent} ]] && [[ -n "$(find . -maxdepth 1 -type f)" ]];
+                    do
+                      output=$( ls -t -p | grep -v / | tail -1 | xargs rm 2>&1)
+                      code=$?
+                      if [ "${code}" -ne 0 ];
+                      then
+                        error "Failed to delete file on ${PVC_NAME} PVC : ${output}"
+                        error "Cleanup Job for ${PVC_NAME} PVC failed."
+                        sleep 60s
+                        exit ${code}
+                      fi
+                    done
+                    info "Cleanup of ${PVC_NAME} PVC completed successfully"
+                  fi
+                  info "Cleanup Job for ${PVC_NAME} PVC completed successfully"
+                  sleep 60s
+              volumeMounts:
+                -  name: dumps
+                   mountPath: /ericsson/enm/dumps
+              resources:
+                {{- toYaml .Values.hcDumpsCleanupJob.resources | nindent 16 }}
+              env:
+                - name: PVC_NAME
+                  value: {{ .Values.hcDumpsCleanupJob.pvcName }}
+                - name: PVC_SIZE
+                  value: {{ .Values.global.rwx.hcdumpsSize }}
+                - name: TZ
+                  value: {{ .Values.global.timezone }}
+          volumes:
+            -  name: dumps
+               persistentVolumeClaim:
+                 claimName: {{ .Values.hcDumpsCleanupJob.pvcName }}
+          restartPolicy: {{ .Values.hcDumpsCleanupJob.restartPolicy }}
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+          nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 12 }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+{{ toYaml .Values.global.nodeSelector | indent 12 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.tolerations .Values.global.tolerations }}
+      tolerations:
+{{- if .Values.tolerations }}
+{{ toYaml .Values.tolerations | indent 12 }}
+{{- end }}
+{{- if .Values.global.tolerations }}
+{{ toYaml .Values.global.tolerations | indent 12 }}
+{{- end }}
+{{- end }}
+  schedule: {{ .Values.hcDumpsCleanupJob.schedule | quote }}
+  successfulJobsHistoryLimit: {{ .Values.hcDumpsCleanupJob.successfulJobsHistoryLimit }}

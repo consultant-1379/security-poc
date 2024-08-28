@@ -1,0 +1,7 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg.sentinelhost") -}}
+{{- define "eric-enmsg.sentinelhost" -}}
+metadata:
+  name: {{ .Values.service.name1 }}
+spec:
+  clusterIP: None
+{{- end -}}

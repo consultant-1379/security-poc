@@ -1,0 +1,4 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "extcalist" (* slogan = "Retrieve a list of information about one or all imported external CA certificates" *) [ EXTCALIST_NAME ]
+
+EXTCALIST_NAME ::= WS ( "-n" (* hide = "true" *) | "--name" (* slogan = "Name the external CA. Tip: -n for short" *) ) WS <ca_name_value> (* slogan = "Specify the name of the external CA" *)
+

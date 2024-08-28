@@ -1,0 +1,10 @@
+- port: {{ .Values.global.enmProperties.COM_INF_LDAP_PORT }}
+  name: ldaps
+- port: 8447
+  name: https
+- port: {{ .Values.servicePorts.admin }}
+  name: admin
+- port: 8989
+  name: replication
+- port: 1689
+  name: jmx

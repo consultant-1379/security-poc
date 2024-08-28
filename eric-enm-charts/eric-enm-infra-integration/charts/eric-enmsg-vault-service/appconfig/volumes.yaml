@@ -1,0 +1,9 @@
+- name: gp
+  configMap:
+    name: gpvaultserv
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: data
+  persistentVolumeClaim:
+    claimName: data

@@ -1,0 +1,3 @@
+"cmaudit" (* slogan = "Command set to manage Configuration Audit jobs" *) WS "execute" (* slogan = "Creates and executes a single job instance" *) WS NODE_TARGET
+
+NODE_TARGET ::= ( "-n" (* hide = "true" *) | "--node" (* slogan = "Option to specify the Network Element name to execute command on, e.g. 'ERBS123'. TIP : -n is the shorthand option for --node" *)  ) WS <node_name>

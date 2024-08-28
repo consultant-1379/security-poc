@@ -1,0 +1,36 @@
+- name: gp
+  configMap:
+    name: gpsaserv
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: batch
+  persistentVolumeClaim:
+    claimName: batch
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: upgind
+  persistentVolumeClaim:
+    claimName: upgind
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: hcdumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: pmul
+  persistentVolumeClaim:
+    claimName: pmul
+- name: home
+  persistentVolumeClaim:
+    claimName: home
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks
+- name: smrs
+  persistentVolumeClaim:
+    claimName: smrs

@@ -1,0 +1,171 @@
+## eric-enmsg-openidm image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  replicas-eric-enmsg-openidm: 1
+  ingress:
+    enmHost:
+  enmProperties:
+    postgresql01_admin_password:
+    postgres_service:
+    sso_instances: sso-instance-1
+  timezone:
+productNumber: CXC 174 2123
+productRevision: R28K
+labels: {}
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-openidm: 1
+images:
+  eric-enmsg-openidm:
+    name: eric-enmsg-openidm
+    tag: 1.27.9-1
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s opendj,postgres,secserv'
+      ]"
+  enmInitContainer:
+    enabled: true
+    name: eric-enm-securestorage-init-base
+    tag: 1.26.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/pwd_key_hardening.sh openidm_admin_password
+      openidm_passkey ChangeMe123;' ]"
+  eric-enm-monitoring:
+    enabled: true
+    name: eric-enm-monitoring-jre
+    tag: 1.24.9-1
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  pullSecret:
+  registry:
+    url:
+## Allows the specification of additional environment variables
+extraEnv:
+# - name: MY_ROOT_PASSWORD
+#   valueFrom:
+#     secretKeyRef:
+#       name: my-secret
+#       key: my-root-password
+
+eric-enm-common-helmchart-library:
+  enabled: true
+## Configure the service
+service:
+  name: openidm
+  sgname: openidm
+  annotations: {}
+  labels: {}
+## Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 4096Mi
+  limits:
+    enabled: true
+    memory: 4096Mi
+  monitoring:
+    enabled: true
+    requests:
+      memory: 200Mi
+      cpu: 50m
+    limits:
+      memory: 300Mi
+      cpu: 200m
+# ENV Wait for Application Dependencies.
+waitInitContainerEnv:
+  enabled: false
+  env:
+  - name: ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: graphdb-neo4j-secrets
+        key: neo4j-password
+# ENM specific init container(ENM image)
+enmInitContainerEnv:
+  enabled: false
+  env:
+  - name: NEO4J_BOLT_HOST
+    value: "graphdb-neo4j"
+  - name: NEO4J_BOLT_PORT
+    value: "7687"
+  - name: ADMIN_USER
+    value: "neo4j"
+  - name: ADMIN_PASSWORD
+    value: "Neo4jadmin123"
+# Add initContainer if required
+extraInitContainers:
+## Additional containers to be added to the pod(s).
+sidecarContainers:
+  enabled: true
+#  - name: my-sidecar
+#    image: nginx:latest
+
+monitoring:
+  enabled: true
+  jmx_service_url: "service:jmx:rmi:///jndi/rmi://:18983/jmxrmi"
+# Custom config map, read from appconfig/configMaps.yaml
+configMaps:
+  enabled: false
+  name: config-eric-enmsg-openidm
+  mountPath: MOUNTPOINT
+## Persist data to a persistent volume
+## database data Persistent Volume Storage Class
+persistentVolumeClaim:
+  enabled: false
+  storageClass:
+  accessMode: ACCESSMODE
+  size: SIZE
+  mountPath: MOUNTPATH
+  annotations: {}
+# StartupProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 20
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /usr/local/bin/liveness.sh
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 1
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+# lifecycle handler configuration from appconfig/lifecycle_handler.yaml
+lifecycle:
+  handler:
+    enabled: true
+# Extra Annotations to be added to pod
+podAnnotations: {}
+## Tolerations for pod assignment
+tolerations: []
+## Affinity for pod assignment
+affinity: {}
+# Constrain which nodes your pod is eligible to be scheduled on
+nodeAffinity: {}
+priorityClassName: ""
+## Node selector
+nodeSelector: {}
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1

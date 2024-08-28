@@ -1,0 +1,9 @@
+NAME=eric-enmsg-medrouter
+DEP=true
+SVC=medrouter
+REQUESTS=true
+REQUESTS_LIST=2048Mi
+LIMITS=true
+LIMITS_LIST=8192Mi
+WAIT=true
+WAIT_LIST=gossiprouter-cache,gossiprouter-remoting,jms01,postgres,sps,cmserv

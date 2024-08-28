@@ -1,0 +1,113 @@
+ALTER TABLE IF EXISTS CA_Certificate
+DROP CONSTRAINT IF EXISTS fk_CAEntity_CA_Id;
+
+ALTER TABLE IF EXISTS CA_Certificate
+DROP CONSTRAINT IF EXISTS fk_Certificate_Data_Certificate_Id;
+
+DROP TABLE IF EXISTS CA_Certificate;
+
+ALTER TABLE IF EXISTS Entity_Certificate
+DROP CONSTRAINT IF EXISTS fk_Entity_Certificate_Certificate_Id;
+
+ALTER TABLE IF EXISTS Entity_Certificate
+DROP CONSTRAINT IF EXISTS fk_Entity_Entity_Id;
+
+DROP TABLE IF EXISTS Entity_Certificate;
+
+ALTER TABLE IF EXISTS Certificate_Data
+DROP CONSTRAINT IF EXISTS fk_Certificate_Status_Id;
+
+ALTER TABLE IF EXISTS Certificate_Data
+DROP CONSTRAINT IF EXISTS fk_CAEntity_Id;
+
+DROP TABLE IF EXISTS Certificate_Data;
+
+ALTER TABLE IF EXISTS Entity
+DROP CONSTRAINT IF EXISTS fk_Entity_Algorithm;
+
+ALTER TABLE IF EXISTS Entity
+DROP CONSTRAINT IF EXISTS fk_Entity_EntityProfile;
+
+ALTER TABLE IF EXISTS Entity
+DROP CONSTRAINT IF EXISTS fk_Entity_Status_Id;
+
+DROP TABLE IF EXISTS Entity;
+
+ALTER TABLE IF EXISTS CertificateProfile_KeyGenerationAlgorithm
+DROP CONSTRAINT IF EXISTS fk_CertificateProfile_KeyGenerationAlgorithm_Algorithm;
+
+ALTER TABLE IF EXISTS CertificateProfile_KeyGenerationAlgorithm
+DROP CONSTRAINT IF EXISTS fk_CertificateProfile_KeyGenerationAlgorithm_CertificateProfile;
+
+DROP TABLE IF EXISTS CertificateProfile_KeyGenerationAlgorithm;
+
+ALTER TABLE IF EXISTS EntityProfile_TrustProfile
+DROP CONSTRAINT IF EXISTS fk_EntityProfile_Entity_Profile_Id;
+
+ALTER TABLE IF EXISTS EntityProfile_TrustProfile
+DROP CONSTRAINT IF EXISTS fk_TrustProfile_Trust_Profile_Id;
+
+DROP TABLE IF EXISTS EntityProfile_TrustProfile;
+
+ALTER TABLE IF EXISTS TrustProfile_InternalCA
+DROP CONSTRAINT IF EXISTS fk_CAEntity_InternalCA_Id;
+
+ALTER TABLE IF EXISTS TrustProfile_InternalCA
+DROP CONSTRAINT IF EXISTS fk_TrustProfile_InternalCA_Trust_Profile_Id;
+
+DROP TABLE IF EXISTS TrustProfile_InternalCA;
+
+ALTER TABLE IF EXISTS TrustProfile_ExternalCA
+DROP CONSTRAINT IF EXISTS fk_CAEntity_ExternalCA_Id;
+
+ALTER TABLE IF EXISTS TrustProfile_ExternalCA
+DROP CONSTRAINT IF EXISTS fk_TrustProfile_ExternalCA_Trust_Profile_Id;
+
+DROP TABLE IF EXISTS TrustProfile_ExternalCA;
+DROP TABLE IF EXISTS TrustProfile;
+
+ALTER TABLE IF EXISTS CertificateProfile
+DROP CONSTRAINT IF EXISTS fk_CertificateProfile_Issuer_Id;
+
+ALTER TABLE IF EXISTS CAEntityAssociation
+DROP CONSTRAINT IF EXISTS fk_CAEntityAssociation_CAEntity_Id;
+
+ALTER TABLE IF EXISTS CAEntityAssociation
+DROP CONSTRAINT IF EXISTS fk_CAEntityAssociation_AssociatedCAEntity_Id;
+DROP TABLE IF EXISTS CAEntityAssociation;
+
+ALTER TABLE IF EXISTS CAEntity
+DROP CONSTRAINT IF EXISTS fk_CAEntity_Algorithm;
+
+ALTER TABLE IF EXISTS CAEntity
+DROP CONSTRAINT IF EXISTS fk_CAEntity_EntityProfile;
+
+ALTER TABLE IF EXISTS CAEntity
+DROP CONSTRAINT IF EXISTS fk_CAEntity_Status_Id;
+
+ALTER TABLE IF EXISTS CAEntity
+DROP CONSTRAINT IF EXISTS fk_External_Crl_Info_Id;
+
+DROP TABLE IF EXISTS CAEntity;
+
+ALTER TABLE IF EXISTS EntityProfile
+DROP CONSTRAINT IF EXISTS fk_EntityProfile_Algorithm;
+
+DROP TABLE IF EXISTS EntityProfile;
+
+ALTER TABLE IF EXISTS CertificateProfile
+DROP CONSTRAINT IF EXISTS fk_CertificateProfile_Algorithm;
+
+DROP TABLE IF EXISTS CertificateProfile;
+
+DROP TABLE IF EXISTS ExternalCrlInfo;
+DROP TABLE IF EXISTS Algorithm;
+DROP TABLE IF EXISTS Entity_Status;
+DROP TABLE IF EXISTS Certificate_Status;
+
+DROP SEQUENCE IF EXISTS SEQ_EXT_CRL_ID;
+DROP SEQUENCE IF EXISTS SEQ_CERTIFICATE_ID;
+DROP SEQUENCE IF EXISTS SEQ_ENTITY_ID;
+DROP SEQUENCE IF EXISTS SEQ_PROFILE_ID;
+DROP SEQUENCE IF EXISTS SEQ_CA_ID;
+DROP SEQUENCE IF EXISTS SEQ_ALGORITHM_ID;

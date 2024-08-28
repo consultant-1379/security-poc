@@ -1,0 +1,19 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "crlmgmt" (* slogan = "Manage the Generation, Publishing, Listing, and Download of Certification Revocation Lists. Tip: crm for short" *) WS ( CRL_MNGMT_GENERATE | CRL_MGMT_DOWNLOAD | CRL_MGMT_LIST | CRL_MGMT_PUBLISH | CRL_MGMT_UNPUBLISH )
+
+CRL_MNGMT_GENERATE ::= ( "-g" (* hide = "true" *) | "--generate" (* slogan = "Generate the CRL with various options. Tip: -g for short" *) ) WS CRL_MGMT_CA_ENTITY_NAME ( { "," (* slogan = "Comma used to add another CA entity name to a list" *) CRL_MGMT_CA_ENTITY_NAME_USER_INPUT } | WS [ CRL_MGMT_ENTITY_SELECTION ] )
+CRL_MGMT_DOWNLOAD ::= ( "-d" (* hide = "true" *) | "--download" (* slogan = "Download the CRL with various options. Tip: -d for short" *) ) WS CRL_MGMT_CA_ENTITY_NAME WS CRL_DOWNLOAD_SELECTION
+CRL_MGMT_LIST ::= ( "-l" (* hide = "true" *) | "--list" (* slogan = "List the CRL management certificate. Tip: -l for short" *) ) WS CRL_MGMT_CA_ENTITY_NAME WS CRL_LIST_SELECTION WS COUNT
+CRL_MGMT_UNPUBLISH ::= ( "-up" (* hide = "true" *) | "--unpublish" (* slogan = "Unpublish the CRL. Tip: -up for short" *) ) WS CRL_MGMT_CA_ENTITY_NAME { "," (* slogan = "Comma used to add another CA entity name to a list" *) CRL_MGMT_CA_ENTITY_NAME_USER_INPUT }
+CRL_MGMT_PUBLISH ::= ( "-pub" (* hide = "true" *) | "--publish" (* slogan = "Publish the CRL to CDPS. Tip: -pub for short" *) ) WS CRL_MGMT_CA_ENTITY_NAME { "," (* slogan = "Comma used to add another CA entity name to a list" *) CRL_MGMT_CA_ENTITY_NAME_USER_INPUT }
+
+CRL_MGMT_ENTITY_SELECTION ::= ( CRL_MGMT_CA_CERT_SERIAL_NO | CRL_MNGMT_STATUS )
+CRL_DOWNLOAD_SELECTION ::= ( CRL_MGMT_CA_CERT_SERIAL_NO | CRL_MNGMT_STATUS | CRL_NUMBER )
+CRL_LIST_SELECTION ::= ( CRL_MGMT_CA_CERT_SERIAL_NO | CRL_MNGMT_STATUS )
+
+CRL_MGMT_CA_CERT_SERIAL_NO ::= ( "-sno" (* hide = "true" *) | "--serialno" (* slogan = "Manage the CA Certificate by specific serial number. Tip: -sno for short" *) ) WS <ca_certificate_serial_number> (* slogan = "Specify the Serial number of the CA certificate" *)
+CRL_MGMT_CA_ENTITY_NAME ::= ( "-caen" (* hide = "true" *) | "--caentityname" (* slogan = "Manage the CA Certificate by specific entity name. Tip: -caen for short" *) ) WS CRL_MGMT_CA_ENTITY_NAME_USER_INPUT
+CRL_MGMT_CA_ENTITY_NAME_USER_INPUT ::= <ca_entity_name> (* slogan = "Specify the name of the CA entity" *)
+COUNT ::=( "-c" (* hide = "true" *) | "--count" (* slogan = "Manage the CA Certificate by count. Tip: -c for short" *) ) WS <count_number> (* regex = "[0-9]+" slogan = "Specify the Count number" *)
+CRL_NUMBER ::= ( "-cn" (* hide = "true" *) | "--crlnumber" (* slogan = "Manage the CA Certificate by specific CRL number. Tip: -cn for short" *) ) WS <crl_number> (* regex = "[0-9]+" slogan = "Specify the CRL number" *)
+CRL_MNGMT_STATUS ::= ( "-s" (* hide = "true" *) | "--status" (* slogan = "Manage the CA Certificate by status. Tip: -s for short" *) ) WS CRL_MGMT_CERT_STATUS
+CRL_MGMT_CERT_STATUS ::= ( "active" (* slogan = "Certificate status as ACTIVE" *) | "inactive" (* slogan = "Certificate status as INACTIVE" *) )

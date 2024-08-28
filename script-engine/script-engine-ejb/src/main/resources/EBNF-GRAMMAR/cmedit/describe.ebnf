@@ -1,0 +1,23 @@
+"cmedit" (* slogan = "Command set to read, manipulate, and export Configuration Management data" *) WS "describe" (* slogan = "Describes modeled network MO Classes, Attributes and Actions" *) ( DESCRIBE_NETYPE | DESCRIBE_MO )
+
+DESCRIBE_NETYPE ::= DESCRIBE_NETYPE_OPTION ( DESCRIBE_NETYPE_ELEMENT | DESCRIBE_ALL_VERSIONS ) )
+DESCRIBE_NETYPE_OPTION ::= WS ( "-ne" (* hide = "true" *) | "--netype" (* slogan = "Query Network Data by NE type.  Tip: -ne for short" *) )
+DESCRIBE_NETYPE_ELEMENT ::= [ "=" (* hide = "true" *) ] WS <NE_type> (* slogan = "Query network data by NE Type. E.g. ERBS" *)
+
+DESCRIBE_MO ::= WS DESCRIBE_MO_TYPE { ";" (* slogan = "Semi-colon used to add another MO Type to the list." *) DESCRIBE_MO_TYPE } { DESCRIBE_OPTIONS } (* unique = "true" *)
+DESCRIBE_MO_TYPE ::= ( DESCRIBE_TYPE | DESCRIBE_PARTIAL_TYPE )
+DESCRIBE_TYPE ::= <MO_class_type> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Query Network Data by MO Class Type. E.g. EUtranCellFDD" *) [ "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( DESCRIBE_ATTRIBUTES_CRITERIA | DESCRIBE_PARTIAL_ATTRIBUTE ) ]
+DESCRIBE_PARTIAL_TYPE ::= DESCRIBE_PARTIAL_CLASS_TYPE [ "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( DESCRIBE_ATTRIBUTES_CRITERIA | DESCRIBE_PARTIAL_ATTRIBUTE ) ]
+
+DESCRIBE_PARTIAL_CLASS_TYPE ::= [ "*" (* hide = "true" *) ] , <MO_class_type> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Query Network Data by MO Class Type. E.g. EUtranCellFDD" *) , [ "*" (* hide = "true" *) ]
+DESCRIBE_PARTIAL_ATTRIBUTE ::= ( DESCRIBE_PARTIAL_ATTRIBUTE_TYPE | "(" (* slogan = "Open bracket used to start a list of attributes.  e.g. 'eutrancellfdd.(tac, administrativestate)'" *) DESCRIBE_PARTIAL_ATTRIBUTE_TYPE { "," (* slogan = "Comma used to add another attribute to a list." *) DESCRIBE_PARTIAL_ATTRIBUTE_TYPE } ")" (* slogan = "Close bracket used to close a list of attributes.  e.g. 'eutrancellfdd.(tac, administrativestate)'" *) )
+DESCRIBE_ATTRIBUTES_CRITERIA ::= ( "*" (* slogan = "String value wildcard. Can be used at the start/or end of the value.  E.g. userLabel==Test*" *) | "<pm>" (* slogan = "Use the special identifier <pm> to select all Performance Management (PM) attributes of the specified MO Class." *) | "<cm>" (* slogan = "Use the special identifier <cm> to select all Configuration Management (CM) attributes of the specified MO Class." *) | "<p>" (* slogan = "Use the special identifier <p> to select all persistent attributes of the specified MO Class." *) | "<w>" (* slogan = "Use the special identifier <w> to select all writable persistent attributes of the specified MO Class." *) | "<m>" (* slogan = "Use the special identifier <m> to select all mandatory persistent attributes of the specified MO Class." *) )
+DESCRIBE_PARTIAL_ATTRIBUTE_TYPE ::= [ "*" (* hide = "true" *) ] , <attribute_name> (* slogan = "Name of Attribute to describe" *) , [ "*" (* hide = "true" *) ]
+DESCRIBE_OPTIONS ::= ( DESCRIBE_NAMESPACE | ( DESCRIBE_VERSION | DESCRIBE_ALL_VERSIONS ) | OUTPUT_FORMAT )
+
+DESCRIBE_NAMESPACE ::= WS ( "-ns" (* hide = "true" *) | "-namespace" (* hide = "true" *) | "--namespace" (* slogan = "[Optional] Query Network Data by specific modeled namespace. Tip: -ns for short" *) ) DESCRIBE_NAMESPACE_INPUT
+DESCRIBE_NAMESPACE_INPUT ::= ( WS | "=" (* hide = "true" *) ) <namespace> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Name of specific Modeled Namespace to describe. E.g. MSRBS_V1_eNodeBFunction" *)
+DESCRIBE_VERSION ::= WS ( "-v" (* hide = "true" *) | "-version" (* hide = "true" *) | "--version" (* slogan = "[Optional] Query Network Data by modeled version. Tip: -v for short" *) ) DESCRIBE_VERSION_INPUT
+DESCRIBE_VERSION_INPUT ::= ( WS | "=" (* hide = "true" *) ) <version> (* inputType = "version" slogan = "Name of specific modeled version to describe.  E.g. H.1.140" *)
+OUTPUT_FORMAT ::= WS ( "-l" (* hide = "true" *) | "-list" (* hide = "true" *) | "--list" (* slogan = "[Optional] Display output results in list format. This is default output format.  Tip: -l for short" *) | "-t" (* hide = "true" *) | "-table" (* hide = "true" *) | "--table" (* slogan = "[Optional] Display output results in tabular format.  Tip: -t for short" *) )
+DESCRIBE_ALL_VERSIONS ::= WS ( "--all" (* slogan = "[Optional] Specify output contains all MO Class versions. Tip: -ALL is also valid" *) | "--ALL" (* hide = "true" *) | "-ALL" (* hide = "true" *) | "-all" (* hide = "true" *) )

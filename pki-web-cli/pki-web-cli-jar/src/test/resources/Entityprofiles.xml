@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfilesSchema.xsd">
+<Entity-Profiles>
+		<EntityProfile Name="RootCA_Entity_Profile">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>ARJ_ROOT_CA</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			<SubjectAltNameValues>
+				<SubjectAltNameValue>
+					<Type>DIRECTORY_NAME</Type>
+					<Value xsi:type="SubjectAltNameString">
+						<StringValue>Email = arj@ar.com</StringValue>
+					</Value>
+				</SubjectAltNameValue>
+				<SubjectAltNameValue>
+					<Type>OTHER_NAME</Type>
+					<Value xsi:type="OtherName">
+						<TypeId>12.2.2.2</TypeId>
+						<Value>SrSr</Value>
+					</Value>
+				</SubjectAltNameValue>
+			</SubjectAltNameValues>
+			<KeyGenerationAlgorithm>
+				<Name>DES</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+			<CertificateProfileName>RootCA_Cert_Profile</CertificateProfileName>
+			
+			<CertificateExtensions>
+			<CertificateExtension xsi:type="KeyUsage">
+			<Critical>true</Critical>
+				<KeyUsageType>CRL_SIGN</KeyUsageType>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="ExtendedKeyUsage">
+				<Critical>false</Critical>
+				<KeyPurposeId>ID_KP_CLIENT_AUTH</KeyPurposeId>
+			</CertificateExtension>
+			</CertificateExtensions>
+		</EntityProfile>
+	</Entity-Profiles>
+</Profiles>

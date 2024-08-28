@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PKIEntities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="EntitiesSchema.xsd">
+	<CA-Entities>
+        <CAEntity Name="RootCA_7">
+            <Subject>
+                <SubjectDN>
+                    <SubjectEntry>
+                        <Type>COMMON_NAME</Type>
+                        <Value> ARJ_Root </Value>
+                    </SubjectEntry>
+                </SubjectDN>
+            </Subject>
+            <EntityProfileName>RootCA_Entity_Profile</EntityProfileName>
+            <RootCA>true</RootCA>
+            <CACRL>
+                <CRLGenerationPeriod>P21D</CRLGenerationPeriod>
+                <CRLSignatureAlgorithm>
+                    <Name>RSA</Name>
+                    <KeySize>1024</KeySize>
+                </CRLSignatureAlgorithm>
+                <PublishCRLToCDPS>true</PublishCRLToCDPS>
+            </CACRL>
+        </CAEntity>
+    </CA-Entities>
+</PKIEntities>

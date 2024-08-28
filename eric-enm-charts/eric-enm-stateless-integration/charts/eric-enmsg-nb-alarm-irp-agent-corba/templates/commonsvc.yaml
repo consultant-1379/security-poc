@@ -1,0 +1,22 @@
+{{- if .Values.service.commonService.enabled -}}
+{{- template "eric-enmsg-nb-alarm-irp-agent-corba.commonservice" (list . "eric-enmsg.service1") -}}
+{{- end }}
+
+{{- define "eric-enmsg.service1" -}}
+metadata:
+  name: nbalarmirp-common
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9600"
+  labels:
+    service: {{ .Values.service.name }}
+{{- end}}
+---
+{{- if .Values.service.commonService.enabled -}}
+{{- template "eric-enmsg-nb-alarm-irp-agent-corba.commonservice" (list . "eric-enmsg.service2") -}}
+{{- end }}
+
+{{- define "eric-enmsg.service2" -}}
+metadata:
+  name: {{  index .Values.service.additionalServiceNames 0  }}
+{{- end -}}

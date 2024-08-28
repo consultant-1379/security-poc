@@ -1,0 +1,85 @@
+{{- if .Values.brAgent.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.service.name }}-bragent-config
+  labels:
+    app: {{ .Values.service.name }}
+    app.kubernetes.io/name: "{{ .Values.service.name }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-enm-rwxpvc.chart" . }}
+data:
+  config.yaml: |
+    agent:
+      registration:
+        name: {{ template "eric-enm-rwxpvc.name" . }}
+        {{- if .Values.brAgent.backupTypeList }}
+        scopes: {{- template "eric-enm-rwxpvc.backupTypes" . }}
+        {{- end }}
+      workers: {{ .Values.brAgent.workers }}
+    restore:
+      preCmd: "mkdir -p /ericsson/tor/smrs/smrsroot; HISTORY_FILE=/ericsson/tor/data/.enm-history; RESTORE_FLAG_FILE=${HISTORY_FILE}-rf; if test -f ${HISTORY_FILE}; then echo RB > ${RESTORE_FLAG_FILE}; else echo RE > ${RESTORE_FLAG_FILE}; fi"
+    backup:
+      preCmd: "mkdir -p /ericsson/tor/smrs/smrsroot/backup /ericsson/tor/smrs/smrsroot/software"
+      paths:
+      {{- if .Values.defaultPaths.smrs }}
+        - path: "/ericsson/tor/smrs/smrsroot/backup"
+          allowChanges: true
+          compression: none
+        - path: "/ericsson/tor/smrs/smrsroot/software"
+          allowChanges: true
+          compression: none
+        - path: "/ericsson/tor/smrs"
+          excludes:
+            - ".snapshot"
+            - "/ericsson/tor/smrs/smrsroot/software"
+            - "/ericsson/tor/smrs/smrsroot/backup"
+          allowChanges: true
+      {{- end }}
+      {{- if .Values.defaultPaths.amos }}
+        - path: "/ericsson/log/amos"
+          excludes:
+            - ".snapshot"
+          allowChanges: true
+      {{- end }}
+      {{- if .Values.defaultPaths.batch }}
+        - path: "/ericsson/batch"
+          excludes:
+            - ".snapshot"
+          allowChanges: true
+          compression: none
+      {{- end }}
+      {{- if .Values.defaultPaths.config_mgt }}
+        - path: "/ericsson/config_mgt"
+          excludes:
+            - ".snapshot"
+          allowChanges: true
+      {{- end }}
+      {{- if .Values.defaultPaths.data }}
+        - path: "/ericsson/tor/data"
+          excludes:
+            - ".snapshot"
+          allowChanges: true
+      {{- end }}
+      {{- if .Values.defaultPaths.cron }}
+        - path: "/ericsson/vmcrons"
+          excludes:
+            - ".snapshot"
+          allowChanges: true
+      {{- end }}
+      {{- if .Values.defaultPaths.home }}
+        - path: "/ericsson/home"
+          excludes:
+            - ".snapshot"
+          allowChanges: true
+      {{- end }}
+    softwareVersion:
+      description: "RWX Filesystems"
+      productName: {{ template "eric-enm-rwxpvc.name" . }}
+      productNumber: {{ .Values.productNumber | quote }}
+      productionDate: {{ .Values.productionDate | quote }}
+      revision: {{ .Values.revision | quote }}
+      type: "RWX-Filesystems"
+    bro:
+      host: {{ .Values.brAgent.broServiceName | quote }}
+{{- end }}

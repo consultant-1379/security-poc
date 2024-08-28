@@ -1,0 +1,13 @@
+{{ define "eric-enm-common-helmchart-library.renamePVNames.tpl" -}}
+{{- $file_content := tpl (.Files.Get "appconfig/volumes.yaml") . | splitList "\n" }}
+{{- range $file_content }}
+{{ $line := . }}
+{{ $tline := $line | trim }}
+{{- if hasPrefix "claimName" $tline -}}
+{{- $replace := printf "%s\n" $line  | replace "    claimName: " "    claimName: eric-enm-rwxpvc-" -}}
+{{ $replace | indent 2 }}
+{{ else }}
+{{ $line | indent 2 }}
+{{ end }}
+{{ end }}
+{{- end -}}

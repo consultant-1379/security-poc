@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name }}
+  labels:
+    app: {{ .Values.service.name }}
+    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: "{{ .Values.service.name }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-enmsg-opendj.chart" . }}
+  annotations:
+{{- include "eric-enmsg-opendj.product-info" . | indent 4 }}
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8001"
+    prometheus.io/path: "/metrics/prometheus_http_anonymous"
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+{{ tpl (.Files.Get "appconfig/servicePorts.txt") . | indent 4 }}
+  selector:
+    app: {{ .Values.service.name }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name1 }}
+  labels:
+    app: {{ .Values.service.name }}
+    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: "{{ .Values.service.name }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-enmsg-opendj.chart" . }}
+  annotations:
+{{- include "eric-enmsg-opendj.product-info" . | indent 4 }}
+spec:
+  ports:
+{{ tpl (.Files.Get "appconfig/servicePorts.txt") . | indent 4 }}
+  selector:
+    statefulset.kubernetes.io/pod-name: {{ .Values.service.name }}-0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name2 }}
+  labels:
+    app: {{ .Values.service.name }}
+    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: "{{ .Values.service.name }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-enmsg-opendj.chart" . }}
+  annotations:
+{{- include "eric-enmsg-opendj.product-info" . | indent 4 }}
+spec:
+  ports:
+{{ tpl (.Files.Get "appconfig/servicePorts.txt") . | indent 4 }}
+  selector:
+    statefulset.kubernetes.io/pod-name: {{ .Values.service.name }}-1

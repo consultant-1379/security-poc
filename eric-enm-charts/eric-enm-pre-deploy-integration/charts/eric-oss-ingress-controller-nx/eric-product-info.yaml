@@ -1,0 +1,16 @@
+#Product Number is dummy
+productName: "OSS Ingress nginx controller HELM"
+productNumber: "CXC 111 1111"
+images:
+  ingresscontroller:
+    productName: "OSS Ingress nginx controller IMAGE"
+    productNumber: "CXC 111 1111"
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "proj-eric-oss-ingress-ctr-nx-drop"
+    name: "eric-oss-ingress-controller-nx"
+    tag: "1.1.0-15"
+  logshipper:
+    name: "eric-log-shipper"
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "proj-adp-log-released"
+    tag: "9.1.0-33"

@@ -1,0 +1,92 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "certmgmt" (* slogan = "Generate, Reissue, Export and List Certificates. Tip: ctm for short" *) ( CERTMGMT_MANAGE | CERTMGMT_RETRIEVE | CERTMGMT_UPDATE | CERTMGMT_EXPORT | CERTMGMT_GENERATE_CSR | CERTMGMT_IMPORT_CERTIFICATE )
+
+CERTMGMT_MANAGE ::= ( CERTMGMT_MANAGE_CAAERT_OPTION | CERTMGMT_MANAGE_EECERT_OPTION | CERTMGMT_MANAGE_SECGW_CERT_OPTION )
+CERTMGMT_RETRIEVE ::= ( CERTMGMT_CACERT CERTMGMT_LIST CERTMGMT_ENTITY_NAME [ CERTMGMT_STATUS ] | CERTMGMT_EECERT CERTMGMT_LIST CERTMGMT_ENTITY_NAME CERTMGMT_STATUS | CERTMGMT_CACERT LIST_HIERARCHY ( CERTMGMT_NAME | CERTMGMT_ALL ) | CERTMGMT_LIST CERTMGMT_CA_ENTITY_NAME CERTMGMT_SERIAL_NO [ CERTMGMT_STATUS ] )
+CERTMGMT_UPDATE ::= ( CERTMGMT_UPDATE_CAAERT_OPTION | CERTMGMT_UPDATE_EECERT_OPTION )
+CERTMGMT_EXPORT ::= ( CERTMGMT_EXPORT_CAAERT_OPTION | CERTMGMT_EXPORT_EECERT_OPTION )
+CERTMGMT_GENERATE_CSR ::= GENERATE_CSR CERTMGMT_CA_ENTITY_NAME NEW_KEY [ CERTMGMT_GENERATE_CSR_FORCE ]
+CERTMGMT_IMPORT_CERTIFICATE ::= CERTMGMT_IMPORT CERTMGMT_CA_ENTITY_NAME EXT_CA_CERTIFICATE CA_REISSUE_TYPE RFC_VALIDATION [ CERTMGMT_FORCE ]
+CSR ::= CERTMGMT_ENTITY_NAME CERTMGMT_FILE_OPTIONS
+
+SECGW_CSR ::= CERTMGMT_CSR_FILE_OPTION_WITHOUT_FORMAT_OPTIONS [ NO_CERTIFICATE_CHAIN ]
+
+NOCSR ::= WS "-nocsr" (* slogan = "Continue entity generation without Certificate Signing Request file" *) CERTMGMT_ENTITY_NAME FORMAT KEYSTORE_OPTIONS
+CERTMGMT_MANAGE_CAAERT_ALTER ::= CERTMGMT_ENTITY_NAME ( FORMAT_OPTIONS [ NO_CERTIFICATE_CHAIN ] | NO_POP_UP )
+CERTMGMT_MANAGE_CAAERT_GENERATE ::= CERTMGMT_GENERATE CERTMGMT_MANAGE_CAAERT_ALTER
+CERTMGMT_MANAGE_CAAERT_OPTION ::= CERTMGMT_CACERT CERTMGMT_MANAGE_CAAERT_GENERATE
+CERTMGMT_MANAGE_EECERT_ALTER ::= CERTMGMT_GENERATE ( CSR | NOCSR )
+CERTMGMT_MANAGE_SECGW_CERT_ALTER ::= CERTMGMT_GENERATE CERTMGMT_SECGW_CERTTYPE SECGW_CSR
+CERTMGMT_MANAGE_EECERT_OPTION ::= CERTMGMT_EECERT CERTMGMT_MANAGE_EECERT_ALTER
+CERTMGMT_MANAGE_SECGW_CERT_OPTION ::= CERTMGMT_SECGW_CERT CERTMGMT_MANAGE_SECGW_CERT_ALTER
+CERTMGMT_UPDATE_CAAERT_LEVEL ::= LEVEL [ REVOKE ]
+CERTMGMT_UPDATE_CAAERT_REISSUE_TYPE ::= REISSUE_TYPE CERTMGMT_UPDATE_CAAERT_LEVEL
+CERTMGMT_UPDATE_CAAERT_ENTITY_NAME ::= CERTMGMT_ENTITY_NAME CERTMGMT_UPDATE_CAAERT_REISSUE_TYPE
+CERTMGMT_UPDATE_CAAERT_REISSUE ::= CERTMGMT_REISSUE CERTMGMT_UPDATE_CAAERT_ENTITY_NAME
+CERTMGMT_UPDATE_CAAERT_OPTION ::= CERTMGMT_CACERT CERTMGMT_UPDATE_CAAERT_REISSUE
+CERTMGMT_UPDATE_EECERT_REISSUE_TYPE ::= CERTMGMT_ENTITY_NAME EE_REISSUE_TYPE
+CERTMGMT_UPDATE_EECERT_REISSUE ::= CERTMGMT_REISSUE CERTMGMT_UPDATE_EECERT_REISSUE_TYPE
+CERTMGMT_UPDATE_EECERT_OPTION ::= CERTMGMT_EECERT CERTMGMT_UPDATE_EECERT_REISSUE
+CERTMGMT_EXPORT_CAAERT_ENTITY_NAME ::= CERTMGMT_ENTITY_NAME FORMAT_OPTIONS
+CERTMGMT_EXPORT_CAAERT_EXPORT ::= CERTMGMT_EXPORT2 CERTMGMT_EXPORT_CAAERT_ENTITY_NAME
+CERTMGMT_EXPORT_CAAERT_OPTION ::= CERTMGMT_CACERT CERTMGMT_EXPORT_CAAERT_EXPORT
+CERTMGMT_EXPORT_EECERT_FORMAT_OPTIONS ::= CERTMGMT_ENTITY_NAME FORMAT_OPTIONS [ NO_CERTIFICATE_CHAIN ]
+CERTMGMT_EXPORT_EECERT_EXPORT ::= CERTMGMT_EXPORT2 CERTMGMT_EXPORT_EECERT_FORMAT_OPTIONS
+CERTMGMT_EXPORT_EECERT_OPTION ::= CERTMGMT_EECERT CERTMGMT_EXPORT_EECERT_EXPORT
+CERTMGMT_EE_REISSUE_FILE_OPTIONS ::= ( CERTMGMT_CSR_FILE_OPTION_WITHOUT_FORMAT_OPTIONS | CRMF_FILE_OPTION_WITHOUT_FORMAT_OPTIONS )
+CERTMGMT_FILE_OPTIONS ::= ( CERTMGMT_CSR_FILE_OPTION | CRMF_FILE_OPTION )
+
+FORMAT_OPTIONS ::= FORMAT ( KEYSTORE_OPTIONS | PEM_FORMAT )
+
+KEYSTORE_OPTIONS ::= KEYSTORE_TYPE [ PASSWORD ]
+
+CERTMGMT_CACERT ::= WS "CACert" (* slogan = "Generate/Reissue/Export/List Certificates of CA Entity" *)
+CERTMGMT_EECERT ::= WS "EECert" (* slogan = "Generate/Reissue/Export/List Certificates of EE Entity" *)
+CERTMGMT_SECGW_CERT ::= WS "SecGW" (* slogan = "Generate/Reissue Certificates for Security Gateway" *)
+NO_CERTIFICATE_CHAIN ::= WS ( "-nch" (* hide = "true" *) | "--nochain" (* slogan = "Do not output Certificate Chain. Tip: -nch for short" *) )
+NO_POP_UP ::= WS ( "-npop" (* hide = "true" *) | "--nopopup" (* slogan = "Complete the command without the download option. Tip: -npop for short" *) )
+
+FORMAT ::= WS ( "-f" (* hide = "true" *) | "--format" (* slogan = "Specify the format of the export. Tip: -f for short" *) )
+
+KEYSTORE_TYPE ::= WS ( "JKS" (* slogan = "Specify the output format as JKS" *) | "P12" (* slogan = "Specify the output format as P12" *) )
+
+PEM_FORMAT ::= WS "PEM" (* slogan = "Specify the output format as PEM" *)
+
+PASSWORD ::= WS ( "-pass" (* hide = "true" *) | "--password" (* slogan = "Password protect the formatted file. Tip: -pass for short" *) ) WS <password> (* slogan = "Specify the password for the file" *)
+CERTMGMT_CSR_FILE_OPTION ::= WS ( "-csr" (* hide = "true" *) | "--csrfile" (* slogan = "Specify the Certificate Signing Request file as input. Tip: -csr for short" *) ) WS "file:" <input_csr_file> (* inputType = "fileName" slogan = "Specify the name of the Certificate Signing Request file" *) ( FORMAT_OPTIONS [ NO_CERTIFICATE_CHAIN ] | NO_POP_UP )
+CRMF_FILE_OPTION ::= WS ( "-crm" (* hide = "true" *) | "--crmffile" (* slogan = "Specify the CRMF file as input. Tip: -crm for short" *) ) WS "file:" <input_crmf_file> (* inputType = "fileName" slogan = "Specify the name of the CRMF file" *) ( FORMAT_OPTIONS [ NO_CERTIFICATE_CHAIN ] | NO_POP_UP )
+CERTMGMT_CSR_FILE_OPTION_WITHOUT_FORMAT_OPTIONS ::= WS ( "-csr" (* hide = "true" *) | "--csrfile" (* slogan = "Specify the Certificate Signing Request file as input. Tip: -csr for short" *) ) WS "file:" <input_csr_file> (* inputType = "fileName" slogan = "Specify the name of the Certificate Signing Request file" *)
+CRMF_FILE_OPTION_WITHOUT_FORMAT_OPTIONS ::= WS ( "-crm" (* hide = "true" *) | "--crmffile" (* slogan = "Specify the CRMF file as input. Tip: -crm for short" *) ) WS "file:" <input_crmf_file> (* inputType = "fileName" slogan = "Specify the name of the CRMF file" *)
+NEW_KEY ::= WS ( "-nk" (* hide = "true" *) | "--newkey" (* slogan = "Specify whether the CSR is generated with a New Key. Tip: -nk for short" *) ) WS ( "true" (* slogan = "Generate the CSR with a New Key" *) | "false" (* slogan = "Generate the CSR without a New Key" *) )
+CA_REISSUE_TYPE ::= WS ( "-crt" (* hide = "true" *) | "--careissuetype" (* slogan = "Import Certificate with a specified CA Reissue type. Tip: -crt for short" *) )
+                    WS ( "RENEW_SUB_CAS" (* slogan = "Reissue type as RENEW_SUB_CAS" *)
+                        | "RENEW_SUB_CAS_WITH_REVOCATION"  (* slogan = "Reissue type as RENEW_SUB_CAS_WITH_REVOCATION " *)
+                        | "REKEY_SUB_CAS" (* slogan = "Reissue type as REKEY_SUB_CAS " *)
+                        | "REKEY_SUB_CAS_WITH_REVOCATION" (* slogan = "Reissue type as REKEY_SUB_CAS_WITH_REVOCATION " *)
+                        | "NONE" (* slogan = "Reissue type as NONE " *) )
+
+CERTMGMT_GENERATE ::= WS ( "-gen" (* hide = "true" *) | "--generate" (* slogan = "Generate Certificates for Entities. Tip: -gen for short" *) )
+CERTMGMT_LIST ::= WS ( "-l" (* hide = "true" *) | "--list" (* slogan = "List Certificates for Entities. Tip: -l for short" *) )
+CERTMGMT_REISSUE ::= WS ( "-ri" (* hide = "true" *) | "--reissue" (* slogan = "Renew and Rekey the Certificate. Tip: -ri for short" *) )
+REVOKE ::= WS ( "-r" (* hide = "true" *) | "--revoke" (* slogan = "Revoke the certificate of the End-entity. Tip: -r for short" *) )
+CERTMGMT_EXPORT2 ::= WS ( "-expcert" (* hide = "true" *) | "--exportcert" (* slogan = "Export certificate for the Entity. Tip: -expcert for short" *) )
+LIST_HIERARCHY ::= WS ( "-lh" (* hide = "true" *) | "--listhierarchy" (* slogan = "List Certificate Hierarchy of an Entity. Tip: -lh for short" *) )
+GENERATE_CSR ::= WS ( "-gc" (* hide = "true" *) | "--generatecsr" (* slogan = "Generate the Certificate Signing Request. Tip: -gc for short" *) )
+CERTMGMT_IMPORT ::= WS ( "-im" (* hide = "true" *) | "--importcert" (* slogan = "Import the certificate. Tip: -im for short" *) )
+CERTMGMT_CA_ENTITY_NAME ::= WS ( "-caen" (* hide = "true" *) | "--caentityname" (* slogan = "Import the Certificate with an entityName. Tip: -caen for short" *) ) WS <entity_name> (* slogan = "Specify the Entity Name to import" *)
+CERTMGMT_ENTITY_NAME ::= WS ( "-en" (* hide = "true" *) | "--entityname" (* slogan = "Include the Entity name. Tip: -en for short" *) ) WS <entity_name> (* slogan = "Specify the Entity name" *)
+CERTMGMT_NAME ::= WS ( "-n" (* hide = "true" *) | "--name" (* slogan = "List the hierarchy by name. Tip: -n for short" *) ) WS <entity_name> (* slogan = "Specify the name to list by" *)
+CERTMGMT_STATUS ::= WS ( "-s" (* hide = "true" *) | "--status" (* slogan = "Retrieve the status of an entity. Tip: -s for short" *) ) CERTIFICATE_STATUS
+CERTMGMT_ALL ::= WS ( "-a" (* hide = "true" *) | "--all" (* slogan = "List for all the Entities present. Tip: -a for short" *) )
+CERTMGMT_SERIAL_NO ::= WS ( "-sno" (* hide = "true" *) | "--serialno" (* slogan = "Retrieve the serial number of an entity. Tip: -sno for short" *) ) WS <serial_number> (* slogan = "Specify the entity serial number" *)
+CERTMGMT_FORCE ::= WS ( "-fc" (* hide = "true" *) | "--force" (* slogan = "Force the generation of the CSR. Tip: -fc for short" *) )
+CERTMGMT_GENERATE_CSR_FORCE ::= WS ( "-fc" (* hide = "true" *) | "--force" (* slogan = "Force the generation of the CSR. Tip: -fc for short. Warning: This option will be depricated in future." *) )
+EXT_CA_CERTIFICATE ::= WS ( "-c" (* hide = "true" *) | "--certificate" (* slogan = "Specify a certificate to import. Tip: -c for short" *) ) WS "file:" <input_cert_file> (* inputType = "fileName" slogan = "Specify the Certificate file to import" *)
+CERTIFICATE_STATUS ::= WS ( "active" (* slogan = "List the certificate(s) for the active Entity" *) | "revoked" (* slogan = "List the certificate(s) for the revoked CA Entity" *) | "expired" (* slogan = "List the certificate(s) for the expired CA Entity" *) | "inactive" (* slogan = "List the certificate(s) for the inactive CA Entity" *) )
+REISSUE_TYPE ::= WS ( "-rt" (* hide = "true" *) | "--reissuetype" (* slogan = "Renew or Re-Key a Certificate. Tip: -rt for short" *) ) WS ( "renew" (* slogan = "Renew the Certificate" *) | "rekey" (* slogan = "Rekey the Certificate" *) )
+CERTMGMT_SECGW_CERTTYPE ::= WS ( "-ct" (* hide = "true" *) | "--certtype" (* slogan = "Certificate Type. Tip: -ct for short" *) ) WS ( "OAM" (* slogan = "Certificate for OAM" *) | "Traffic" (* slogan = "Certificate for Traffic" *) )
+LEVEL ::= WS ( "-le" (* hide = "true" *) | "--level" (* slogan = "Specify the level of the CA Certificate. Tip: -le for short" *) ) WS ( "CA" (* slogan = "Set level as CA" *) | "CA_IMMEDIATE_SUB_CAS" (* slogan = "Set level as CA_IMMEDIATE_SUB_CAS" *) | "CA_ALL_CHILD_CAS" (* slogan = "Set level as CA_ALL_CHILD_CAS" *) )
+EE_REISSUE_TYPE ::= WS ( "-rt" (* hide = "true" *) | "--reissuetype" (* slogan = "Renew or Re-Key a Certificate. Tip: -rt for short" *) ) WS ( EE_REISSUE_TYPE_RENEW | EE_REISSUE_TYPE_REKEY )
+EE_REISSUE_TYPE_RENEW ::= "renew" CERTMGMT_EE_REISSUE_FILE_OPTIONS
+EE_REISSUE_TYPE_REKEY_FORMAT ::= PASSWORD FORMAT KEYSTORE_TYPE
+EE_REISSUE_TYPE_REKEY ::= "rekey" EE_REISSUE_TYPE_REKEY_FORMAT
+RFC_VALIDATION ::= WS ( "-rv" (* hide = "true" *) | "--rfcvalidation" (* slogan = "Import Certificate with RFC Validation. Tip: -rv for short" *) ) WS ( "true" (* slogan = "Set RFC Validation as True" *) | "false" (* slogan = "Set RFC Validation as False" *) )

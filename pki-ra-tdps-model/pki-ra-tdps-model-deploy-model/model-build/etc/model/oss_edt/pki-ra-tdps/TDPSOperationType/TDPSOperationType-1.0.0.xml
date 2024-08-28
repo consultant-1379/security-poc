@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+*******************************************************************************
+* COPYRIGHT Ericsson LMI 2022. All rights reserved.
+*
+* No part of this document may be reproduced in any form without the
+* written permission of the copyright owner.The contents of this document
+* are subject to revision without notice due to continued progress in
+* methodology, design and manufacturing. Ericsson shall have no liability
+* for any error or damage of any kind resulting from the use of this document.
+*
+*******************************************************************************
+
+
+--><ns2:EnumDataTypeDefinition xmlns:ns1="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:ns2="urn:com:ericsson:schema:xml:oss:oss_edt" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ns1:lifeCycle="CURRENT" ns1:name="TDPSOperationType" ns1:ns="pki-ra-tdps" ns1:version="1.0.0">
+  <ns1:modelCreationInfo author="egiator" creationDate="Tue Jun 07 16:16:46 CEST 2022">
+    <ns1:designedModel className="com.ericsson.oss.itpf.security.pki.ra.tdps.model.edt.TDPSOperationType" componentId="pki-ra-tdps-model-jar"/>
+  </ns1:modelCreationInfo>
+  <ns1:desc>This TDPSOperationType Model defines enum for type of operation to be commited at TDPS whether to publish or unpublish.</ns1:desc>
+  <ns2:member name="PUBLISH" ns1:lifeCycle="CURRENT" value="1">
+    <ns2:desc>Publish Certificate from TDPS</ns2:desc>
+  </ns2:member>
+  <ns2:member name="UNPUBLISH" ns1:lifeCycle="CURRENT" value="2">
+    <ns2:desc>Unpublish Certificate from TDPS</ns2:desc>
+  </ns2:member>
+  <ns2:member name="UNKNOWN" ns1:lifeCycle="CURRENT" value="3">
+    <ns2:desc>Unknown Certificate from TDPS</ns2:desc>
+  </ns2:member>
+</ns2:EnumDataTypeDefinition>

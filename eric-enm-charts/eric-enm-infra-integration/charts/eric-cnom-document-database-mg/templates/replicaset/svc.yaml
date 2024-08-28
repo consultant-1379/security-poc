@@ -1,0 +1,44 @@
+{{- if .Values.replicaSet.enabled }}
+{{- $serviceName := include "eric-cnom-document-database-mg.serviceName" . }}
+{{- $replicaCount := .Values.replicaSet.replicaCount | int }}
+{{- $root := . }}
+{{- range $i, $e := until $replicaCount }}
+{{- $targetPod := printf "%s-%d" $serviceName $i }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $serviceName }}-{{ $i }}
+  labels:
+    app.kubernetes.io/name: {{ template "eric-cnom-document-database-mg.name" $root }}
+    app.kubernetes.io/version: {{ template "eric-cnom-document-database-mg.version" $root }}
+    app.kubernetes.io/instance : {{ $root.Release.Name }}
+    chart: {{ template "eric-cnom-document-database-mg.chart" $root }}
+    heritage: "{{ $root.Release.Service }}"
+    component: mongodb
+  annotations:
+    {{- include "eric-cnom-document-database-mg.product-info" $root | nindent 4 }}
+    {{- with $root.Values.service.annotations }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+spec:
+  type: ClusterIP
+  {{- if $root.Values.global }}
+  {{- if $root.Values.global.internalIPFamily }}
+  ipFamilies:
+    - {{ $root.Values.global.internalIPFamily }}
+  {{- end }}
+  {{- end }}
+  ports:
+  - name: mongodb
+    port: {{ $root.Values.service.port }}
+    targetPort: mongodb
+  selector:
+    app.kubernetes.io/name: {{ template "eric-cnom-document-database-mg.name" $root }}
+    app.kubernetes.io/version: {{ template "eric-cnom-document-database-mg.version" $root }}
+    app.kubernetes.io/instance : {{ $root.Release.Name }}
+    statefulset.kubernetes.io/pod-name: {{ $targetPod }}
+    component: mongodb
+---
+{{- end }}
+{{- end }}

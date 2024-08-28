@@ -1,0 +1,49 @@
+
+possible customisations: in localEnv.yaml:
+==========================================
+	credmController:
+	  namespace: default
+	  logdebugflag: false
+	  javamockflag: true
+where:
+namespace = name of the wanted namespace
+logdebugflag = true to have more prints
+javamockflag = false to run true java credentialmanagercli
+
+i	mageCredentials:
+	  #repoPath: proj_oss_releases/enm
+	  #pullPolicy: Always
+	  repoPath: proj-enm
+	  pullPolicy: Never
+
+change repoPath and pullPolicy as wanted
+
+to build:
+=========
+./build.sh [repo name, default: armdocker.rnd.ericsson.se/proj-enm]
+
+look inside ./build.sh for push commands
+
+to start/stop deployment:
+=========================
+./helm.sh start [namespace, default=default]
+./helm.sh stop [namespace, default=default]
+./helm.sh status [namespace, default=default]
+
+to run rest server:
+===================
+./exec.sh
+in the bash shell:
+/credm/scripts/run.sh
+
+
+
+to delete images
+================
+docker images | grep credm | awk '{print $1 ":" $2}'
+docker rmi $(docker images | grep cert | awk '{print $1 ":" $2}')
+
+
+
+
+

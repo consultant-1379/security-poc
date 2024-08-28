@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>credentialmanagercli</artifactId>
+    <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+    <version>1.0.2-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>ERICcredentialmanagercli_CXP9031389</artifactId>
+  <name>[${project.parent.artifactId}] RPM module</name>
+  <packaging>${rpm.packaging}</packaging>
+
+  <properties>
+    <publish_artifact>true</publish_artifact>
+    <media.category>service,db,scripting,automation</media.category>
+    <com.ericsson.oss.rpm.architecture>noarch</com.ericsson.oss.rpm.architecture>
+    <rpm-root>opt</rpm-root>
+    <comp-name>ericsson</comp-name>
+    <install-path>ERICcredentialmanagercli</install-path>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>${project.parent.artifactId}-jar</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources/version</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    
+    <plugins>
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>rpm-maven-plugin</artifactId>
+	<extensions>true</extensions>
+	
+	<executions>
+	  <execution>
+	    <id>generate-rpm</id>
+	    <goals>
+	      <goal>rpm</goal>
+	    </goals>
+	    <phase>prepare-package</phase>
+	  </execution>
+	</executions>
+	
+	<configuration>
+	  <targetOS>linux</targetOS>
+	  <targetVendor>redhat</targetVendor>
+	  <skip>true</skip>
+	  <inherited>true</inherited>
+	  <copyright>2014 Ericsson AB All rights reserved</copyright>
+	  <summary>${stripped.artifactId}</summary>
+	  <packager>${ericsson.rstate}</packager>
+	  <group>ERI-NMS</group>
+	  <vendor>Ericsson AB</vendor>
+	  <url>www.ericsson.com</url>
+          <!-- RHEL 7 -->
+	  <posttransScriptlet>
+            <scriptFile>src/main/scripts/posttrans.sh</scriptFile>
+          </posttransScriptlet>
+	  <!-- defineStatements> <defineStatement>_build_name_fmt %%{ARCH}/%%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm</defineStatement> 
+	  </defineStatements -->
+	  <mappings combine.self="override">
+	    <mapping>
+	      <directory>/${rpm-root}/${comp-name}/${install-path}/lib</directory>
+	      <filemode>775</filemode>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <dependency />
+	    </mapping>
+	    <mapping>
+	      <directory>/${rpm-root}/${comp-name}/${install-path}/conf</directory>
+	      <filemode>775</filemode>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <configuration>false</configuration>
+	      <sources>
+		<source>
+		  <location>src/main/resources/CertificateRequest.xsd</location>
+		</source>
+		<source>
+		  <location>src/main/resources/</location>
+		  <includes>
+		    <include>*.properties*</include>
+		    <include>*.txt</include>
+		    <include>*.xml</include>
+		    <include>credentialmanagerconf.sh</include>
+		  </includes>
+		</source>
+		<source>
+		  <location>target/classes/version.properties</location>
+                  <includes>
+                    <include>version.properties</include>
+		  </includes>
+                </source>
+	      </sources>
+	    </mapping>
+	    <mapping>
+	      <directory>/${rpm-root}/${comp-name}/${install-path}/bin</directory>
+	      <filemode>775</filemode>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <sources>
+		<source>
+		  <location>src/main/scripts/credentialmanager.sh</location>
+		</source>
+		<source>
+		  <location>src/main/scripts/memorychecker.sh</location>
+		</source>
+		<source>
+		  <location>src/main/scripts/credentialmanagercliCrontab.sh</location>
+		</source>
+		<source>
+		  <location>src/main/scripts/enmCertificatesLocal.sh</location>
+		</source>
+	      </sources>
+	    </mapping>
+	    
+	    <mapping>
+	      <directory>/${rpm-root}/${comp-name}/${install-path}</directory>
+	      <filemode>775</filemode>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <sources>
+		<source>
+		  <location>src/main/resources/README.txt</location>
+		</source>
+		<source>
+		  <location>src/main/scripts/preremove.sh</location>
+		</source>
+		<source>
+		  <location>src/main/scripts/postinstall.sh</location>
+		</source>
+	      </sources>
+	    </mapping>
+	    
+	    <mapping>
+	      <directory>/etc/init.d/</directory>
+	      <directoryIncluded>false</directoryIncluded>
+	      <filemode>755</filemode>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <configuration>true</configuration>
+	      <sources>
+		<source>
+		  <destination>enmCertificates</destination>
+		  <location>src/main/scripts/enmCertificates.sh</location>
+		</source>
+	      </sources>
+	    </mapping>
+	    
+	    <mapping>
+              <directory>/usr/lib/systemd/system/</directory>
+	      <directoryIncluded>false</directoryIncluded>
+	      <filemode>644</filemode>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <sources>
+		<source>
+		  <destination>enmCertificates.service</destination>
+		  <location>src/main/scripts/enmCertificates.service</location>
+		</source>
+	      </sources>
+	    </mapping>
+
+	    <mapping>
+	      <directory>/etc/cron.d/</directory>
+	      <directoryIncluded>false</directoryIncluded>
+	      <filemode>755</filemode>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <configuration>false</configuration>
+	      <sources>
+		<source>
+		  <destination>credentialmanagercli</destination>
+		  <location>src/main/scripts/credentialmanagerCrontabSetup.sh</location>
+		</source>
+	      </sources>
+	    </mapping>
+	    <mapping>
+	      <directory>/ericsson/credm/cli/script/pre-start</directory>
+	      <filemode>755</filemode>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	    </mapping>
+
+	    <mapping>
+	      <directory>/etc/rc.d/rc3.d</directory>
+	      <directoryIncluded>false</directoryIncluded>
+	      <configuration>true</configuration>
+	      <sources>
+		<softlinkSource>
+		  <destination>S71enmCertificates</destination>
+		  <location>/etc/init.d/enmCertificates</location>
+		</softlinkSource>
+	      </sources>
+	    </mapping>
+	    
+	    <mapping>
+	      <directory>/etc/logrotate.d</directory>
+	      <directoryIncluded>false</directoryIncluded>
+	      <filemode>644</filemode>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <configuration>true</configuration>
+	      <sources>
+		<source>
+		  <location>src/main/logrotate/CredManagerCliShell</location>
+		</source>
+	      </sources>
+	    </mapping>
+	    
+	    <mapping>
+	      <directory>/usr/lib/ocf/resource.d</directory>
+	      <directoryIncluded>false</directoryIncluded>
+	      <filemode>755</filemode>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <configuration>true</configuration>
+	      <sources>
+		<source>
+		  <location>src/main/scripts/credentialmanagercliRestartVM.sh</location>
+		</source>
+	      </sources>
+	    </mapping>
+	    
+	    <mapping>
+	      <directory>/ericsson/credm/data/xmlfiles/template</directory>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <configuration>true</configuration>
+	      <directoryIncluded>false</directoryIncluded>
+	      <sources>
+		<source>
+		  <location>src/main/resources/CredM-JBoss-CertRequest.xml</location>
+		</source>
+	      </sources>
+		  
+	    </mapping>
+		
+	    <mapping>
+	      <directory>/ericsson/credm/cli/data</directory>
+	      <username>root</username>
+	      <groupname>root</groupname>
+	      <configuration>true</configuration>
+	      <directoryIncluded>false</directoryIncluded>
+	      <sources>
+		<source>
+		  <location>src/main/resources/CredM-CLI-CertRequest.xml</location>
+		</source>
+	      </sources>
+	      
+	    </mapping>
+	    
+	    <mapping>
+	      <directory>/var/log/credentialmanager</directory>
+	      <configuration>false</configuration>
+	    </mapping>
+	    <mapping>
+	      <directory>/var/log/credentialmanager/taf</directory>
+	      <configuration>false</configuration>
+	    </mapping>
+	    
+	    <mapping>
+	      <directory>/var/log/enmcertificates</directory>
+	      <configuration>false</configuration>
+	    </mapping>
+	    
+	    <mapping>
+	      <directory>/var/log/enmcertificates/oldlogs</directory>
+	      <configuration>false</configuration>
+	    </mapping>
+	    
+	    <mapping>
+	      <directory>/ericsson/credm/data/certs</directory>
+	      <configuration>false</configuration>
+	    </mapping>
+	    
+	    <mapping>
+	      <directory>/ericsson/credm/cli/data/certs</directory>
+	      <configuration>false</configuration>
+	    </mapping>
+	    <mapping>
+	      <directory>/${rpm-root}/${comp-name}/${install-path}/rpmscripts</directory>
+	      <filemode>644</filemode>
+                <username>root</username>
+                <groupname>root</groupname>
+		<sources>
+		  <source>
+		  <location>src/main/scripts/preinstall.sh</location>
+		  </source>
+		<source>
+		  <location>src/main/scripts/postinstall.sh</location>
+		</source>
+		<source>
+		  <location>src/main/scripts/preremove.sh</location>
+		</source>
+		<source>
+		  <location>src/main/scripts/postremove.sh</location>
+		</source>
+
+	      </sources>
+	    </mapping>
+	  </mappings>	    
+
+	  <preinstallScriptlet combine.self="override">
+	    <scriptFile>src/main/scripts/preinstall.sh</scriptFile>
+	    <fileEncoding>utf-8</fileEncoding>
+	  </preinstallScriptlet>
+	  <postinstallScriptlet combine.self="override">
+	    <scriptFile>src/main/scripts/postinstall.sh</scriptFile>
+	    <fileEncoding>utf-8</fileEncoding>
+	  </postinstallScriptlet>
+
+	  <preremoveScriptlet combine.self="override"> 
+	    <scriptFile>src/main/scripts/preremove.sh</scriptFile>
+	    <fileEncoding>utf-8</fileEncoding>
+	  </preremoveScriptlet>
+	  <postremoveScriptlet combine.self="override"> 
+	    <scriptFile>src/main/scripts/postremove.sh</scriptFile>
+	    <fileEncoding>utf-8</fileEncoding>
+	  </postremoveScriptlet>
+
+	</configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+

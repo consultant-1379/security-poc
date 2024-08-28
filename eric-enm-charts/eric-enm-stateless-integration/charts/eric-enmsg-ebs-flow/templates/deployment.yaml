@@ -1,0 +1,17 @@
+{{- template "eric-enm-common-helmchart-library.deployment" (list . "eric-enmsg-ebs-flow.deployment") -}}
+{{- define "eric-enmsg-ebs-flow.deployment" -}}
+spec:
+  replicas: {{ template "eric-enmsg-ebs-flow.replicas" . }}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: {{ template "eric-enmsg-ebs-flow.maxunavailable" . }}
+  template:
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: {{ template "eric-enmsg-ebs-flow.maxunavailable" . }}
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app: {{ .Values.service.name }}
+{{- end -}}

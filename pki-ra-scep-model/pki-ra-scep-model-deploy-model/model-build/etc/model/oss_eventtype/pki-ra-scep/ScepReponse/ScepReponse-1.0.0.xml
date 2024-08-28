@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+*******************************************************************************
+* COPYRIGHT Ericsson LMI 2022. All rights reserved.
+*
+* No part of this document may be reproduced in any form without the
+* written permission of the copyright owner.The contents of this document
+* are subject to revision without notice due to continued progress in
+* methodology, design and manufacturing. Ericsson shall have no liability
+* for any error or damage of any kind resulting from the use of this document.
+*
+*******************************************************************************
+
+
+--><ns8:EventTypeDefinition xmlns:ns1="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:ns8="urn:com:ericsson:schema:xml:oss:oss_eventtype" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" defaultChannelUrn="//global/ClusteredScepResponseChannel" eventPersistence="NON_PERSISTENT" ns1:lifeCycle="CURRENT" ns1:name="ScepReponse" ns1:ns="pki-ra-scep" ns1:version="1.0.0" priority="4" timeToLive="0">
+  <ns1:modelCreationInfo author="egiator" creationDate="Tue Jun 07 16:07:59 CEST 2022">
+    <ns1:designedModel className="com.ericsson.oss.itpf.security.pkira.scep.event.ScepResponseMessage" componentId="pki-ra-scep-model-api"/>
+  </ns1:modelCreationInfo>
+  <ns1:desc>Scep Response Message</ns1:desc>
+  <ns8:attribute filterable="false" immutable="false" key="false" mandatory="true" ns1:lifeCycle="CURRENT" ns1:name="transactionId" sensitive="false">
+    <ns1:desc>transactionId to be send over the Response Channel</ns1:desc>
+    <ns1:type xsi:type="ns1:stringType"/>
+  </ns8:attribute>
+  <ns8:attribute filterable="false" immutable="false" key="false" mandatory="true" ns1:lifeCycle="CURRENT" ns1:name="status" sensitive="false">
+    <ns1:desc>status to be send over the Response Channel</ns1:desc>
+    <ns1:type xsi:type="ns1:integerType">
+      <ns1:notNullConstraint/>
+    </ns1:type>
+  </ns8:attribute>
+  <ns8:attribute filterable="false" immutable="false" key="false" mandatory="false" ns1:lifeCycle="CURRENT" ns1:name="certificate" sensitive="false">
+    <ns1:desc>certificate to be send over the Response Channel</ns1:desc>
+    <ns1:type xsi:type="ns1:listType">
+      <ns1:collectionValuesType xsi:type="ns1:byteType">
+        <ns1:notNullConstraint/>
+      </ns1:collectionValuesType>
+    </ns1:type>
+  </ns8:attribute>
+  <ns8:attribute filterable="false" immutable="false" key="false" mandatory="false" ns1:lifeCycle="CURRENT" ns1:name="failureInfo" sensitive="false">
+    <ns1:desc>failureInfo to be send over the Response Channel</ns1:desc>
+    <ns1:type xsi:type="ns1:stringType"/>
+  </ns8:attribute>
+</ns8:EventTypeDefinition>

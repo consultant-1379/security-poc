@@ -1,0 +1,28 @@
+# Change IO subsystem configuration : threads and keepalive
+echo "update io subsystem"
+echo "add ajp executor"
+/subsystem=io/worker=ajp-executor:add()
+/subsystem=io/worker=ajp-executor:write-attribute(name="io-threads",value="30")
+/subsystem=io/worker=ajp-executor:write-attribute(name="task-keepalive", value="10000")
+/subsystem=io/worker=ajp-executor:write-attribute(name="task-max-threads",value="30")
+/subsystem=io/worker=ajp-executor:write-attribute(name="stack-size",value="0")
+
+echo "add http executor"
+/subsystem=io/worker=http-executor:add()
+/subsystem=io/worker=http-executor:write-attribute(name="io-threads",value="15")
+/subsystem=io/worker=http-executor:write-attribute(name="task-keepalive", value="15000")
+/subsystem=io/worker=http-executor:write-attribute(name="task-max-threads",value="15")
+/subsystem=io/worker=http-executor:write-attribute(name="stack-size",value="0")
+
+/socket-binding-group=standard-sockets/socket-binding=scep:add(port=8090)
+/subsystem=undertow/server=default-server/http-listener=scep:add(socket-binding=scep)
+/socket-binding-group=standard-sockets/socket-binding=cmp:add(port=8091)
+/subsystem=undertow/server=default-server/http-listener=cmp:add(socket-binding=cmp)
+/socket-binding-group=standard-sockets/socket-binding=cdps:add(port=8092)
+/subsystem=undertow/server=default-server/http-listener=cdps:add(socket-binding=cdps)
+/socket-binding-group=standard-sockets/socket-binding=tdps:add(port=8093)
+/subsystem=undertow/server=default-server/http-listener=tdps:add(socket-binding=tdps)
+/subsystem=undertow/server=default-server/http-listener=cmp:write-attribute(name=no-request-timeout, value=75000)
+/subsystem=undertow/server=default-server/http-listener=scep:write-attribute(name=no-request-timeout, value=75000)
+/subsystem=undertow/configuration=filter/response-header=xFrameOptions:add(header-name=X-Frame-Options,header-value="SAMEORIGIN")
+/subsystem=undertow/server=default-server/host=default-host/filter-ref=xFrameOptions:add

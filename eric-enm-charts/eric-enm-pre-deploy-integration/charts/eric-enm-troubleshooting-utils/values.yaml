@@ -1,0 +1,110 @@
+## eric-enm-troubleshooting-utils image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  ingress:
+    enmHost:
+  enmProperties:
+    postgres_service:
+  persistentVolumeClaim:
+    storageClass:
+  timezone:
+productInfo:
+# R-State of the product. R State should match helm chart version (3.1.0 -> R2A)
+# To automate it when packaging the helm chart rstate can be generated
+# and below value replaced with correct R-State
+productRevision: R28K
+productionDate: 2022-06-21T12:41:00Z
+revision: 1.27.9-1
+productNumber: CXC Placeholder
+labels: {}
+# Number of replicas(pods) to deploy
+replicas-eric-enm-troubleshooting-utils: 1
+images:
+  eric-enm-troubleshooting-utils:
+    name: eric-enm-troubleshooting-utils
+    tag: 1.27.9-1
+imageCredentials:
+  pullSecret:
+  repoPath: proj-enm
+  pullPolicy: IfNotPresent
+  registry:
+    url:
+lifecycle:
+  handler:
+    enabled: true
+eric-enm-common-helmchart-library:
+  enabled: true
+service:
+  name: troubleshooting-utils
+  annotations: {}
+  labels: {}
+# Ingress
+ingress:
+  enabled: false
+## Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 100Mi
+    cpu: 100m
+  limits:
+    enabled: true
+    memory: 1000Mi
+    cpu: 1000m
+# ENM specific init container(ENM image)
+enmInitContainerEnv:
+  enabled: false
+# startupProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 5
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+# Extra Annotations to be added to pod
+podAnnotations: {}
+## Tolerations for pod assignment
+tolerations:
+- key: node.kubernetes.io/not-ready
+  operator: Exists
+  effect: NoExecute
+  tolerationSeconds: 300
+- key: node.kubernetes.io/unreachable
+  operator: Exists
+  effect: NoExecute
+  tolerationSeconds: 300
+## Affinity for pod assignment
+affinity: {}
+# Constrain which nodes your pod is eligible to be scheduled on
+nodeAffinity: {}
+priorityClassName: ""
+## Node selector
+nodeSelector: {}
+clusterRole: true
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0

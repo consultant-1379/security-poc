@@ -1,0 +1,17 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "pfm" (* hide = "true" *) WS ( PFM_MANAGE | PFM_RETRIEVE )
+
+PFM_MANAGE ::= ( PFM_CREATE | PFM_CREATEBULK | PFM_UPDATE | PFM_DELETE ) PFM_INPUT_FILE
+PFM_RETRIEVE ::= ( PFM_LIST_PROFILES  PFM_PROFILE_TYPE  [ PFM_PROFILE_NAME ] | PFM_DELETE PFM_SELECTION  | PFM_VIEW PFM_SELECTION |  PFM_EXPORT  PFM_PROFILE_TYPE  [ PFM_PROFILE_NAME ]  [PFM_PROFILE_ALLFIELDS] )
+PFM_SELECTION ::= PFM_PROFILE_TYPE PFM_PROFILE_NAME
+
+PFM_CREATEBULK ::= ( "--createbulk" (* slogan = "Create one or more profiles based on the input XML file. Tip: -cb for short" *) | "-cb" (* hide = "true" *) )
+PFM_EXPORT ::= ( "--export" (* slogan = "Export existing profiles based on profile criteria. Tip: -ex for short" *) | "-ex" (* hide = "true" *) )
+PFM_CREATE ::= ( "--create" (* slogan = "Create a Certificate or Entity Profile using the Input Profile XML. Tip: -c for short" *) | "-c" (* hide = "true" *) )
+PFM_LIST_PROFILES ::= ( "--list" (* slogan = "List the profiles present in the system based on profile criteria. Tip: -l for short" *) | "-l" (* hide = "true" *) )
+PFM_VIEW ::= ( "--view" (* slogan = "View a list of all the fields of the Profile based on the profile criteria. Tip: -v for short" *) | "-v" (* hide = "true" *) )
+PFM_UPDATE ::= ( "--update" (* slogan = "Update the Profile based on the provided Input XML file. Tip: -u for short" *) | "-u" (* hide = "true" *) )
+PFM_DELETE ::= ( "--delete" (* slogan = "Delete a profile based on an XML file or profile criteria. Tip: -d for short" *) | "-d" (* hide = "true" *) )
+PFM_INPUT_FILE ::= WS ( "-xf" (* hide = "true" *) | "--xmlfile" (* slogan = "Include the input XML file. Tip: -xf for short" *) ) WS "file:" <input_xml_filename> (* inputType = "fileName" slogan = "Specify the name of the input XML file" *)
+PFM_PROFILE_TYPE ::= WS ( "--profiletype" (* slogan = "Base the selection on a profile type. Tip: -type for short" *) | "-type" (* hide = "true" *) ) WS ( "certificate" (* slogan = "Set profile type as Certificate" *) | "entity" (* slogan = "Set profile type as Entity" *) | "trust" (* slogan = "Set profile type as Trust" *) )
+PFM_PROFILE_NAME ::= WS ( "--name" (* slogan = "Base the selection on a profile name. Tip: -n for short" *) | "-n" (* hide = "true" *) ) WS <profile_name> (* slogan = "Specify the profile name" *)
+PFM_PROFILE_ALLFIELDS ::= WS ( "-af" (* hide = "true" *) | "--allfields" (* slogan = "This option is to enable all the fields in xml file. Tip: -af for short" *) )

@@ -1,0 +1,155 @@
+## eric-enmsg-vault-service image version
+
+global:
+  registry:
+    url: armdocker.rnd.ericsson.se
+    pullSecret:
+  ingress:
+    enmHost: ENM_HOST
+  persistentVolumeClaim:
+    storageClass:
+  timezone:
+  enmProperties:
+    COM_INF_LDAP_ADMIN_ACCESS:
+    COM_INF_LDAP_PORT:
+    COM_INF_LDAP_ADMIN_CN:
+    COM_INF_LDAP_ROOT_SUFFIX:
+    LDAP_ADMIN_CN:
+    LDAP_ADMIN_PASSWORD:
+productInfo:
+  # R-State of the product. R State should match helm chart version (3.1.0 -> R2A)
+  # To automate it when packaging the helm chart rstate can be generated
+  # and below value replaced with correct R-State
+  number: CXC Placeholder
+  rstate: R28K
+  productionDate: PRODUCTION_DATE
+  revision: 1.27.9-1
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-vault-service: 1
+images:
+  eric-enmsg-vault-service:
+    name: eric-enmsg-vault-service
+    tag: 1.27.9-1
+  vault3pp:
+    name: eric-enm-vault-3pp
+    tag: 1.27.9-1
+  consulagent:
+    name: eric-enm-kvstore-hc
+    tag: 2.26.0-19
+    args: "['client_mode']"
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s gossiprouter-cache,gossiprouter-eap7,kvstore'
+      ]"
+  enmInitContainer:
+    enabled: true
+    name: eric-enm-vault-service-init
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/wait-vaultdb-restored.sh']"
+  eric-enm-monitoring:
+    enabled: true
+    name: eric-enm-monitoring-eap7
+    tag: 1.27.9-1
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  registry:
+    url:
+    pullSecret:
+## Configure the service
+service:
+  name: vaultserv
+  additionalServiceNames:
+  - vault-service
+  annotations: {}
+  labels: {}
+## Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 1954Mi
+    cpu: 486m
+  limits:
+    enabled: true
+    memory: 1954Mi
+    cpu: 1700m
+  vault3pp:
+    enabled: true
+    requests:
+      cpu: "100m"
+      memory: "244Mi"
+    limits:
+      cpu: "300m"
+      memory: "244Mi"
+  consulagent:
+    enabled: true
+    requests:
+      cpu: "100m"
+      memory: "244Mi"
+    limits:
+      cpu: "300m"
+      memory: "244Mi"
+  monitoring:
+    enabled: true
+    requests:
+      cpu: "100m"
+      memory: "200Mi"
+    limits:
+      cpu: "200m"
+      memory: "300Mi"
+# Persistent volume claim
+persistentVolumeClaim:
+  enabled: false
+# LivenessProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /usr/local/bin/monitor.sh
+  arguments: startup
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 20
+livenessProbe:
+  enabled: true
+  command: /usr/local/bin/monitor.sh
+  arguments: liveness
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /usr/local/bin/monitor.sh
+  arguments: readiness
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+# Extra Annotations to be added to pod
+podAnnotations: {}
+## Tolerations for pod assignment
+tolerations: []
+# Constrain which nodes your pod is eligible to be scheduled on
+nodeAffinity: {}
+priorityClassName: ""
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    partition: 0
+vault3pp:
+  enabled: true
+  logLevel: trace
+consulagent:
+  enabled: true
+## Affinity for pod assignment
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1
+brAgent:
+  restore:
+    configMap:
+      name: backup-restore-configmap
+      restoreStateKey: RESTORE_STATE

@@ -1,0 +1,146 @@
+## eric-enmsg-itservices image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  ericIngress:
+    enabled: true
+  ingress:
+    enmHost:
+  vips:
+    cm_vip_address:
+    itservices_0_vip_address:
+    itservices_1_vip_address:
+  enmProperties:
+    postgres_service: postgres
+  timezone:
+# R-State of the product. R State should match helm chart version (3.1.0 -> R2A)
+# To automate it when packaging the helm chart rstate can be generated
+# and below value replaced with correct R-State
+productNumber: CXC 174 2046
+productRevision: R17K
+labels: {}
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-itservices: 1
+privileged:
+  enabled: false
+  capabilities:
+    add:
+    - NET_ADMIN
+    - SYS_TIME
+images:
+  eric-enmsg-itservices:
+    name: eric-enmsg-itservices
+    tag: 1.16.9-1
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s gossiprouter-cache,gossiprouter-remoting,jms01,postgres,sps'
+      ]"
+  eric-enm-httpd:
+    name: eric-enmsg-itservices-httpd
+    tag: 1.16.9-1
+  eric-enm-monitoring:
+    enabled: true
+    name: eric-enm-monitoring-eap7
+    tag: 1.27.9-1
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  pullSecret:
+  registry:
+    url:
+eric-enm-common-helmchart-library:
+  enabled: true
+service:
+  name: itservices
+  additionalServiceNames:
+  - dhcp-service
+  annotations: {}
+  labels: {}
+statefulset:
+  enabled: false
+# Ingress
+ingress:
+  enabled: false
+ingress_jboss_web_context:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    ingress.kubernetes.io/ssl-passthrough: "true"
+# Service Ports to Expose, read from appconfig/servicePorts.txt
+servicePorts:
+  enabled: true
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+resources:
+  requests:
+    enabled: true
+    memory: 3596Mi
+    cpu:
+  limits:
+    enabled: true
+    memory: 4096Mi
+    cpu:
+    ## Persist data to a persistent volume
+  ## database data Persistent Volume Storage Class
+persistentVolumeClaim:
+  enabled: false
+  storageClass:
+  accessMode: ACCESSMODE
+  size: SIZE
+  mountPath: MOUNTPATH
+  annotations: {}
+# StartupProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 20
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+# Extra Annotations to be added to pod
+podAnnotations: {}
+## Tolerations for pod assignment
+### ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+tolerations: []
+## Affinity for pod assignment
+### ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+# Constrain which nodes your pod is eligible to be scheduled on
+### ref:  https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#node-affinity-beta-feature
+nodeAffinity: {}
+### ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#pod-priority
+priorityClassName: ""
+## Node selector
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+nodeSelector: {}
+#https://kubernetes.io/docs/reference/federation/extensions/v1beta1/definitions/#_v1beta1_deploymentstrategy
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1

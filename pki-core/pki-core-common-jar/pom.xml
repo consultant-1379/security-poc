@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<artifactId>pki-core</artifactId>
+
+		<version>1.0.3-SNAPSHOT</version>
+
+	</parent>
+
+	<artifactId>pki-core-common-jar</artifactId>
+
+	<properties>
+		<sonar.tests>src/test/java</sonar.tests>
+		<consolidated.jacoco.path>${project.basedir}/../target/jacoco.exec</consolidated.jacoco.path>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-certificatemanagement-api</artifactId>
+			<version>${version.pki.core.api}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-entitymanagement-api</artifactId>
+			<version>${version.pki.core.api}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-common-jar</artifactId>
+			<version>${version.pki.common}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-crlmanagement-api</artifactId>
+			<version>${version.pki.core.api}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-common-model</artifactId>
+			<version>${version.pki.common}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>key-access-provider-service-model</artifactId>
+			<version>${version.kaps.api}</version>
+		</dependency>
+	</dependencies>
+</project>
+

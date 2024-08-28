@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+	<sub-deployment name="com.ericsson.oss.itpf.poc.security-pki-ra-cmp-ejb-${project.version}.jar">
+		<exclusions>
+			<module name="org.hibernate" />
+		</exclusions>
+		<dependencies>
+			<module name="org.hibernate" />
+		</dependencies>
+	</sub-deployment>
+  
+    <sub-deployment name="com.ericsson.oss.itpf.poc.security-pki-ra-cmp-local-service-ejb-${project.version}.jar">
+        <exclusions>
+            <module name="org.hibernate" />
+        </exclusions>
+        <dependencies>
+            <module name="org.hibernate" />
+        </dependencies>
+    </sub-deployment>
+	<deployment>
+		<dependencies>
+			<module name="org.bouncycastle" slot="main" export="true" />
+		</dependencies>
+	</deployment>
+</jboss-deployment-structure>

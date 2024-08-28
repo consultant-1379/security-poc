@@ -1,0 +1,12 @@
+- name: ldaps-communication
+  port: 10389
+  targetPort: 10389
+- name: ldaps-secure-communication
+  port: 10636
+  targetPort: 10636
+- name: admin-port
+  port: 4445
+  targetPort: 4445
+- name: metrics
+  port: 9600
+  targetPort: 9600

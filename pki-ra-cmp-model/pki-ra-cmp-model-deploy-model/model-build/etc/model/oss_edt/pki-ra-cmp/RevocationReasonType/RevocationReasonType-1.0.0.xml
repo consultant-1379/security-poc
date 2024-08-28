@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+*******************************************************************************
+* COPYRIGHT Ericsson LMI 2022. All rights reserved.
+*
+* No part of this document may be reproduced in any form without the
+* written permission of the copyright owner.The contents of this document
+* are subject to revision without notice due to continued progress in
+* methodology, design and manufacturing. Ericsson shall have no liability
+* for any error or damage of any kind resulting from the use of this document.
+*
+*******************************************************************************
+
+
+--><ns2:EnumDataTypeDefinition xmlns:ns1="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:ns2="urn:com:ericsson:schema:xml:oss:oss_edt" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ns1:lifeCycle="CURRENT" ns1:name="RevocationReasonType" ns1:ns="pki-ra-cmp" ns1:version="1.0.0">
+  <ns1:modelCreationInfo author="egiator" creationDate="Tue Jun 07 16:00:44 CEST 2022">
+    <ns1:designedModel className="com.ericsson.oss.itpf.security.pki.ra.cmp.revocation.model.edt.RevocationReasonType" componentId="pki-ra-cmp-model-jar"/>
+  </ns1:modelCreationInfo>
+  <ns1:desc>This Model defines enum for RevocationReasonType</ns1:desc>
+  <ns2:member name="AA_COMPROMISE" ns1:lifeCycle="CURRENT" value="10">
+    <ns2:desc> AA COMPROMISE</ns2:desc>
+  </ns2:member>
+  <ns2:member name="PRIVILEGE_WITHDRAWN" ns1:lifeCycle="CURRENT" value="9">
+    <ns2:desc>PRIVILEGE WITHDRAWN</ns2:desc>
+  </ns2:member>
+  <ns2:member name="REMOVE_FROM_CRL" ns1:lifeCycle="CURRENT" value="8">
+    <ns2:desc>REMOVE FROM CRL</ns2:desc>
+  </ns2:member>
+  <ns2:member name="CERTIFICATE_HOLD" ns1:lifeCycle="CURRENT" value="6">
+    <ns2:desc>CERTIFICATE HOLD</ns2:desc>
+  </ns2:member>
+  <ns2:member name="CESSATION_OF_OPERATION" ns1:lifeCycle="CURRENT" value="5">
+    <ns2:desc>CESSATION OF OPERATION</ns2:desc>
+  </ns2:member>
+  <ns2:member name="SUPERSEDED" ns1:lifeCycle="CURRENT" value="4">
+    <ns2:desc>SUPERSEDED</ns2:desc>
+  </ns2:member>
+  <ns2:member name="AFFILIATION_CHANGED" ns1:lifeCycle="CURRENT" value="3">
+    <ns2:desc>AFFILIATION CHANGED</ns2:desc>
+  </ns2:member>
+  <ns2:member name="CA_COMPROMISE" ns1:lifeCycle="CURRENT" value="2">
+    <ns2:desc>CA COMPROMISE</ns2:desc>
+  </ns2:member>
+  <ns2:member name="KEY_COMPROMISE" ns1:lifeCycle="CURRENT" value="1">
+    <ns2:desc>KEY COMPROMISE</ns2:desc>
+  </ns2:member>
+  <ns2:member name="UNSPECIFIED" ns1:lifeCycle="CURRENT" value="0">
+    <ns2:desc>UNSPECIFIED</ns2:desc>
+  </ns2:member>
+</ns2:EnumDataTypeDefinition>

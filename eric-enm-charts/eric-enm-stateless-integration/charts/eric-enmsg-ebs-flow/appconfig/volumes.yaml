@@ -1,0 +1,15 @@
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: pm1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pm2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks

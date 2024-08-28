@@ -1,0 +1,1 @@
+"batch" (* slogan = "Execute a command batch file" *) WS "execute" WS "file:" <file_name> (* inputType = "fileName" slogan = "Enter the name of the file that was dropped in CLI workspace" promptSlogan = "Please type or copy the name of the file" *)

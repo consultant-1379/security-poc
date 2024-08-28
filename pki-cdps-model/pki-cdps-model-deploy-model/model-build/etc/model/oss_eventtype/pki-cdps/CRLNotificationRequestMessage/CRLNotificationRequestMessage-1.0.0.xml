@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+*******************************************************************************
+* COPYRIGHT Ericsson LMI 2022. All rights reserved.
+*
+* No part of this document may be reproduced in any form without the
+* written permission of the copyright owner.The contents of this document
+* are subject to revision without notice due to continued progress in
+* methodology, design and manufacturing. Ericsson shall have no liability
+* for any error or damage of any kind resulting from the use of this document.
+*
+*******************************************************************************
+
+
+--><EventTypeDefinition xmlns="urn:com:ericsson:schema:xml:oss:oss_eventtype" xmlns:ns2="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" defaultChannelUrn="//global/ClusteredCRLNotificationChannel" eventPersistence="NON_PERSISTENT" ns2:lifeCycle="CURRENT" ns2:name="CRLNotificationRequestMessage" ns2:ns="pki-cdps" ns2:version="1.0.0" priority="4" timeToLive="0">
+  <ns2:modelCreationInfo author="egiator" creationDate="Tue Jun 07 16:21:58 CEST 2022">
+    <ns2:designedModel className="com.ericsson.oss.itpf.security.pki.cdps.event.CRLNotificationRequestMessage" componentId="pki-cdps-model-api"/>
+  </ns2:modelCreationInfo>
+  <ns2:desc>CDPS sends an event to PKI Manager to send CRL Notification for publish and unpublish</ns2:desc>
+</EventTypeDefinition>

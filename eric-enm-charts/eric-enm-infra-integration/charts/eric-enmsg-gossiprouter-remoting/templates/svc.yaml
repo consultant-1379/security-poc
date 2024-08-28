@@ -1,0 +1,7 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg-gossiprouterremoting.service") -}}
+{{- define "eric-enmsg-gossiprouterremoting.service" -}}
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9600"
+{{- end -}}

@@ -1,0 +1,9 @@
+NAME=eric-enm-sso-core-token-service
+STS=true
+WAIT=true
+WAIT_LIST=gossiprouter-cache,gossiprouter-remoting,models,ldap-local,jms01,sps
+REQUESTS=true
+REQUESTS_LIST=7Gi
+LIMITS=true
+LIMITS_LIST=7Gi
+SVC=cts

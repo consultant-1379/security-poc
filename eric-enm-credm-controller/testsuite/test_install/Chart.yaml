@@ -1,0 +1,18 @@
+apiVersion: v2
+appVersion: "1.0"
+dependencies:
+- condition: simplesps.enabled
+  name: simplesps
+- condition: simpleservice.enabled
+  name: simpleservice
+- condition: eric-enm-credm-controller.enabled
+  name: eric-enm-credm-controller
+- condition: otherservice.enabled
+  name: otherservice
+- condition: moreservice1.enabled
+  name: moreservice1
+- condition: mystatefulset.enabled
+  name: mystatefulset
+description: A Helm chart for eric-enm-test
+name: eric-enm-test
+version: 1.10.0-1

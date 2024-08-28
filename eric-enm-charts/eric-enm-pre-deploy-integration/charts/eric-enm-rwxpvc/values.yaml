@@ -1,0 +1,129 @@
+## eric-enm-rwxpvc image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  replicas-eric-enm-rwxpvc: 1
+  ingress:
+    enmhost:
+  timezone:
+  security:
+    tls:
+      enabled: false
+  rwx:
+    storageClass: nfs
+    amosSize: 1Gi
+    batchSize: 4Gi
+    configmgtSize: 5Gi
+    cronSize: 1Gi
+    customSize: 1Gi
+    dataSize: 20Gi
+    dlmsSize: 5Gi
+    hcdumpsSize: 10Gi
+    homeSize: 20Gi
+    mdtSize: 10Gi
+    netlogSize: 2Gi
+    norollbackSize: 5Gi
+    pm1Size: 5Gi
+    pm2Size: 5Gi
+    pmlinksSize: 5Gi
+    pmulSize: 1Gi
+    sentinelSize: 1Gi
+    sdnSize: 1Gi
+    smrsSize: 5Gi
+    tfdSize: 10Gi
+    upgindSize: 4Gi
+    trutilsSize: 1Gi
+    jmsSize: 1Gi
+    electSize: 15Gi
+    georepSize: 5Gi
+images:
+  brAgent:
+    name: backup-restore-agent
+    tag: 2.0.6-2
+    entrypoint: "/opt/ericsson/backup-restore-agent/bragent"
+
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  pullSecret:
+  registry:
+    url:
+    pullSecret:
+  logshipper:
+    registry:
+      url:
+      imagePullPolicy:
+    repoPath: proj-adp-log-released
+
+productRevision: R5A
+productionDate: 2022-05-20T05:16:55Z
+revision: 1.4.0-46
+productNumber: "CXP 765 4321"
+
+labels: {}
+
+resources:
+  brAgent:
+    requests:
+      cpu: "100m"
+      memory: "64Mi"
+      ephemeral-storage: "100Mi"
+    limits:
+      cpu: "4"
+      memory: "512Mi"
+      ephemeral-storage: "400Mi"
+  logshipper:
+    limits:
+      memory: "100Mi"
+      cpu: "100m"
+      ephemeral-storage: "200Mi"
+    requests:
+      memory: "50Mi"
+      cpu: "50m"
+      ephemeral-storage: "150Mi"
+
+service:
+  name: rwxpvc
+  annotations: {}
+  labels: {}
+
+log:
+  # Supported values "stdout" / "file"
+  # 'stdout' outputs agent logs to only stdout
+  # 'file' outputs agent logs to both stdout and file
+  output: "file"
+  logshipper:
+    level: "info"
+
+logshipper:
+  storagePath: "/logs"
+  harvester:
+    logData:
+      - subPaths:
+          - "eric-enm-rwxpvc-bragent.log"
+
+brAgent:
+  enabled: false
+  replicas_rwxpvc_bragent: 1
+  broServiceName: eric-ctrl-bro
+
+  # List of backup scopes/types for brAgent
+  backupTypeList:
+
+  # Selective backup configmap name
+  backupDataModelConfig:
+
+  # Number of tar workers jobs to execute in paralell
+  workers: 3
+
+# Default paths if selective backup configmap not defined
+defaultPaths:
+  amos: true
+  batch: true
+  config_mgt: true
+  data: true
+  smrs: true
+  cron: true
+  home: true

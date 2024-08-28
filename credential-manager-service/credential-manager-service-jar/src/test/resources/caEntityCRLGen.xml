@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PKIEntities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="EntitiesSchema.xsd">
+	<CA-Entities>
+
+
+		<!-- Same CA in caEntities.xml with CRLGenerationInfo to trigger update code section -->
+		<CAEntity Name="ENM_PKI_CRLGenINFOTest_CA">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>RootCA</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			
+			<SubjectAltNameValues>
+				
+				<SubjectAltNameValue>
+						<Type>IP_ADDRESS</Type>
+						<Value xsi:type="SubjectAltNameString">
+							<StringValue>1.1.1.2</StringValue>
+						</Value>
+				</SubjectAltNameValue>
+			
+			</SubjectAltNameValues>
+			
+			<EntityProfileName>entityProfile</EntityProfileName>
+			
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+			<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+			<RootCA>true</RootCA>
+				
+			<CACRL>
+				<PublishCRLToCDPS>true</PublishCRLToCDPS>
+			</CACRL>
+		</CAEntity>
+
+	</CA-Entities>
+</PKIEntities>

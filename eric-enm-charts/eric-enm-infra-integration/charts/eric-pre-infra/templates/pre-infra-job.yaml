@@ -1,0 +1,151 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.job.name }}
+  labels:
+    app: {{ .Values.job.name }}
+    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: "{{ .Values.job.name }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-pre-infra.chart" . }}
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeded
+{{- include "eric-pre-infra.product-info" . | indent 4 }}
+spec:
+  ttlSecondsAfterFinished: {{ .Values.job.ttl }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.job.name }}
+        app.kubernetes.io/name: "{{ .Values.job.name }}"
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+        app.kubernetes.io/version: {{ template "eric-pre-infra.chart" . }}
+{{- with .Values.podAnnotations }}
+      annotations:
+{{- include "eric-pre-infra.product-info" . | indent 8 }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+    spec:
+      restartPolicy: Never
+{{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+{{- end }}
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+      nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.tolerations .Values.global.tolerations }}
+      tolerations:
+{{- if .Values.tolerations }}
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.global.tolerations }}
+{{ toYaml .Values.global.tolerations | indent 8 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.extraInitContainers .Values.images.enmInitContainer.enabled }}
+      initContainers:
+{{- if .Values.images.waitInitContainer.enabled }}
+      - name: {{ .Values.job.name }}-wait
+        image: {{ template "eric-pre-infra.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "waitInitContainer" "name" }}:{{ index .Values "images" "waitInitContainer" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+        command: {{ index .Values "images" "waitInitContainer" "command" }}
+        env:
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+{{- if .Values.images.waitInitContainer.env }}
+{{ toYaml .Values.images.waitInitContainer.env | indent 10 }}
+{{- end }}
+{{- end }}
+{{- if .Values.images.enmInitContainer.enabled }}
+      - name: {{ .Values.job.name }}-enm
+        image: {{ template "eric-pre-infra.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "enmInitContainer" "name" }}:{{ index .Values "images" "enmInitContainer" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+        command: {{ index .Values "images" "enmInitContainer" "command" }}
+        env:
+{{ toYaml .Values.images.enmInitContainer.env | indent 10 }}
+{{- end }}
+{{- if .Values.extraInitContainers }}
+{{ toYaml .Values.extraInitContainers | indent 6 }}
+{{- end }}
+{{- end }}
+      containers:
+      - name: {{ .Values.job.name }}
+        image: {{ template "eric-pre-infra.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "eric-pre-infra" "name" }}:{{ index .Values "images" "eric-pre-infra" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+        env:
+          - name: TZ
+            value: {{ .Values.global.timezone }}
+{{- if index .Values "images" "eric-pre-infra" "command" }}
+        command: {{ index .Values "images" "eric-pre-infra" "command" }}
+{{- end }}
+{{- if  .Values.privileged.enabled }}
+        securityContext:
+          privileged: true
+{{- end }}
+{{- if or .Values.resources.requests.enabled .Values.resources.limits.enabled }}
+        resources:
+{{- if  .Values.resources.requests.enabled }}
+          requests:
+{{- if  .Values.resources.requests.memory }}
+            memory: {{ .Values.resources.requests.memory | quote }}
+{{- end }}
+{{- if  .Values.resources.requests.cpu }}
+            cpu: {{ .Values.resources.requests.cpu | quote }}
+{{- end }}
+{{- end }}
+{{- if  .Values.resources.limits.enabled }}
+          limits:
+{{- if  .Values.resources.limits.memory }}
+            memory: {{ .Values.resources.limits.memory | quote }}
+{{- end }}
+{{- if  .Values.resources.limits.cpu }}
+            cpu: {{ .Values.resources.limits.cpu | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if .Values.extraEnv }}
+{{ toYaml .Values.extraEnv | indent 10 }}
+{{- end }}
+{{- if .Values.extraPorts.enabled }}
+        ports:
+{{ .Files.Get "appconfig/containerPorts.txt" | indent 10 }}
+{{- end }}
+{{- if or .Values.configMaps.enabled .Values.extraVolumeMounts.enabled }}
+        volumeMounts:
+{{- end }}
+{{- if .Values.configMaps.enabled }}
+        - name: configurations
+          mountPath: {{ .Values.configMaps.mountPath }}
+{{- end }}
+{{- if .Values.extraVolumeMounts.enabled }}
+{{ .Files.Get "appconfig/volumeMounts.yaml" | indent 8 }}
+{{- end }}
+{{- if .Values.sidecarContainers.enabled }}
+{{ $root := .}}
+{{ range $path, $bytes :=  .Files.Glob  "appconfig/sidecars/*.yaml" }}
+{{ tpl ($root.Files.Get $path) $root | indent 6 }}
+{{ end }}
+{{- end }}
+{{- if include "eric-pre-infra.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-pre-infra.pullSecrets" . }}
+{{- end }}
+      volumes:
+{{- if .Values.configMaps.enabled }}
+      - name: configurations
+        configMap:
+          name: {{ .Values.configMaps.name }}
+{{- end }}
+{{- if .Values.extraVolumes.enabled }}
+{{ .Files.Get "appconfig/volumes.yaml" | indent 6 }}
+{{- end }}

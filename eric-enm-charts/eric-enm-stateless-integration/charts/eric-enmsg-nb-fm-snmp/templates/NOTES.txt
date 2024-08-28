@@ -1,0 +1,6 @@
+This is eric-enmsg-nb-fm-snmp Helm Installation!
+Your chart has been successfully released.
+
+To check it's state, run:
+
+  helm status {{.Release.Name}}

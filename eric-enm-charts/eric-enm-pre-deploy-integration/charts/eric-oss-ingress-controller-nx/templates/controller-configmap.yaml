@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "eric-oss-ingress-controller-nx.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "eric-oss-ingress-controller-nx.name" . }}
+    app.kubernetes.io/version: {{ include "eric-oss-ingress-controller-nx.version" . }}
+    chart: {{ template "eric-oss-ingress-controller-nx.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: controller
+{{- include "eric-oss-ingress-controller-nx.config-labels" .| indent 4 }}
+  annotations:
+{{- include "eric-oss-ingress-controller-nx.product-info" . | indent 4 }}
+{{- include "eric-oss-ingress-controller-nx.config-annotations" .| indent 4 }}
+data:
+  use-forwarded-headers: "true"
+  proxy-connect-timeout: {{ .Values.config.proxyconnecttimeout | quote }}
+  keepalive-timeout: {{ .Values.config.keepalivetimeout | quote }}
+  proxy-body-size: {{ .Values.config.proxybodysize | quote }}
+  worker-processes: {{ .Values.config.workerprocesses | quote }}
+  use-proxy-protocol: "true"
+  enable-underscores-in-headers: "true"
+  use-http2: "false"
+  use-gzip: "false"
+  {{- range $key, $value := .Values.controller.extraConfig }}
+    {{ $key | nindent 2 }}: {{ $value | quote }}
+  {{- end }}

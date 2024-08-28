@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.service.name }}-preinstall
+  annotations:
+    "helm.sh/hook": pre-install 
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 1
+  template:
+    spec:
+{{- if  .Values.imageCredentials.registry.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.imageCredentials.registry.pullSecret | quote}}
+{{- else if .Values.global.registry.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.global.registry.pullSecret | quote }}
+{{- end }}
+      restartPolicy: Never
+      containers:
+      - name: {{.Values.service.name}}-pre-install
+        image: {{ .Values.global.registry.url }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "eric-enmsg-sps-service-hook" "name" }}:{{ index .Values "images" "eric-enmsg-sps-service-hook" "tag" }}
+        imagePullPolicy: Always
+        command: ["/bin/sh", "-c", "/bin/rm -f /ericsson/tor/data/credm/hosts/*"]
+        volumeMounts:
+        - name: data
+          mountPath: /ericsson/tor/data
+
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: eric-enm-rwxpvc-data
+
+

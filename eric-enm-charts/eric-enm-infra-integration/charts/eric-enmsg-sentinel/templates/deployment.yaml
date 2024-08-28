@@ -1,0 +1,16 @@
+{{- template "eric-enm-common-helmchart-library.deployment" (list . "eric-enmsg-sentinel.deployment") -}}
+{{- define "eric-enmsg-sentinel.deployment" -}}
+spec:
+  template:
+    metadata:
+      labels:
+{{- if .Values.brAgent.enabled }}
+        adpbrlabelkey: {{ .Values.service.name }}-bragent
+      annotations:
+        backupType: {{- template "{{.Chart.Name}}.backupTypes" . }}
+{{- end }}
+    spec:
+{{- if .Values.global.sentinelHostname }}
+      hostname: "{{ .Values.global.sentinelHostname }}"
+{{- end }}
+{{- end -}}

@@ -1,0 +1,27 @@
+{{- if .Values.rbac.create -}}
+  {{- if .Values.rbac.scope }}
+  {{- if eq .Values.rbac.scope "namespace" }}
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: "{{ template "eric-net-ingress-l4.fullname" . }}"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "eric-net-ingress-l4.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-net-ingress-l4.product-info" . | nindent 4 }}
+rules:
+  - apiGroups: ["routing.ericingress.ericsson.com"]
+    resources: ["ericingresses"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+  - apiGroups: ["routing.ericingress.ericsson.com"]
+    resources: ["ericingresses/status"]
+    verbs: ["get", "update", "patch"]
+
+  - apiGroups: [""]
+    resources: ["endpoints", "services", "pods"]
+    verbs: ["get", "list", "watch", "update", "patch"]
+  {{- end -}}
+  {{- end -}}
+{{- end -}}

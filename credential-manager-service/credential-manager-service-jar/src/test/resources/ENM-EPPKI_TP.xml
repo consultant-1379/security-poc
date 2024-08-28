@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+<Trust-Profiles>
+
+	<TrustProfile Name="IPSEC NE  TP" >
+        <InternalCA>NE External CA</InternalCA>
+        <ExternalCA>VC_Root_CA_A1</ExternalCA>		
+	</TrustProfile>	
+			
+</Trust-Profiles>	
+</Profiles>

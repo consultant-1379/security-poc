@@ -1,0 +1,14 @@
+- backend:
+    service:
+      name: itservices
+      port:
+        number: 443
+  path: /dhcp
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: itservices
+      port:
+        number: 443
+  path: /ntp-service
+  pathType: ImplementationSpecific

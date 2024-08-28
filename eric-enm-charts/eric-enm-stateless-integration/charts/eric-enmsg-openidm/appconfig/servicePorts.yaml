@@ -1,0 +1,12 @@
+- name: http
+  port: 8085
+  targetPort: 8085
+- name: https
+  port: 8445
+  targetPort: 8445
+- name: mutualauth
+  port: 8446
+  targetPort: 8446
+- name: metrics
+  port: 9600
+  targetPort: 9600

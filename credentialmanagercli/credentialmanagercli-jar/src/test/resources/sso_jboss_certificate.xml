@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+	<application>
+		<certificates>
+			<certificate>
+				<tbscertificate>
+					<version>3</version>
+					<subject>
+						<distinguishname>O=Ericsson,OU=ericssonTOR=,CN=SSO_HOST_APACHE_SSO</distinguishname>
+					</subject>
+					<issuer>
+						<distinguishname>TORMgmtRootCA</distinguishname>
+					</issuer>
+					<certificateextension>
+						<subjectalternativename>
+							<directoryname>CN=COMUser</directoryname>
+							<dns>BLADE-SSO_HOST_APACHE</dns>
+							<ipaddress>IP_ADDRESS</ipaddress>
+						</subjectalternativename>
+					</certificateextension>
+				</tbscertificate>
+				<endentityprofilename>TOREndEntityProfile</endentityprofilename>
+				<signaturealgorithm>SHA256WithRSAEncryption</signaturealgorithm>
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+
+				<keystore>
+					<base64keystore>
+						<keystorelocation>
+							<privatekeyfilelocation>/ericsson/tor/data/certificates/sso/ssoserverjboss.key</privatekeyfilelocation>
+							<certicatefilelocation>/ericsson/tor/data/certificates/sso/ssoserverjboss.crt</certicatefilelocation>
+						</keystorelocation>
+					</base64keystore>
+				</keystore>
+
+				<truststore>
+					<base64truststore>
+						<cacertificates>
+							<cacertificate>
+								<subject>O=Ericsson,OU=ericssonOAM,CN=TORMgmtRootCA</subject>
+							</cacertificate>
+						</cacertificates>
+						<truststorelocation>/ericsson/tor/data/certificates/sso/mgmtrootca.cer</truststorelocation>
+					</base64truststore>
+				</truststore>
+	<!-- 			<truststore>
+					<base64truststore>
+						<cacertificates>
+							<cacertificate>
+								<subject>O=Ericsson,OU=ericssonOAM,CN=DSCertCA</subject>
+							</cacertificate>
+						</cacertificates>
+						<truststorelocation>/ericsson/tor/data/certificates/sso/rootca.cer</truststorelocation>
+					</base64truststore>
+				</truststore> -->
+
+			</certificate>
+
+		</certificates>
+	</application>
+</applications>

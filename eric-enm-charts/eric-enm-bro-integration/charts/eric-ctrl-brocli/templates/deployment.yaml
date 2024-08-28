@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    {{- include "eric-ctrl-brocli.labels" . | nindent 4 }}
+  name: {{ include "eric-ctrl-brocli.name" . }}
+  annotations:
+    {{- include "eric-ctrl-brocli.product-info" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "eric-ctrl-brocli.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.updateStrategy.type | default "RollingUpdate" }}
+  template:
+    metadata:
+      labels:
+        {{- include "eric-ctrl-brocli.labels" . | nindent 8 }}
+      annotations:
+        {{- include "eric-ctrl-brocli.product-info" . | indent 8 }}
+    spec:
+      {{- include "eric-ctrl-brocli.pullsecret" . }}
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+      nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
+{{- end }}
+      containers:
+        - name: {{ include "eric-ctrl-brocli.name" . }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 550
+            capabilities:
+              drop:
+                - all
+          image: {{ include "eric-ctrl-brocli.ImagePath" . }}
+          {{ include "eric-ctrl-brocli.pullpolicy" .  }}
+          env:
+            - name: LOGDIR
+              value: "/logs"
+            - name: BRO_HOST
+              value: {{ .Values.broServiceName }}
+            - name: LOGFILEMAXBYTES
+              value: "{{ mul 50 1024 1024 }}"
+            - name: LOGFILECOUNT
+              value: "2"
+            - name: TZ
+              value: {{ .Values.global.timezone| default "UTC" }}
+          resources:
+            {{- toYaml .Values.resources.brocli | nindent 12 }}
+          volumeMounts:
+           {{- if .Values.logshipper.enabled }}
+            {{- include "eric-ctrl-brocli.logshipper-storage-path" . | indent 12 }}
+           {{- else }}
+            - name: "log"
+              mountPath: "/logs"
+           {{- end }}
+       {{- if .Values.logshipper.enabled }}
+        {{- include "eric-ctrl-brocli.logshipper-container" . | indent 8 }}
+       {{- end }}
+      volumes:
+       {{- if .Values.logshipper.enabled }}
+        {{- include "eric-ctrl-brocli.logshipper-volume" . | indent 8 }}
+       {{- else }}
+        - name: "log"
+          emptyDir: {}
+       {{- end }}

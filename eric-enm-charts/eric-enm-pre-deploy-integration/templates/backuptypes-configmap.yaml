@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eric-enm-rwxpvc-backup-types
+  labels:
+    app: eric-enm-rwxpvc
+data:
+  selective_backup.yaml: |
+    backupDataModelConfig:
+      - backupType: ROLLBACK
+        # When backup scope/type matches ROLLBACK, uses these path(s) instead
+        paths:
+          - path: "/ericsson/tor/data"
+            excludes:
+              - ".snapshot"
+              - ".enm-history"
+            allowChanges: true

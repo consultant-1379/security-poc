@@ -1,0 +1,36 @@
+- name: gp
+  configMap:
+    name: gpcmevents
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dlms
+  persistentVolumeClaim:
+    claimName: dlms
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: pm1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pm2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks
+- name: upgind
+  persistentVolumeClaim:
+    claimName: upgind
+- name: batch
+  persistentVolumeClaim:
+    claimName: batch

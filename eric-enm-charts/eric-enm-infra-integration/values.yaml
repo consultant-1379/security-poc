@@ -1,0 +1,1270 @@
+global:
+  registry:
+    url: armdocker.rnd.ericsson.se
+    pullSecret:
+  timezone: UTC
+  restore:
+    configMap:
+      name: backup-restore-configmap
+      restoreStateKey: RESTORE_STATE
+    state: ""
+    scope: ""
+    backupName: ""
+    serviceaccount:
+      # Name of the ServiceAccount to be used for restore/rollback operations.
+      # Leave empty to use the default value of 'restore-service-account'
+      # If the ServiceAccount, Role and RoleBinding are externally defined,
+      # the Role MUST have at least get, list, patch and delete authorization
+      # for configmaps and pods resources
+      # as well as create, list and delete authorization for batch.jobs resource
+      name:
+  replicas-eric-enmsg-gossiprouter-cache: 1
+  replicas-eric-enmsg-gossiprouter-remoting: 1
+  replicas-eric-enmsg-gossiprouter-eap7: 1
+  replicas-eric-enmsg-jmsserver: 1
+  replicas-eric-enm-modeldeployservice: 1
+  replicas-eric-enmsg-opendj: 2
+  replicas-eric-enm-omnidaemon: 1
+  replicas-eric-enmsg-sentinel: 1
+  replicas-eric-enm-kvstore-hc: 3
+  replicas-eric-enmsg-vault-service: 2
+  replicas-eric-data-search-engine: 1
+  replicas-eric-data-eshistory-search-engine: 1
+  replicas-elasticsearch-bragent: 1
+  replicas-eshistory-bragent: 1
+  replicas-elasticsearch-admin: 1
+  replicas-eric-data-search-engine-curator: 1
+  replicas-eric-enm-sfwkdb-schemamgt: 1
+  replicas-eric-ctrl-bro: 1
+  replicas-eric-enmsg-flsdb-schemamgt: 1
+  replicas-eric-enmsg-autoid-service: 1
+  replicas-eric-net-ingress-l4: 2
+  replicas-eric-enm-sso-core-token-service: 2
+  persistentVolumeClaim:
+    storageClass:
+  ingress:
+    enmHost:
+  enmProperties:
+    host_system_identifier:
+    COM_INF_LDAP_ADMIN_ACCESS: U2FsdGVkX1+Th331ViwStKrs91kgAE88zyFbqQDBjN0=
+    COM_INF_LDAP_ADMIN_CN:
+    COM_INF_LDAP_PORT: 1636
+    COM_INF_LDAP_ROOT_SUFFIX:
+    postgresql01_admin_password: U2FsdGVkX19uWU+/kfu7jHGmy9BQdkr1Wz7pcHG56M8=
+    default_security_admin_password: U2FsdGVkX18E0yK+cT5A6t0/tWFhT2MW48C279fNStA=
+    certificatesRevListDistributionPointServiceDnsEnable: false
+    certificatesRevListDistributionPointServiceIpv4Enable: false
+    certificatesRevListDistributionPointServiceIpv6Enable: false
+    publicKeyInfraRegAutorithyPublicServerName:
+    dps_persistence_provider: neo4j
+    LDAP_ADMIN_CN: "\"cn=directory manager\""
+    LDAP_ADMIN_PASSWORD: U2FsdGVkX1+KJ3KtE2zpudi9Vqko/a4vRDzruu3lk0E=
+    smrs_sftp_port_partition_enable: false
+    smrs_sftp_securePort: 22
+    web_protocols_default: https
+    web_ports_default: 443
+    pmicNfsShareList: /ericsson/pmic1/,/ericsson/pmic2/
+    postgres_service: postgres
+    defaultJbossLogLevel: "INFO"
+    hqs_persistence_provider_es: true
+    hqs_persistence_provider: eshistory
+    hqs_persistence_provider_port: 9200
+images:
+  repoPath: proj-enm
+  infra-integration:
+    name:
+    tag:
+    command:
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s eric-enm-modeldeployservice' ]"
+  eric-enm-models-service:
+    name: eric-enm-models-service
+    tag: 1.27.9-1
+  eric-enm-models-ebs:
+    name: eric-enm-models-ebs
+    tag: 1.12.9-1
+  eric-enm-chart-hooks:
+    name: eric-enm-chart-hooks
+    tag: 1.0.3-1
+    hook-pre-weight: -99
+    hook-post-weight: 99
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  registry:
+    url:
+    pullSecret:
+
+modelsServiceJob:
+  name: eric-enm-models-service
+  restartPolicy: OnFailure
+  ttl: 300
+  timeout: 18000
+
+eric-enm-models-ebs:
+  name: eric-enm-models-ebs
+  restartPolicy: OnFailure
+  ttl: 300
+
+tags:
+  value_pack_ebs_ln: true
+  value_pack_ebs_m: true
+
+mdtPersistentVolumeClaim:
+  enabled: true
+  name: mdt
+  claimName: eric-enm-rwxpvc-mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment
+
+#Enable software to be included.
+
+eric-enm-flsdb-schemamgt:
+  enabled: false
+eric-net-ingress-l4:
+  enabled: true
+  images:
+    eric-enm-snmp-trap-forwarder:
+      enabled: true
+      name: eric-enm-snmp-trap-forwarder
+      tag: 1.0.14-0
+    eric-enm-http-alarms-forwarder:
+      enabled: true
+      name: eric-enm-http-alarms-forwarder
+      tag: 1.0.9-0
+  sidecars:
+    eric-enm-snmp-trap-forwarder:
+      enabled: true
+      resources:
+        requests:
+          memory: "200Mi"
+          cpu: "100m"
+        limits:
+          memory: "200Mi"
+          cpu: "250m"
+      env:
+        SNMP_TRAP_RECEIVER_PORT: "162"
+        SNMP_TRAP_FORWARDER_PORT: "162"
+        APG_SNMP_TRAP_RECEIVER_PORT: "10163"
+        APG_SNMP_TRAP_FORWARDER_PORT: "10163"
+      volumeMounts:
+        - name: dumps
+          mountPath: /ericsson/enm/dumps
+      readinessProbe:
+        exec:
+            command:
+            - cat
+            - /tmp/healthy.txt
+        initialDelaySeconds: 5
+        timeoutSeconds: 15
+        periodSeconds: 10
+        failureThreshold: 2
+      livenessProbe:
+        exec:
+            command:
+            - cat
+            - /tmp/healthy.txt
+        initialDelaySeconds: 15
+        timeoutSeconds: 15
+        periodSeconds: 20
+        failureThreshold: 2
+      securityContext:
+        privileged: true
+      lifecycle:
+        postStart:
+          exec:
+            command: [ "/bin/bash", "/scripts/wrapper.sh", "/bin/bash", "/tmp/register_iptables_rules.sh" ]
+        preStop:
+          exec:
+            command: [ "/bin/bash", "/scripts/wrapper.sh", "/bin/bash", "/tmp/remove_iptables_rules.sh" ]
+    eric-enm-http-alarms-forwarder:
+      enabled: true
+      resources:
+        requests:
+          memory: "200Mi"
+          cpu: "100m"
+        limits:
+          memory: "200Mi"
+          cpu: "250m"
+      env:
+        HTTP_PORT: "8099"
+        SECURE_HTTP_PORT: "8943"
+      readinessProbe:
+        exec:
+            command:
+            - cat
+            - /tmp/healthy.txt
+        initialDelaySeconds: 5
+        timeoutSeconds: 15
+        periodSeconds: 10
+        failureThreshold: 2
+      livenessProbe:
+        exec:
+            command:
+            - cat
+            - /tmp/healthy.txt
+        initialDelaySeconds: 15
+        timeoutSeconds: 15
+        periodSeconds: 20
+        failureThreshold: 2
+      securityContext:
+        privileged: true
+      lifecycle:
+        postStart:
+          exec:
+            command: [ "/bin/bash", "/scripts/wrapper.sh", "/bin/bash", "/tmp/register_iptables_rules.sh" ]
+        preStop:
+          exec:
+            command: [ "/bin/bash", "/scripts/wrapper.sh", "/bin/bash", "/tmp/remove_iptables_rules.sh" ]
+  volumes:
+    - name: dumps
+      persistentVolumeClaim:
+        claimName: eric-enm-rwxpvc-hcdumps
+eric-enmsg-gossiprouter-cache:
+  enabled: true
+
+eric-enmsg-gossiprouter-remoting:
+  enabled: true
+
+eric-enmsg-jmsserver:
+  enabled: true
+
+eric-enm-modeldeployservice:
+  enabled: true
+  brAgent:
+    enabled: true
+    backupTypeList:
+      - ROLLBACK
+
+eric-enm-sfwkdb-schemamgt:
+  enabled: true
+
+eric-enm-dps-schemamgt:
+  enabled: true
+
+eric-enmsg-gossiprouter-eap7:
+  enabled: true
+
+eric-enmsg-opendj:
+  enabled: true
+  persistentVolumeClaim:
+    size: 5Gi
+  brAgent:
+    enabled: true
+    restorePropertyPath: "global.restore"
+    scopes: ROLLBACK
+    backupTypeList:
+      - ROLLBACK
+
+eric-enm-sso-core-token-service:
+  enabled: false
+
+eric-enm-omnidaemon:
+  enabled: false
+  persistentVolumeClaim:
+    omnidaemonPVSize: 67Gi
+  brAgent:
+    enabled: true
+    backupTypeList:
+
+eric-enmsg-sentinel:
+  enabled: false
+  brAgent:
+    enabled: true
+    broServiceName: eric-ctrl-bro
+    backupTypeList:
+      - ROLLBACK
+  security:
+    tls:
+      agentToBro:
+        enabled: false
+  persistentVolumeClaim:
+    sentinelPVSize: 1Gi
+
+eric-enm-kvstore-hc:
+  enabled: true
+  brAgent:
+    enabled: true
+    broServiceName: eric-ctrl-bro
+    backupTypeList:
+      - ROLLBACK
+  security:
+    tls:
+      agentToBro:
+        enabled: false
+  persistentVolumeClaim:
+    size: 1Gi
+
+elasticsearch-admin:
+  enabled: false
+
+elasticsearch-bragent:
+  enabled: false
+  nameOverride: "elasticsearch-enm-bragent"
+  fullnameOverride: "elasticsearch-enm-bragent"
+  seName: "elasticsearch"
+
+eshistory-bragent:
+  enabled: false
+  nameOverride: "eshistory-enm-bragent"
+  fullnameOverride: "eshistory-enm-bragent"
+  seName: "eshistory"
+  brAgent:
+    backupTypeList:
+      - ROLLBACK
+
+eric-data-search-engine:
+  enabled: false
+  logshipper:
+    storagePath: "/logs"
+  log:
+    logshipper:
+      level: "info"
+    outputs:
+      - "stream"
+      - "stdout"
+  nameOverride: "elasticsearch"
+  replicaCount:
+    ingest: 2
+  updateStrategy:
+     ingest:
+       rollingUpdate:
+         maxUnavailable: 1
+         maxSurge: 0
+  searchengine:
+    host: "elasticsearch"
+  annotations:
+    prometheus.io/scrape: "true"
+  affinity:
+    podAntiAffinity: "hard"
+  autoSetRequiredWorkerNodeSysctl: "false"
+  jvmHeap:
+    ingest: "1024m"
+    master: "512m"
+    data: "2048m"
+  startupProbe:
+    data:
+      periodSeconds: 60
+      failureThreshold: 600
+  resources:
+    ingest:
+      limits:
+        cpu: "500m"
+        memory: "2Gi"
+      requests:
+        cpu: "500m"
+        memory: "2Gi"
+    master:
+      limits:
+        cpu: "500m"
+        memory: "2Gi"
+      requests:
+        cpu: "500m"
+        memory: "2Gi"
+    data:
+      limits:
+        cpu: "1000m"
+        memory: "8Gi"
+      requests:
+        cpu: "1000m"
+        memory: "8Gi"
+    logshipper:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+      limits:
+        memory: "200Mi"
+        cpu: "200m"
+    preupgradehook:
+      requests:
+        memory: "64Mi"
+        cpu: "25m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"
+    postupgradehook:
+      requests:
+        memory: "64Mi"
+        cpu: "25m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"
+  persistence:
+    data:
+      persistentVolumeClaim:
+        storageClassName:
+        size: "130Gi"
+    backup:
+      persistentVolumeClaim:
+        size: "130Gi"
+        storageClassName:
+    master:
+      persistentVolumeClaim:
+        size: "256Mi"
+        storageClassName:
+  brAgent:
+    enabled: true
+    customAgent: true
+  global:
+    security:
+      tls:
+        enabled: false
+
+eric-data-eshistory-search-engine:
+  enabled: false
+  logshipper:
+    storagePath: "/logs"
+  log:
+    logshipper:
+      level: "info"
+    outputs:
+      - "stream"
+      - "stdout"
+  nameOverride: "eshistory"
+  updateStrategy:
+    ingest:
+      rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: 0
+  searchengine:
+    host: "eshistory"
+  autoSetRequiredWorkerNodeSysctl: "false"
+  annotations:
+    prometheus.io/scrape: "true"
+  replicaCount:
+    ingest: 2
+  affinity:
+    podAntiAffinity: "hard"
+  jvmHeap:
+    ingest: "1024m"
+    master: "1024m"
+    data: "4096m"
+  startupProbe:
+    data:
+      periodSeconds: 60
+      failureThreshold: 600
+  resources:
+    ingest:
+      limits:
+        cpu: "1000m"
+        memory: "2Gi"
+      requests:
+        cpu: "1000m"
+        memory: "2Gi"
+    data:
+      limits:
+        cpu: "1000m"
+        memory: "8Gi"
+      requests:
+        cpu: "1000m"
+        memory: "8Gi"
+    master:
+      limits:
+        cpu: "1000m"
+        memory: "2Gi"
+      requests:
+        cpu: "1000m"
+        memory: "1Gi"
+    preupgradehook:
+      requests:
+        memory: "64Mi"
+        cpu: "25m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"
+    postupgradehook:
+      requests:
+        memory: "64Mi"
+        cpu: "25m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"
+  persistence:
+    data:
+      persistentVolumeClaim:
+        storageClassName:
+        size: "175Gi"
+    master:
+      persistentVolumeClaim:
+        size: "256Mi"
+        storageClassName:
+    backup:
+      persistentVolumeClaim:
+        size: "175Gi"
+        storageClassName:
+  brAgent:
+    enabled: true
+    customAgent: true
+  global:
+    security:
+      tls:
+        enabled: false
+
+
+eric-enmsg-vault-service:
+  enabled: false
+
+eric-data-document-database-pg:
+  enabled: true
+  nameOverride: "postgres"
+  resources:
+    postgres:
+      requests:
+        memory: 4000Mi
+        cpu: 1000m
+      limits:
+        memory: 4000Mi
+        cpu: 2000m
+    bra:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
+        ephemeral-storage: "10Gi"
+      limits:
+        cpu: "1"
+        memory: "2Gi"
+        ephemeral-storage: "18Gi"
+    logshipper:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+      limits:
+        memory: "200Mi"
+        cpu: "200m"
+  brAgent:
+    enabled: true
+    backupTypeList:
+      - ROLLBACK
+  persistentVolumeClaim:
+    size: 25Gi
+  credentials:
+    kubernetesSecretName: document-database-pg-secret
+  postgresConfig:
+    autovacuum: "on"
+    autovacuum_analyze_threshold: 2000
+    autovacuum_max_workers: 6
+    autovacuum_naptime: "2min"
+    autovacuum_vacuum_threshold: 4000
+    max_wal_size: "1GB"
+    min_wal_size: "80MB"
+    max_slot_wal_keep_size: "1072"
+    client_min_messages: "WARNING"
+    effective_cache_size: "3275MB"
+    log_autovacuum_min_duration: 1000
+    log_connections: "off"
+    log_disconnections: "off"
+    log_duration: "off"
+    log_hostname: "off"
+    log_line_prefix: "pg_log-%m,db=%d,user=%u,%i"
+    log_min_error_statement: "WARNING"
+    log_min_messages: "WARNING"
+    log_rotation_age: 10080
+    log_rotation_size: 102400
+    log_truncate_on_rotation: "on"
+    maintenance_work_mem: "128MB"
+    max_connections: 1000
+    max_prepared_transactions: 500
+    max_stack_depth: "4MB"
+    shared_buffers: "2048MB"
+    temp_buffers: "64MB"
+    work_mem: "64MB"
+    logging_collector: "off"
+    log_destination: 'stderr'
+    tcp_keepalives_interval: 60
+    tcp_keepalives_idle: 60
+    tcp_keepalives_count: 5
+  security:
+    postgres:
+      tls:
+        enable: false
+    tls:
+      brAgent:
+        enabled: false
+  global:
+    security:
+      tls:
+        enabled: false
+  affinity:
+    podAntiAffinity: hard
+  podDisruptionBudget:
+    maxUnavailable: 1
+  terminationGracePeriodSeconds:
+    postgres: 100
+  log:
+    logshipper:
+      level: "info"
+    outputs:
+      - "stream"
+      - "stdout"
+  targetPGversion: "13"
+
+postgresCredentials:
+  superPwd:
+  customUser:
+  customPwd:
+
+eric-data-graph-database-nj:
+  enabled: true
+  persistentVolumeClaim:
+    enabled: true
+    size: 60Gi
+    storageClass:
+    backup:
+      storageClass:
+    logging:
+      storageClass:
+  core:
+    initContainers:
+      enabled: true
+      name: eric-enm-neo4j-extension-plugin
+      tag: 1.26.9-0
+    initHooks: []
+  resources:
+    graphdb:
+      limits:
+        cpu: 7950m
+        memory: 48Gi
+      requests:
+        cpu: 1988m
+        memory: 48Gi
+    brAgent:
+      limits:
+        cpu: 4000m
+        memory: 8Gi
+      requests:
+        cpu: 2000m
+        memory: 8Gi
+    logshipper:
+      limits:
+        memory: "200Mi"
+        cpu: "200m"
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+  nameOverride: "neo4j"
+  brAgent:
+    heap_min_size: "3g"
+    heap_max_size: "3g"
+    pagecache_size: "2g"
+    enabled: true
+    restorePropertyPath: "global.restore"
+    broServiceName: eric-ctrl-bro
+    backupTypeList:
+      - ROLLBACK
+    consistencyCheck:
+      enabled: false
+  lifecycleHook:
+    enabled: false
+  readReplica:
+    numberOfServers: 0
+  imageCredentials:
+    initContainerRepoPath: "proj-enm"
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - neo4j
+        topologyKey: "kubernetes.io/hostname"
+
+  podDisruptionBudget:
+    maxUnavailable: 1
+  log:
+    outputs:
+      - "stream"
+    logshipper:
+      level: "info"
+  config:
+    defaultDatabaseName: dps
+    liveness:
+      enabled: true
+      # Mandatory Initial time to validate the pod liveness
+      initialDelaySeconds: 120
+      # Mandatory cron time to validate if is still active
+      periodSeconds: 60
+      # Mandatory On timeout is restarted
+      timeoutSeconds: 120
+      # Number of failed before restart
+      failureThreshold: 1
+      # Number of success
+      successThreshold: 1
+
+    # Mandatory Used when pods are considered ready to attend
+    readinessProbe:
+      enabled: true
+      # Mandatory Initial time to validate the pod readiness
+      initialDelaySeconds: 10
+      # Mandatory cron time to validate if its active
+      periodSeconds: 60
+      # Mandatory On timeout is restarted
+      timeoutSeconds: 120
+      # Number of success
+      successThreshold: 1
+      # Number of failed before retry the starting
+      failureThreshold: 30
+#    jmx:
+#      enabled: false
+    logging:
+      debug:
+        # Valid values are DEBUG, INFO, WARN, ERROR, NONE
+        level: INFO
+        rotationSize: 20m
+        rotationKeepNumber: 50
+      security:
+        # Valid values are DEBUG, INFO, WARN, ERROR, NONE
+        level: INFO
+        rotationSize: 20m
+        rotationKeepNumber: 7
+      query:
+        # Valid values are OFF, INFO, VERBOSE
+        level: INFO
+        rotationSize: 20m
+        rotationKeepNumber: 50
+        threshold: 5s
+        pageLoggingEnabled: true
+        allocationLoggingEnabled: true
+        parameterLoggingEnabled: false
+        timeLoggingEnabled: true
+      gc:
+        enabled: true
+        rotationSize: "20000000"
+        rotationKeepNumber: 5
+      http:
+        enabled: true
+        rotationSize: 20m
+        rotationKeepNumber: 5
+    neo4jPassword: "Neo4jadmin123"
+    extraVars:
+      - name: NEO4J_dbms_directories_data
+        value: "/data"
+      # Mandatory: To allow remote backups
+      - name: "NEO4J_dbms_backup_enabled"
+        value: "true"
+      - name: NEO4J_dbms_directories_import
+        value: "import"
+      - name: NEO4j_dbms_directories_plugins
+        value: "/plugins"
+      ##Comma-separated list of <classname>=<mount point> for unmanaged extensions
+      - name: NEO4J_dbms_unmanaged__extension__classes
+        value: "com.ericsson.oss.itpf.datalayer.dps.neo4j.driver.transport.bolt.extension=/boltext"
+      # Mandatory: To allow remote backups ipaddress
+      - name: NEO4J_dbms_backup_listen__address
+        value: "0.0.0.0:6362"
+      - name: NEO4J_dbms_checkpoint_iops_limit
+        value: "1500"
+      - name: NEO4J_dbms_db_timezone
+        value: "SYSTEM"
+      - name: NEO4J_dbms_connector_http_enabled
+        value: "true"
+      - name: NEO4J_dbms_connector_https_enabled
+        value: "false"
+      - name: NEO4J_dbms_connector_bolt_thread__pool__min__size
+        value: "500"
+      - name: NEO4J_dbms_connector_bolt_thread__pool__max__size
+        value: "500"
+      - name: NEO4J_dbms_transaction_concurrent_maximum
+        value: "555"
+      - name: NEO4J_dbms_shutdown__transaction__end__timeout
+        value: "60s"
+      - name: NEO4J_dbms_lock_acquisition_timeout
+        value: "60s"
+      # Enable auth requirement to access Neo4j.
+      - name: NEO4J_dbms_security_auth__enabled
+        value: "true"
+      # Require authorization for access to the Causal Clustering status endpoints.
+      - name: NEO4J_dbms_security_causal__clustering__status__auth__enabled
+        value: "true"
+      ### ENM Settings
+      - name: NEO4J_dbms_security_procedures_unrestricted
+        value: "ericsson.driver.*"
+      # transaction.timeout: The maximum time interval of
+      # a transaction within which it should be completed.
+      - name: NEO4J_dbms_transaction_timeout
+        value: "10m"
+      - name: NEO4J_dbms_transaction_bookmark__ready__timeout
+        value: "5s"
+      - name: NEO4J_dbms_mode
+        value: "CORE"
+      # Additional JVM arguments. Argument order can be significant.
+      # To use a Java commercial feature, the argument to unlock commercial features
+      # must precede the argument to enable the specific feature in the config value string.
+      - name: NEO4J_dbms_jvm_additional
+        value: "
+        -Dcom.sun.management.jmxremote
+        -XX:+HeapDumpOnOutOfMemoryError
+        -Dorg.neo4j.causalclustering.core.EnterpriseCoreEditionModule.idReuse=true
+        -XX:HeapDumpPath=/data/heap_dump.hprof
+        -XX:+UseG1GC
+        -XX:-OmitStackTraceInFastThrow
+        -XX:+AlwaysPreTouch
+        -XX:+DisableExplicitGC
+        -Djdk.tls.ephemeralDHKeySize=2048
+        -Dunsupported.dbms.udc.source=rpm
+        -Dio.netty.maxDirectMemory=0
+        -Dorg.neo4j.kernel.impl.store.kvstore.AbstractKeyValueStore.maxLookupRetryCount=2147483647
+        -Dorg.neo4j.index.internal.gbptree.CrashGenerationCleaner.number_of_workers=8
+        -Dorg.neo4j.index.internal.gbptree.CrashGenerationCleaner.batch_timeout=180
+        -XX:MaxDirectMemorySize=3g
+        -Djdk.tls.rejectClientInitiatedRenegotiation=true
+        -Dorg.neo4j.kernel.impl.locking.ResourceTypes.useStrongHashing=true
+        -XX:+PrintConcurrentLocks"
+      # track_query_allocation: Enables or disables
+      # tracking of how many bytes are allocated by the execution of a query.
+      - name: NEO4J_dbms_track__query__allocation
+        value: "false"
+      - name: NEO4J_dbms_windows__service__name
+        value: "neo4j"
+      - name: NEO4J_dbms_tx__log_rotation_size
+        value: "256M"
+      - name: NEO4J_dbms_tx__log_rotation_retention__policy
+        value: "20 files"
+      # this value is true in physical but have to set it to false here
+      - name: NEO4J_dbms_config_strict__validation
+        value: "false"
+      - name: NEO4J_metrics_prometheus_enabled
+        value: "true"
+      - name: NEO4J_metrics_prometheus_endpoint
+        value: 0.0.0.0:2004
+        # The maximum time an idle thread in the thread
+        # pool bound to this connector will wait for new tasks.
+      - name: NEO4J_dbms_connector_bolt_thread__pool__keep__alive
+        value: "5m"
+      - name: NEO4J_causal__clustering_minimum__core__cluster__size__at__formation
+        value: "3"
+      - name: NEO4J_causal__clustering_minimum__core__cluster__size__at__runtime
+        value: "3"
+        # from the dbms.cluster.routing.getServers() procedure.
+      - name: NEO4J_causal__clustering_cluster__routing__ttl
+        value: "60s"
+      - name: NEO4J_causal__clustering_leader__election__timeout
+        value: "30000ms"
+        # Enable pre-voting extension to the Raft protocol
+        # (this is breaking and must match between the core cluster members).
+      - name: NEO4J_causal__clustering_enable__pre__voting
+        value: "true"
+      - name: NEO4J_causal__clustering_join__catch__up__timeout
+        value: "3h"
+      - name: NEO4J_causal__clustering_catch__up__client__inactivity__timeout
+        value: "600s"
+      - name: NEO4J_causal__clustering_raft__log__prune__strategy
+        value: "3g size"
+      - name: NEO4J_causal__clustering_raft__log__pruning__frequency
+        value: "300s"
+      - name: NEO4J_causal__clustering_log__shipping__max__lag
+        value: "2048"
+      - name: NEO4J_causal__clustering_replication__retry__timeout__limit
+        value: "60s"
+      - name: NEO4J_dbms_memory_heap_max__size
+        value: "12g"
+      - name: NEO4J_dbms_memory_pagecache_size
+        value: "14g"
+      - name: NEO4J_dbms_memory_heap_initial__size
+        value: "12g"
+      - name: NEO4J_causal__clustering_cluster__binding__timeout
+        value: "15m"
+      - name: "NEO4J_dbms_connector_bolt_listen__address"
+        value: "0.0.0.0:7687"
+      - name: "NEO4J_dbms_connector_http_listen__address"
+        value: "0.0.0.0:7474"
+
+eric-data-search-engine-curator:
+  enabled: false
+  global:
+    security:
+      tls:
+        enabled: false
+  cronjob:
+    curator:
+      enabled: true
+      schedule: "0 */1 * * *"
+      successfulJobHistoryLimit: 3
+      failedJobHistoryLimit: 5
+  searchengine:
+    host: elasticsearch
+    port: 9200
+  logshipper:
+    storagePath: "/logs"
+  log:
+    logshipper:
+      level: "info"
+    outputs:
+      - "stream"
+      - "stdout"
+  resources:
+    logshipper:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+      limits:
+        memory: "200Mi"
+        cpu: "200m"
+  # Note values below refer to total (replicated) disk space which Curator uses for deletion
+  actions: |
+    1:
+      action: delete_indices
+      description: Remove INFO SYSLOG logs older than 7 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_info_syslog_logs_index-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    2:
+      action: delete_indices
+      description: Remove INFO SYSLOG logs when over 68GB of space is used
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_info_syslog_logs_index-
+      - filtertype: space
+        disk_space: 68
+        use_age: True
+        source: creation_date
+    3:
+      action: delete_indices
+      description: Remove INFO logs older than 7 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_info_logs_index-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    4:
+      action: delete_indices
+      description: Remove INFO logs when over 26GB of space is used
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_info_logs_index-
+      - filtertype: space
+        disk_space: 26
+        use_age: True
+        source: creation_date
+    5:
+      action: delete_indices
+      description: Remove WARN AND ABOVE logs older than 7 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_warn_and_above_logs_index-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    6:
+      action: delete_indices
+      description: Remove WARN AND ABOVE logs when over 26GB of space is used
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_warn_and_above_logs_index-
+      - filtertype: space
+        disk_space: 26
+        use_age: True
+        source: creation_date
+    7:
+      action: delete_indices
+      description: Remove SECURITY logs older than 7 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_security_logs_index-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    8:
+      action: delete_indices
+      description: Remove SECURITY logs when over 26GB of space is used
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_security_logs_index-
+      - filtertype: space
+        disk_space: 26
+        use_age: True
+        source: creation_date
+    9:
+      action: delete_indices
+      description: Remove OPENDJ logs older than 7 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_logs-opendj-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    10:
+      action: delete_indices
+      description: Remove OPENDJ logs when over 30GB of space is used
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_logs-opendj-
+      - filtertype: space
+        disk_space: 30
+        use_age: True
+        source: creation_date
+    11:
+      action: delete_indices
+      description: Remove DEBUG logs older than 7 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_debug_logs_index-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    12:
+      action: delete_indices
+      description: Remove DEBUG logs when over 8GB of space is used
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_debug_logs_index-
+      - filtertype: space
+        disk_space: 8
+        use_age: True
+        source: creation_date
+    13:
+      action: delete_indices
+      description: Remove ADP logs older than 7 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_adp_logs_index-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    14:
+      action: delete_indices
+      description: Remove ADP logs when over 6GB of space is used
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_adp_logs_index-
+      - filtertype: space
+        disk_space: 6
+        use_age: True
+        source: creation_date
+    15:
+      action: delete_indices
+      description: Remove AUDIT logs older than 7 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_audit_logs_index-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    16:
+      action: delete_indices
+      description: Remove AUDIT logs when over 6GB of space is used
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_audit_logs_index-
+      - filtertype: space
+        disk_space: 6
+        use_age: True
+        source: creation_date
+    17:
+      action: delete_indices
+      description: Remove ADP APP logs older than 2 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: adp-app-logs-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 2
+    18:
+      action: delete_indices
+      description: Remove HELP SEARCH logs older than 2 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm-help-search-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 2
+    19:
+      action: delete_indices
+      description: Remove enm_logs-application (legacy) logs older than 7 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_logs-application-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    20:
+      action: delete_indices
+      description: Remove oldest indices when over 208GB total space is used
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: space
+        disk_space: 208
+        use_age: True
+        source: creation_date
+    21:
+      action: delete_indices
+      description: Remove OPENIDM logs older than 7 days
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_openidm_logs_index-
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: '%Y.%m.%d'
+        unit: days
+        unit_count: 7
+    22:
+      action: delete_indices
+      description: Remove OPENIDM logs when over 2GB of space is used
+      options:
+        disable_action: false
+        ignore_empty_list: true
+      filters:
+      - filtertype: pattern
+        kind: prefix
+        value: enm_openidm_logs_index
+      - filtertype: space
+        disk_space: 2
+        use_age: True
+        source: creation_date
+
+eric-enm-int-log-transformer:
+  enabled: false
+  eric-log-transformer:
+    resources:
+      logshipper:
+        requests:
+          memory: "100Mi"
+          cpu: "100m"
+        limits:
+          memory: "200Mi"
+          cpu: "200m"
+    replicaCount: 2
+    queue:
+      sizePerPipeline: 2048
+    metrics:
+      enabled: true
+    log:
+      logshipper:
+        level: "info"
+      outputs:
+        - "stream"
+        - "stdout"
+
+eric-cnom-document-database-mg:
+  enabled: false
+  imageCredentials:
+    registry:
+      url: selndocker.mo.sw.ericsson.se
+  brAgent:
+    enabled: false
+  replicaSet:
+    enabled: true
+    replicaCount: 3

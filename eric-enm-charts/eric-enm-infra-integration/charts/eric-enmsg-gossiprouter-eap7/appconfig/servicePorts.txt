@@ -1,0 +1,6 @@
+- name: eap7
+  port: 12003
+  targetPort: 12003
+- name: metrics
+  port: 9600
+  targetPort: 9600

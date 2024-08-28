@@ -1,0 +1,104 @@
+## eric-enmsg-sentinel image version
+
+global:
+  pullSecret:
+  sentinelHostname: sentinel-0
+  registry:
+    url: armdocker.rnd.ericsson.se
+  ingress:
+    enmHost:
+  persistentVolumeClaim:
+    storageClass:
+  timezone: UTC
+# R-State of the product. R State should match helm chart version (3.1.0 -> R2A)
+# To automate it when packaging the helm chart rstate can be generated
+# and below value replaced with correct R-State
+productNumber: CXC 174 1990
+productRevision: R28K
+productionDate: 2022-06-21T12:39:13Z
+revision: 1.27.9-1
+labels: {}
+eric-enm-common-helmchart-library:
+  enabled: true
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-sentinel: 1
+images:
+  eric-enmsg-sentinel:
+    name: eric-enmsg-sentinel
+    tag: 1.27.9-1
+  brAgent:
+    name: backup-restore-agent
+    tag: 2.0.6-2
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  pullSecret:
+  registry:
+    url:
+ingress:
+  enabled: true
+service:
+  name1: sentinelhost
+  name: sentinel
+  sgname: sentinellicensemanager
+  annotations: {}
+  labels: {}
+eric-enm-common-helmchart-library:
+  enabled: true
+resources:
+  requests:
+    enabled: true
+    memory: 4096Mi
+  limits:
+    enabled: true
+    memory: 4096Mi
+  brAgent:
+    requests:
+      cpu: "100m"
+      memory: "32Mi"
+    limits:
+      cpu: "300m"
+      memory: "64Mi"
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 28
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+podAnnotations: {}
+tolerations: []
+affinity: {}
+nodeAffinity: {}
+priorityClassName: ""
+nodeSelector: {}
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1
+brAgent:
+  enabled: true
+  broServiceName: eric-ctrl-bro
+  connectRetryCount: 3
+  backupTypeList:

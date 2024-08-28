@@ -1,0 +1,997 @@
+# Default values for eric-cnom-server.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# global:
+#   # The timezone. See the tz database (a.k.a. IANA time zone database) for valid names.
+#   timezone: UTC
+#   registry:
+#     # Global docker registry url
+#     url: selndocker.mo.sw.ericsson.se
+#     # Global image pull policy
+#     imagePullPolicy: IfNotPresent
+#   # Pull Secret used to pull from private image registries
+#   pullSecret:
+#   # A map of key-value pairs of node selectors
+#   nodeSelector:
+#   # The IP family the service belongs to when service.type is set to ClusterIP.
+#   # Options are: IPv4, IPv6
+#   internalIPFamily:
+#   security:
+#     tls:
+#       # Whether TLS should be used for our API and also for calling other services' APIs.
+#       enabled: true
+#     policyBinding:
+#       # Whether to create an automated Role Binding to a Cluster Role used with
+#       # a default (restricted) Pod Security Policy.
+#       create: false
+#     # A map of key-value pairs of Role references. The value defines the Role name
+#     # to use in the Role Binding for the Pod Security Policy.
+#     policyReferenceMap:
+#       default-restricted-security-policy: "default-restricted-security-policy"
+
+# Kubernetes cluster domain
+clusterDomain: "cluster.local"
+
+# Override the name used for all created Kubernetes resources. If not overridden the name
+# will be taken from the name of the chart i.e. eric-cnom-server.
+# If you want to install the chart twice in the same namespace you need to set this, otherwise
+# helm install will fail.
+nameOverride:
+
+imageCredentials:
+  server:
+    # Docker image repository path. Set to an empty string if the images are directly
+    # in the registry root.
+    repoPath:
+    registry:
+      # Docker registry url. Overrides global.registry.url
+      url:
+      # Docker image pull policy. Overrides global.registry.imagePullPolicy
+      imagePullPolicy:
+  logshipper:
+    # Docker image repository path. Set to an empty string if the images are directly
+    # in the registry root.
+    repoPath:
+    registry:
+      # Docker registry url. Overrides global.registry.url
+      url:
+      # Docker image pull policy. Overrides global.registry.imagePullPolicy
+      imagePullPolicy:
+  # DEPRECATED. Use setting under imageCredentials.server instead.
+  # Docker image repository path. Set to an empty string if the images are directly
+  # in the registry root.
+  repoPath:
+  registry:
+    # DEPRECATED. Use setting under imageCredentials.server instead.
+    # Docker registry url. Overrides global.registry.url
+    url:
+    # DEPRECATED. Use setting under imageCredentials.server instead.
+    # Docker image pull policy. Overrides global.registry.imagePullPolicy
+    imagePullPolicy:
+  # Pull Secret used to pull from private image registries. Overrides global.pullSecret
+  pullSecret:
+
+images:
+  server:
+    # Name of the CNOM docker image.
+    name:
+    # CNOM's image tag
+    tag:
+  logshipper:
+    # Name of the Log Shipper docker image
+    name: eric-log-shipper
+    # Log Shipper's image tag
+    tag: 8.1.0-20
+
+# Replica count. Note: Currently CNOM only supports 1 replica. Setting it to 2 or more
+# will not work properly.
+replicaCount: 1
+
+podDisruptionBudget:
+  # Minimum amount of available Pods e.g. when draining nodes. This is mutually exclusive with
+  # 'podDisruptionBudget.maxUnavailable'.
+  minAvailable:
+  # Maximum amount of unavailable Pods e.g. when draining nodes. This is mutually exclusive with
+  # 'podDisruptionBudget.minAvailable'. If neither 'minAvailable' nor
+  # 'maxUnavailable' have been set, we default to use 'maxUnavailable: 1'
+  # Note: Currently set to 1 since we only support one replica, but we still want e.g. nodes to
+  # be drained.
+  # Set 'podDisruptionBudget=null' to not create any PodDisruptionBudget resource at all.
+  maxUnavailable:
+
+# A map of key-value pairs of node selectors. Merges with what is specified for
+# global.nodeSelector.
+nodeSelector: {}
+
+# A map of key-value pairs of additional annotations added to all Kubernetes resources created
+# by the Helm chart
+annotations: {}
+
+# A map of key-value pairs of additional labels added to all Kubernetes resources created
+# by the Helm chart
+labels: {}
+
+affinity:
+  # Inter-pod anti-affinity policy, available values are 'soft' and 'hard'
+  podAntiAffinity: "soft"
+
+# A list of tolerations for node taints
+tolerations:
+  - key: node.kubernetes.io/not-ready
+    operator: Exists
+    effect: NoExecute
+    tolerationSeconds: 0
+  - key: node.kubernetes.io/unreachable
+    operator: Exists
+    effect: NoExecute
+    tolerationSeconds: 0
+
+# The grace period is the duration in seconds after the processes running in the Pod are sent
+# a termination signal and the time when the processes are forcibly halted with a kill signal
+terminationGracePeriodSeconds: 30
+
+# Control how Pods are spread across your cluster among failure-domains such as regions, zones,
+# nodes, and other user-defined topology domains e.g. to achieve high availability.
+topologySpreadConstraints: []
+
+appArmorProfile:
+  server:
+    # The AppArmor profile type/reference. Options are:
+    # runtime/default - Apply the default profile of the container engine
+    # localhost - Apply the profile loaded on the host with the name specified by 'localhostProfile'
+    # unconfined - Indicate that no profiles will be loaded
+    # "" - AppArmor is not set on the container at all
+    type: ""
+    # The name of the local AppArmor profile to be used. The 'localhost' profile type
+    # requires a profile name to be provided.
+    localhostProfile:
+
+seccompProfile:
+  init:
+    # The seccomp profile type/reference. Options are:
+    # RuntimeDefault - Apply the default profile of the container engine
+    # Localhost - Apply the profile loaded on the host with the name specified by 'localhostProfile'
+    # Unconfined - Indicate that no profiles will be loaded
+    # "" - seccomp is not set on the container at all
+    type: ""
+    # The name of the local seccomp profile to be used. The 'Localhost' profile type
+    # requires a profile name to be provided.
+    localhostProfile:
+  server:
+    # The seccomp profile type/reference. Options are:
+    # RuntimeDefault - Apply the default profile of the container engine
+    # Localhost - Apply the profile loaded on the host with the name specified by 'localhostProfile'
+    # Unconfined - Indicate that no profiles will be loaded
+    # "" - seccomp is not set on the container at all
+    type: ""
+    # The name of the local seccomp profile to be used. The 'Localhost' profile type
+    # requires a profile name to be provided.
+    localhostProfile:
+
+service:
+  # Service type of the CNOM service
+  type: ClusterIP
+  endpoints:
+    api:
+      # Port of the CNOM API
+      port: 8585
+      tls:
+        # Whether TLS should be enforced for our API.
+        # By default, the ADP service SIP-TLS is used to generate the certificates needed.
+        # A new certificate will be created every time CNOM restarts unless one these are true:
+        #   - a Secret is configured
+        #   - SIP-TLS exists in the cluster and disableSipTls is set to false
+        #   - 'ingress.enabled', 'ingress.certificates.enabled' and 'ingress.tls.passthrough'
+        #     are all set to true
+        # Options are: required, optional (note that currently optional means TLS is disabled)
+        enforced: required
+        # Whether to use TLS client authentication for our API.
+        # If you are not behind a proxy, it is likely you want to set this to 'optional', otherwise
+        # e.g. your browser is expected to supply a client certificate upon connection.
+        # Options are: required, optional
+        verifyClientCertificate: required
+        # A list of Secrets containing certificates for Certificate Authorities (CAs). The file in a
+        # Secret needs to be in PEM format. The CAs will be mounted in addition to the default CA in
+        # CNOM, which is created when SIP-TLS is enabled and present in the cluster. Each entry in
+        # the list should contain the name of a Secret, with the optional property 'bundle' to
+        # specify the name of the bundle in the Secret. The default bundle name is
+        # 'client-cacertbundle.pem'. Example:
+        # - name: name-of-secret
+        # - name: name-of-another-secret
+        #   bundle: name-of-bundle-file-in-secret.pem
+        ca: []
+        # Name of a Secret containing the key used in TLS server authentication.
+        # The file in the Secret needs to be named 'key.pem' and needs to be in PEM format.
+        # It can be the same Secret as 'cert' below if the Secret contains both they key and cert.
+        # If you set this, no SIP-TLS certificate will be used.
+        key:
+        # Name of a Secret containing the certificate used in TLS server authentication.
+        # The file in the Secret needs to be named 'cert.pem' and needs to be in PEM format.
+        # It can be the same Secret as 'key' above if the Secret contains both they key and cert.
+        # If you set this, no SIP-TLS certificate will be used.
+        cert:
+        # Disable the use of SIP-TLS for our API
+        disableSipTls: false
+    yangStateData:
+      # Port of the YANG state data API
+      port: 8586
+      tls:
+        # Whether TLS should be enforced for the yangStateData API.
+        # By default, the ADP service SIP-TLS is used to generate the certificates needed.
+        # A new certificate will be created every time CNOM restarts unless a Secret is configured.
+        # Options are: required, optional (note that currently optional means TLS is disabled)
+        enforced: required
+        # Whether to use TLS client authentication for the yangStateData API.
+        # Options are: required, optional
+        verifyClientCertificate: required
+        # A list of Secrets containing certificates for Certificate Authorities (CAs). The file in a
+        # Secret needs to be in PEM format. The CAs will be mounted in addition to the CMYP CA,
+        # which is created when SIP-TLS and CMYP is enabled and present in the cluster. Each entry
+        # in the list should contain the name of a Secret, with the optional property 'bundle' to
+        # specify the name of the bundle in the Secret. The default bundle name is
+        # 'client-cacertbundle.pem'. Example:
+        # - name: name-of-secret
+        # - name: name-of-another-secret bundle: name-of-bundle-file-in-secret.pem
+        ca: []
+        # Name of a Secret containing the key used in TLS server authentication.
+        # The file in the Secret needs to be named 'key.pem' and needs to be in PEM format.
+        # It can be the same Secret as 'cert' below if the Secret contains both they key and cert.
+        # If you set this, no SIP-TLS certificate will be used.
+        key:
+        # Name of a Secret containing the certificate used in TLS server authentication.
+        # The file in the Secret needs to be named 'cert.pem' and needs to be in PEM format.
+        # It can be the same Secret as 'key' above if the Secret contains both they key and cert.
+        # If you set this, no SIP-TLS certificate will be used.
+        cert:
+        # Disable the use of SIP-TLS for the yangStateData API
+        disableSipTls: false
+
+ingress:
+  # Create an ingress resource definition. Specify server.basePath if you want CNOM
+  # to be reached at a certain path on the ingress.
+  # Note: You are NOT recommended to enable the ingress if you do not have the ADP service
+  # 'Certificate Management' (CertM) and its CRDs installed in the cluster!
+  enabled: false
+  # Create an ICCR HTTPProxy resource instead of an Ingress resource. This only works if
+  # you have the ADP ICCR service and its CRDs installed in the cluster.
+  useHttpProxy: true
+  # Ingress class name indicates which ingress controller instance will consume the ingress
+  # resource
+  ingressClass: OAM-IngressClass
+  # Ingress annotations
+  annotations: {}
+  # Hostname of the service. Note that you can set the path at which CNOM can be reached at with
+  # 'server.basePath'.
+  hostname: ""
+  tls:
+    # Whether the Ingress Controller should pass through incoming TLS requests directly to the
+    # CNOM Server for decryption rather than decrypting the request in the Ingress.
+    # Turning on 'passthrough' will automatically mount the CertM certificates,
+    # defined under 'ingress.certificates', on 'service.endpoints.api.tls.ca'
+    # (and '.key' and '.cert').
+    # This means the default SIP-TLS generated certificates will not be mounted there, only
+    # the CertM certificates, effectively turning off cluster-internal service's possibility to
+    # reach the CNOM API.
+    # 'passthrough' is only automatically supported by the HTTPProxy resource.
+    # However if you use another ingress (such as e.g. Nginx) it can most likely support these
+    # features via 'ingress.annotations'. Check your ingress' documentation.
+    passthrough: false
+    # Whether to use TLS client authentication to protect the backend service from unauthorized
+    # external clients. 'ingress.useHttpProxy' has to be set to true for this to take effect.
+    # This option is ignored if 'ingress.tls.passthrough' is set to true.
+    # Options are: required, optional
+    verifyClientCertificate: required
+  certificates:
+    # Whether to enable the ingress certificates or not.
+    # If set to false, you can use the ingress without the ADP service 'Certificate Management'.
+    # This is not recommended to be disabled since it will use HTTP instead HTTPS.
+    enabled: true
+    # Name of the asymmetric key and certificate as defined in the 'ietf-keystore' YANG schema.
+    # The key and cert will be put in the Secret 'eric-cnom-server-certm-certificate-secret'
+    # with the names 'tls.key' and 'tls.crt'.
+    asymmetricKeyCertificateName: gui-cnom-http-server
+    # Name of the trusted certificate list as defined in the 'ietf-trustore' YANG schema.
+    # The certificates are merged into the filename 'ca.crt' found in the Secret
+    # 'eric-cnom-server-certm-ca-certificates-secret'.
+    trustedCertificateListName: gui-cnom-http-server
+
+resources:
+  server:
+    requests:
+      # The requested amount of memory per instance
+      memory: 400Mi
+      # The requested amount of CPU per instance
+      cpu: 150m
+    limits:
+      # The maximum amount of memory allowed per instance
+      memory: 400Mi
+      # The maximum amount of CPU allowed per instance
+      cpu: 500m
+  logshipper:
+    requests:
+      # The requested amount of memory for the logshipper sidecar
+      memory: 50Mi
+      # The requested amount of CPU for the logshipper sidecar
+      cpu: 50m
+    limits:
+      # The maximum amount of memory allowed for the logshipper sidecar
+      memory: 100Mi
+      # The maximum amount of CPU allowed for the logshipper sidecar
+      cpu: 100m
+  init:
+    requests:
+      # The requested amount of memory for the document database pg init
+      # container
+      memory: 50Mi
+      # The requested amount of CPU for the document database pg init container
+      cpu: 50m
+    limits:
+      # The maximum amount of memory allowed for the document database pg init
+      # container
+      memory: 100Mi
+      # The maximum amount of CPU allowed for the document database pg init
+      # container
+      cpu: 100m
+
+probes:
+  server:
+    livenessProbe:
+      # Number of seconds after the container has started before the liveness probe is initiated.
+      # The high default is because the server could take a while to start in resource-constrained
+      # environments.
+      initialDelaySeconds: 120
+      # How often (in seconds) to perform the probe
+      periodSeconds: 10
+      # Number of seconds after which the probe times out
+      timeoutSeconds: 5
+      # When the probe fails, Kubernetes will try failureThreshold times before restarting the
+      # container
+      failureThreshold: 3
+    readinessProbe:
+      # Number of seconds after the container has started before the readiness probes is initiated
+      initialDelaySeconds: 0
+      # How often (in seconds) to perform the probe
+      periodSeconds: 10
+      # Number of seconds after which the probe times out
+      timeoutSeconds: 5
+      # When the probe fails, Kubernetes will try failureThreshold times before the Pod will be
+      # marked Unready
+      failureThreshold: 3
+      # Minimum consecutive successes for the probe to be considered successful after having failed
+      successThreshold: 1
+  logshipper:
+    livenessProbe:
+      # Number of seconds after the container has started before the liveness probe is initiated
+      initialDelaySeconds: 1
+      # How often (in seconds) to perform the probe
+      periodSeconds: 10
+      # Number of seconds after which the probe times out
+      timeoutSeconds: 10
+      # When the probe fails, Kubernetes will try failureThreshold times before restarting the
+      # container
+      failureThreshold: 3
+
+updateStrategy:
+  # CNOM's update strategy
+  type: RollingUpdate
+  rollingUpdate:
+    # The maximum number of Pods that can be unavailable during the update process
+    maxUnavailable: 0
+    # The maximum number of Pods that can be created over the desired number of Pods
+    maxSurge: 1
+
+# The legal notice will be displayed when logging in. A value of null indicates
+# that the default should be used.
+legalNotice: null
+
+# The displayed product name
+productName: "Core Network Operations Manager"
+
+# The short (abbreviated) product name, displayed on small screens
+productNameShort: "CNOM"
+
+logging:
+  # Where to output logs. Options are: none, stdout, file
+  # If 'file' is included, the logs end up in the directory /logs/
+  # Enabling 'logging.logshipper.enabled' automatically adds the 'file' output.
+  output:
+    - stdout
+  # Where to output audit logs. Options are: none, stdout, file
+  # If 'file' is included, the logs end up in the directory /logs/
+  # Enabling 'logging.logshipper.enabled' automatically adds the 'file' output.
+  # Note that currently the audit logs are written unencrypted to disc.
+  # Since they might contain sensitive data you might want to disable this,
+  # but it might be better to have audit logs than no audit logs at all.
+  outputAudit:
+    - stdout
+  # Output logs in this format (applies to both general and audit logs)
+  # Options are: text, json
+  format: "json"
+  # Whether to include debug logs
+  debug: false
+  logshipper:
+    # Enable the use of Log Shipper as a sidecar
+    enabled: false
+
+logshipper:
+  # The logplane to use for CNOM if using Log Shipper as a sidecar
+  logplane: adp-app-logs
+  # Maximum size of the shared volume used by the Log Shipper sidecar to store logs.
+  # Do not change this unless you know what you are doing.
+  storageAllocation: 100Mi
+  logtransformer:
+    # Kubernetes service name for accessing the Log Transformer host. This is used as an
+    # IP address and must be the same as the name given to the Log Transformer service in
+    # that Helm chart. Only used if using Log Shipper as a sidecar.
+    host: eric-log-transformer
+
+server:
+  # Base path on which to serve CNOM, for example if it is behind a proxy.
+  basePath: ""
+  # Set this if behind a proxy. The current limit is that CNOM can only be
+  # behind one proxy, not multiple.
+  behindProxy: false
+  # Domain where the server is hosted. Used in session cookies to specify the
+  # allowed host to receive the cookie. Setting an empty string will omit it
+  # from the cookie. Do not set to an IP. Example: somedomain.com
+  domain: ""
+
+authentication:
+  # Set this to false to disable authentication. Do not do this in production!
+  # If authentication is turned off, you might still see the login page, but any
+  # username/password will work. Setting it to false will also disable the 'User Management' app.
+  enabled: true
+  local:
+    # Use the local authentication provider. This authenticates the user against credentials
+    # (username/password) stored in CNOM's own database.
+    enabled: true
+  ldap:
+    # Use the LDAP authentication provider. If used, the 'User Management' app will be disabled.
+    # The defaults are set to use the ADP LDAP Server as the provider. LDAP Server has a limitation
+    # in that it can only be used together with SIP-TLS. If SIP-TLS does not exist in your cluster,
+    # you cannot use LDAP Server and thus not this authentication provider. In a future release,
+    # this configuration will give you the possibility to use other services than just ADP's LDAP
+    # Server.
+    enabled: false
+    # Hostname of the LDAP Server
+    host: "eric-sec-ldap-server"
+    # Port of the LDAP Server
+    port: 636
+    # Base path of the service. Can for example be used if the service is behind an
+    # ingress/proxy on a certain base path. If the service is reached via
+    # https://ingress-host:443/service-name, then this can be set to 'service-name'.
+    basePath: ""
+    tls:
+      # Whether to use TLS for the LDAP Server.
+      # Changing this or global.security.tls.enabled currently has no effect,
+      # as ADP LDAP Server requires mTLS.
+      enabled: true
+      # Whether the peer service's server certificate should be verified. It is verified against
+      # the supplied CA certificate(s) found in the 'ca' Secret below. Do not set this to false
+      # in production unless you know what you are doing.
+      verifyServerCertificate: true
+      # Whether to use TLS client authentication for the LDAP Server.
+      # Changing this currently has no effect, as LDAP Server requires mTLS.
+      sendClientCertificate: true
+      # Name of the Secret containing the certificate(s) for the Certificate Authority (CA).
+      # The file in the Secret needs to be named 'cacertbundle.pem' and needs to be in PEM format.
+      # The default points to a SIP-TLS generated Secret.
+      ca: "eric-sec-sip-tls-trusted-root-cert"
+      # Name of the Secret containing the key used in TLS client authentication. The file in the
+      # Secret needs to be named 'key.pem' and needs to be in PEM format. It can be the same Secret
+      # as 'cert' below if the Secret contains both they key and cert. The default points to a
+      # SIP-TLS generated Secret, named 'eric-cnom-server-ldap-server-client-cert'. If you set
+      # 'nameOverride', then 'eric-cnom-server' will be replaced by that value.
+      key:
+      # Name of the Secret containing the certificate used in TLS client authentication. The file in
+      # the Secret needs to be named 'cert.pem' and needs to be in PEM format. It can be the same
+      # Secret as 'key' above if the Secret contains both they key and cert. The default points to a
+      # SIP-TLS generated Secret, named 'eric-cnom-server-ldap-server-client-cert'. If you set
+      # 'nameOverride', then 'eric-cnom-server' will be replaced by that value.
+      cert:
+      # Whether to use the new ADP LDAP Server CA when signing our client certificates towards the
+      # LDAP server. If you are using ADP LDAP Server version 6.2.X or earlier, set this to false.
+      useNewCA: true
+    # Map external roles to CNOM-internal roles. The value is an array where each item is an object
+    # with:
+    # 'internalRole' - the internal CNOM role name.
+    # 'externalRoles' - an array of roles/groups defined on the ADP LDAP Server. A matching role
+    # from this array maps that role to the defined CNOM internal role.
+    # The configuration should be listed in priority order, with the most permissive 'internalRole'
+    # listed first and the least permissive last. For example, the following would
+    # give both the ADP LDAP Server role 'system-security-admin' and 'system-admin' the CNOM-internal
+    # role 'SECURITY_ADMIN':
+    # - internalRole: SECURITY_ADMIN
+    #   externalRoles: ["system-security-admin", "system-admin"]
+    # - internalRole: ADMINISTRATOR
+    #   externalRoles: ["system-admin"]
+    roleMapping:
+      - internalRole: SECURITY_ADMIN
+        externalRoles: ["system-security-admin"]
+      - internalRole: ADMINISTRATOR
+        externalRoles: ["system-admin"]
+      - internalRole: OPERATOR
+        externalRoles: ["system-read-only"]
+
+# For running scripts during demos. CNOM will SSH to a remote host to execute scripts.
+# Do not enable this in production!
+demoScripts:
+  enabled: false
+  # Address to the host, as seen from within a Pod in the cluster
+  host: ""
+  # User on the host
+  user: ""
+  # Location of the scripts on the host
+  # (relative paths are with respect to the user's home directory)
+  path: ""
+  # The name of a Secret containing a private key that can log in to the host.
+  # The name of the private key in the Secret must not start with a period.
+  keySecret: ""
+
+dashboards:
+  # List of external ConfigMaps containing JSON files with user-defined dashboards, widgets
+  # and sources.
+  configMaps: []
+  # Import these predefined dashboards included in CNOM.
+  # Possible values are: common, alarm.
+  predefined:
+    - common
+    - alarm
+
+appConfig:
+  # List of external ConfigMaps containing JSON/YAML files with app-specific configuration.
+  # This should not be needed in most cases.
+  configMaps: []
+  # Whether to use app configs predefined in standalone deployment. If set to true, it will work
+  # for the standalone CNOM dashboard applications.
+  useStandalone: false
+
+metrics:
+  hierarchy:
+    # Name of external ConfigMap containing JSON files with with user-defined metric
+    # hierarchies in a specific format
+    configMap: ""
+
+yangStateData:
+  # Name of external Configmap containing JSON files with user-defined
+  # prometheus queries to be used for showing various KPI (Key Performance
+  # Indicators)
+  configMap: ""
+
+cmYangProvider:
+  # Hostname of the cm-yang-provider. Used to request the correct certificate for mTLS.
+  host: "eric-cm-yang-provider"
+
+rateLimit:
+  # Whether HTTP request rate limiting should be enabled. Help protect against e.g. brute-force
+  # attacks. Disable this if you are already rate-limiting before reaching the CNOM API
+  # such as in an Ingress. Currently only limits requests to the /login endpoint.
+  enabled: true
+
+documentDatabase:
+  # Whether CNOM is deployed together with the document database or not. You
+  # will need to manually disable features that require the database if you
+  # set this to false.
+  enabled: true
+  # Hosts of the CNOM database. Setting multiple database hosts will let CNOM Server
+  # connect to the CNOM database replica set that supports High Availability (HA).
+  # You need to set `replicaSet.enabled=true` for the CNOM database to enable replica set.
+  # The available hosts of the CNOM database replica set are of pattern
+  # `<database-service-name>-<ordinal>:<port>`. For a replica set of `N` (defaults to 3)
+  # CNOM database replicas, the available ordinals are from `0` to `N - 1`.
+  hosts:
+    - "eric-cnom-document-database-mg:27017"
+  password:
+    # Whether database password authentication is enabled or not.
+    # The value has to agree with the value of usePassword in the CNOM document
+    # database Helm chart.
+    enabled: true
+    # Name of the Secret containing the granted database user and password.
+    # The default Secret is included in the CNOM document database.
+    secret: "eric-cnom-document-database-mg"
+
+documentDatabasePg:
+  # ALPHA FEATURE: Whether CNOM should connect to Document Database PG
+  enabled: false
+  # Hostname of Document Database PG
+  host: "eric-data-document-database-pg"
+  # Port of Document Database PG
+  port: 5432
+  # Name of the logical database to use. If not using mTLS, the logical database
+  # already needs to be present in Document Database PG.
+  database: "cnom"
+  # User account in Document Database PG. Only used when using mTLS, else the user
+  # in documentDatabasePg.secret takes precedence.
+  user: "cnom"
+  # Kubernetes secret with the username and password to connect to Document Database PG.
+  # Mandatory when not using mTLS.
+  secret:
+  # Key of the username in the secret
+  secretUsernameKey: "custom-user"
+  # Key of the password in the secret
+  secretPasswordKey: "custom-pwd"
+  tls:
+    # Whether to use TLS for the Document Database PG. Only takes effect if
+    # global.security.tls.enabled is also set to true.
+    enabled: true
+    # Whether the peer service's server certificate should be verified. It is verified against
+    # the supplied CA certificate(s) found in the 'ca' Secret below. Do not set this to false
+    # in production unless you know what you are doing.
+    verifyServerCertificate: true
+    # Whether to use TLS client authentication
+    sendClientCertificate: true
+    # Name of the Secret containing the certificate(s) for the Certificate Authority (CA).
+    # The file in the Secret needs to be named 'cacertbundle.pem' and needs to be in PEM format.
+    # The default points to a SIP-TLS generated Secret.
+    ca: "eric-sec-sip-tls-trusted-root-cert"
+    # Name of the Secret containing the key used in TLS client authentication. The file in the
+    # Secret needs to be named 'key.pem' and needs to be in PEM format. It can be the same Secret as
+    # 'cert' below if the Secret contains both they key and cert. The default points to a SIP-TLS
+    # generated Secret, named 'eric-cnom-server-document-database-pg-client-cert'.
+    # If you set 'nameOverride', then 'eric-cnom-server' will be replaced by that value.
+    key:
+    # Name of the Secret containing the certificate used in TLS client authentication. The file in
+    # the Secret needs to be named 'cert.pem' and needs to be in PEM format. It can be the same
+    # Secret as 'key' above if the Secret contains both they key and cert. The default points to a
+    # SIP-TLS generated Secret, named 'eric-cnom-server-document-database-pg-client-cert. If you set
+    # 'nameOverride', then 'eric-cnom-server' will be replaced by that value.
+    cert:
+    # Name of the Secret containing the certificate(s) for the Certificate Authority (CA) for the
+    # admin cert. The file in the Secret needs to be named 'cacertbundle.pem' and needs to be in PEM
+    # format. The default points to a SIP-TLS generated Secret.
+    adminCa: "eric-sec-sip-tls-trusted-root-cert"
+    # Name of the Secret containing the key used in TLS client authentication for the database admin
+    # user's (what the PG documentation refers to as 'super user') cert. The file in the Secret
+    # needs to be named 'key.pem' and needs to be in PEM format. It can be the same Secret as 'cert'
+    # below if the Secret contains both they key and cert. The default points to a SIP-TLS generated
+    # Secret, named 'eric-cnom-server-document-database-pg-admin-client-cert'. If you set
+    # 'nameOverride', then 'eric-cnom-server' will be replaced by that value.
+    adminKey:
+    # Name of the Secret containing the certificate used in TLS client authentication for the
+    # database admin user. The file in the Secret needs to be named 'cert.pem' and needs to be in
+    # PEM format. It can be the same Secret as 'key' above if the Secret contains both they key and
+    # cert. The default points to a SIP-TLS generated Secret, named
+    # 'eric-cnom-server-document-database-pg-admin-client-cert. If you set 'nameOverride', then
+    # 'eric-cnom-server' will be replaced by that value.
+    adminCert:
+
+pmServer:
+  # Hostname of the PM Server
+  host: "eric-pm-server"
+  # Port of the PM Server. If not set, it will automatically be set to
+  # 9089 if TLS is enabled, otherwise to 9090.
+  port: null
+  # Base path of the service. Can for example be used if the service is behind an
+  # ingress/proxy on a certain base path. If the service is reached via
+  # https://ingress-host:443/service-name, then this can be set to 'service-name'.
+  basePath: ""
+  tls:
+    # Whether to use TLS for the PM Server. Only takes effect if
+    # global.security.tls.enabled is also set to true.
+    enabled: true
+    # Whether the peer service's server certificate should be verified. It is verified against
+    # the supplied CA certificate(s) found in the 'ca' Secret below. Do not set this to false
+    # in production unless you know what you are doing.
+    verifyServerCertificate: true
+    # Whether to use TLS client authentication for the PM Server
+    sendClientCertificate: true
+    # Whether if PM Server should use its own CA or the SIP-TLS root CA.
+    # PM Server 5.1 started using its own CA to issue client certificates instead of the SIP-TLS
+    # root CA. In PM Server 6.X all client certs are required to be issued by PM Server's own CA.
+    # This option allow you to chose how CNOM requests its client certificate, which you can use
+    # depending on which version of PM Server you run in your cluster.
+    useSipTlsRootCA: false
+    # Name of the Secret containing the certificate(s) for the Certificate Authority (CA).
+    # The file in the Secret needs to be named 'cacertbundle.pem' and needs to be in PEM format.
+    # The default points to a SIP-TLS generated Secret.
+    ca: "eric-sec-sip-tls-trusted-root-cert"
+    # Name of the Secret containing the key used in TLS client authentication. The file in the
+    # Secret needs to be named 'key.pem' and needs to be in PEM format. It can be the same Secret as
+    # 'cert' below if the Secret contains both they key and cert. The default points to a SIP-TLS
+    # generated Secret, named 'eric-cnom-server-pm-server-client-cert'. If you set 'nameOverride',
+    # then 'eric-cnom-server' will be replaced by that value.
+    key:
+    # Name of the Secret containing the certificate used in TLS client authentication. The file in
+    # the Secret needs to be named 'cert.pem' and needs to be in PEM format. It can be the same
+    # Secret as 'key' above if the Secret contains both they key and cert. The default points to a
+    # SIP-TLS generated Secret, named 'eric-cnom-server-pm-server-client-cert. If you set
+    # 'nameOverride', then 'eric-cnom-server' will be replaced by that value.
+    cert:
+  # By default CNOM only allows calling one PM Server address, defined by
+  # pmServer.host, pmServer.port and pmServer.basePath.
+  # With this whitelist you can supply additional addresses that can be used in
+  # custom sources used in dashboards.
+  addressWhitelist: []
+
+alarmHandler:
+  # Hostname of the Alarm Handler
+  host: "eric-fh-alarm-handler"
+  # Port of the Alarm Handler. If not set, it will automatically be set to
+  # 5006 if TLS is enabled, otherwise to 5005.
+  port: null
+  # Base path of the service. Can for example be used if the service is behind an
+  # ingress/proxy on a certain base path. If the service is reached via
+  # https://ingress-host:443/service-name, then this can be set to 'service-name'.
+  basePath: ""
+  tls:
+    # Whether to use TLS for the Alarm Handler. Only takes effect if
+    # global.security.tls.enabled is also set to true.
+    enabled: true
+    # Whether the peer service's server certificate should be verified. It is verified against
+    # the supplied CA certificate(s) found in the 'ca' Secret below. Do not set this to false
+    # in production unless you know what you are doing.
+    verifyServerCertificate: true
+    # Whether to use TLS client authentication for the Alarm Handler
+    sendClientCertificate: true
+    # Name of the Secret containing the certificate(s) for the Certificate Authority (CA).
+    # The file in the Secret needs to be named 'cacertbundle.pem' and needs to be in PEM format.
+    # The default points to a SIP-TLS generated Secret.
+    ca: "eric-sec-sip-tls-trusted-root-cert"
+    # Name of the Secret containing the key used in TLS client authentication. The file in the
+    # Secret needs to be named 'key.pem' and needs to be in PEM format. It can be the same Secret as
+    # 'cert' below if the Secret contains both they key and cert. The default points to a SIP-TLS
+    # generated Secret, named 'eric-cnom-server-alarm-handler-client-cert'. If you set 'nameOverride',
+    # then 'eric-cnom-server' will be replaced by that value.
+    key:
+    # Name of the Secret containing the certificate used in TLS client authentication. The file in
+    # the Secret needs to be named 'cert.pem' and needs to be in PEM format. It can be the same
+    # Secret as 'key' above if the Secret contains both they key and cert. The default points to a
+    # SIP-TLS generated Secret, named 'eric-cnom-server-alarm-handler-client-cert'. If you set
+    # 'nameOverride', then 'eric-cnom-server' will be replaced by that value.
+    cert:
+  # By default CNOM only allows calling one Alarm Handler address, defined by
+  # alarmHandler.host, alarmHandler.port and alarmHandler.basePath.
+  # With this whitelist you can supply additional addresses that can be used in
+  # custom sources used in dashboards.
+  addressWhitelist: []
+
+snmpAlarmProvider:
+  # Hostname of the SNMP Alarm Provider
+  host: "eric-fh-snmp-alarm-provider"
+  # Port of the SNMP Alarm Provider
+  port: 161
+  # Base path of the service. Can for example be used if the service is behind an
+  # ingress/proxy on a certain base path. If the service is reached via
+  # https://ingress-host:443/service-name, then this can be set to 'service-name'.
+  basePath: ""
+  # By default CNOM only allows calling one SNMP Alarm Provider address, defined by
+  # snmpAlarmProvider.host, snmpAlarmProvider.port and snmpAlarmProvider.basePath.
+  # With this whitelist you can supply additional addresses that can be used in
+  # custom sources used in dashboards.
+  addressWhitelist: []
+
+searchEngine:
+  # Hostname of the Search Engine. If TLS is enabled for the Search Engine, the hostname will be
+  # automatically suffixed with '-tls'. E.g. if using the default host name it will become
+  # 'eric-data-search-engine-tls'.
+  host: "eric-data-search-engine"
+  # Port of the Search Engine
+  port: 9200
+  # Base path of the service. Can for example be used if the service is behind an
+  # ingress/proxy on a certain base path. If the service is reached via
+  # https://ingress-host:443/service-name, then this can be set to 'service-name'.
+  basePath: ""
+  tls:
+    # Whether to use TLS for the Search Engine. Only takes effect if
+    # global.security.tls.enabled is also set to true.
+    enabled: true
+    # Whether the peer service's server certificate should be verified. It is verified against
+    # the supplied CA certificate(s) found in the 'ca' Secret below. Do not set this to false
+    # in production unless you know what you are doing.
+    verifyServerCertificate: true
+    # Whether to use TLS client authentication for the Search Engine
+    sendClientCertificate: true
+    # Name of the Secret containing the certificate(s) for the Certificate Authority (CA).
+    # The file in the Secret needs to be named 'cacertbundle.pem' and needs to be in PEM format.
+    # The default points to a SIP-TLS generated Secret.
+    ca: "eric-sec-sip-tls-trusted-root-cert"
+    # Name of the Secret containing the key used in TLS client authentication. The file in the
+    # Secret needs to be named 'key.pem' and needs to be in PEM format. It can be the same Secret as
+    # 'cert' below if the Secret contains both they key and cert. The default points to a SIP-TLS
+    # generated Secret, named 'eric-cnom-server-searchengine-client-cert'. If you set 'nameOverride',
+    # then 'eric-cnom-server' will be replaced by that value.
+    key:
+    # Name of the Secret containing the certificate used in TLS client authentication. The file in
+    # the Secret needs to be named 'cert.pem' and needs to be in PEM format. It can be the same
+    # Secret as 'key' above if the Secret contains both they key and cert. The default points to a
+    # SIP-TLS generated Secret, named 'eric-cnom-server-searchengine-client-cert'. If you set
+    # 'nameOverride', then 'eric-cnom-server' will be replaced by that value.
+    cert:
+  # By default CNOM only allows calling one Search Engine address, defined by
+  # searchEngine.host, searchEngine.port and searchEngine.basePath.
+  # With this whitelist you can supply additional addresses that can be used in
+  # custom sources used in dashboards.
+  addressWhitelist: []
+
+centralConfigurationRepository:
+  # Hostname of the Central Configuration Repository
+  host: "eric-ccr-server"
+  # Port of the Central Configuration Repository. If not set, it will automatically be set to
+  # 443 if TLS is enabled, otherwise to 80.
+  port: null
+  # Base path of the service. Can for example be used if the service is behind an
+  # ingress/proxy on a certain base path. If the service is reached via
+  # https://ingress-host:443/service-name, then this can be set to 'service-name'.
+  basePath: ""
+  tls:
+    # Whether to use TLS for the Central Configuration Repository. Only takes effect if
+    # global.security.tls.enabled is also set to true.
+    enabled: false
+    # Whether the peer service's server certificate should be verified. It is verified against
+    # the supplied CA certificate(s) found in the 'ca' Secret below. Do not set this to false
+    # in production unless you know what you are doing.
+    verifyServerCertificate: true
+    # Whether to use TLS client authentication for the Central Configuration Repository
+    sendClientCertificate: true
+    # Name of the Secret containing the certificate(s) for the Certificate Authority (CA).
+    # The file in the Secret needs to be named 'cacertbundle.pem' and needs to be in PEM format.
+    # The default points to a SIP-TLS generated Secret.
+    ca: "eric-sec-sip-tls-trusted-root-cert"
+    # Name of the Secret containing the key used in TLS client authentication. The file in the
+    # Secret needs to be named 'key.pem' and needs to be in PEM format. It can be the same Secret as
+    # 'cert' below if the Secret contains both they key and cert. The default points to a SIP-TLS
+    # generated Secret, named 'eric-cnom-server-central-configuration-repository-client-cert'. If
+    # you set 'nameOverride', then 'eric-cnom-server' will be replaced by that value.
+    key:
+    # Name of the Secret containing the certificate used in TLS client authentication. The file in
+    # the Secret needs to be named 'cert.pem' and needs to be in PEM format. It can be the same
+    # Secret as 'key' above if the Secret contains both they key and cert. The default points to a
+    # SIP-TLS generated Secret, named
+    # 'eric-cnom-server-central-configuration-repository-client-cert'. If you set 'nameOverride', then
+    # 'eric-cnom-server' will be replaced by that value.
+    cert:
+  # By default CNOM only allows calling one Central Configuration Repository address, defined by
+  # centralConfigurationRepository.host, centralConfigurationRepository.port and
+  # centralConfigurationRepository.basePath.
+  # With this whitelist you can supply additional addresses that can be used in
+  # custom sources used in dashboards.
+  addressWhitelist: []
+
+cmMediator:
+  # Hostname of the CM Mediator
+  host: "eric-cm-mediator"
+  # Port of the CM Mediator. If not set, it will automatically be set to
+  # 5004 if TLS is enabled, otherwise to 5003.
+  port: null
+  # Base path of the service. Can for example be used if the service is behind an
+  # ingress/proxy on a certain base path. If the service is reached via
+  # https://ingress-host:443/service-name, then this can be set to 'service-name'.
+  basePath: ""
+  tls:
+    # Whether to use TLS for the CM Mediator. Only takes effect if
+    # global.security.tls.enabled is also set to true.
+    enabled: true
+    # Whether the peer service's server certificate should be verified. It is verified against
+    # the supplied CA certificate(s) found in the 'ca' Secret below. Do not set this to false
+    # in production unless you know what you are doing.
+    verifyServerCertificate: true
+    # Whether to use TLS client authentication for the CM Mediator
+    sendClientCertificate: true
+    # Name of the Secret containing the certificate(s) for the Certificate Authority (CA).
+    # The file in the Secret needs to be named 'cacertbundle.pem' and needs to be in PEM format.
+    # The default points to a SIP-TLS generated Secret.
+    ca: "eric-sec-sip-tls-trusted-root-cert"
+    # Name of the Secret containing the key used in TLS client authentication. The file in the
+    # Secret needs to be named 'key.pem' and needs to be in PEM format. It can be the same Secret as
+    # 'cert' below if the Secret contains both they key and cert. The default points to a SIP-TLS
+    # generated Secret, named 'eric-cnom-server-cmmediator-client-cert'. If you set 'nameOverride',
+    # then 'eric-cnom-server' will be replaced by that value.
+    key:
+    # Name of the Secret containing the certificate used in TLS client authentication. The file in
+    # the Secret needs to be named 'cert.pem' and needs to be in PEM format. It can be the same
+    # Secret as 'key' above if the Secret contains both they key and cert. The default points to a
+    # SIP-TLS generated Secret, named 'eric-cnom-server-cmmediator-client-cert'. If you set
+    # 'nameOverride', then 'eric-cnom-server' will be replaced by that value.
+    cert:
+
+dataIngester:
+  # Whether to enable the CNOM Data Ingester service
+  enabled: false
+  # Hostname of the CNOM Data Ingester service
+  host: "eric-cnom-data-ingester"
+  # Port of the CNOM Data Ingester service
+  port: 50053
+  # Supervisor service
+  supervisor:
+    # Port of the supervisor service
+    port: 9001
+  encryptionKey:
+    # The encryption key secret. It provides the same encryption key for the server and data ingester.
+    secret: "eric-cnom-encryption-key"
+  sharedVolume:
+    # Whether to use CNOM Data Ingester's Persistent Volume Claim for sharing data files.
+    # If set to true, CNOM Data Ingester's PVC must support `ReadWriteMany`.
+    # This shared volume is temporary and will be removed soon when the support for Object Store is ready.
+    enabled: true
+    # The name of CNOM Data Ingester's Persistent Volume Claim.
+    claimName: "eric-cnom-data-ingester"
+
+messageBusKF:
+  # The Message Bus KF servers. This is used for communicating with the CNOM Data Ingester
+  # service, and is not needed if data ingester are not used.
+  servers: "eric-data-message-bus-kf:9092"
+  topic:
+    # Number of partitions
+    numPartitions: 2
+    # Number of replicas. Should not be greater than replicas of the Message Bus KF service.
+    replicationFactor: 2
+
+nrfProvision:
+  # Hostname of NRF Provision service
+  host: "eric-nrf-provision"
+  # Port of NRF Provision service
+  port: 3000
+
+nssfProvision:
+  # Hostname of NSSF Provision service
+  host: "eric-nssf-provisioning"
+  # Port of NSSF Provision service
+  port: 3000
+
+features:
+  # Status Overview application
+  statusOverview: true
+  # Alarm Viewer application
+  alarmViewer: true
+  # Log Viewer application
+  logViewer: true
+  # NRF Data Configuration - UE Routing Data application for UE group profile
+  nrfProvisionUeGroupProfile: false
+  # NRF Data Configuration - UE Routing Data application for UE individual profile
+  nrfProvisionUeIndividualProfile: false
+  # NRF Data Configuration - NF Profile application
+  nrfProvisionNfProfile: false
+  # NRF Data Configuration - PLMN NRF Address application
+  nrfProvisionNrfAddress: false
+  # NRF Data Configuration - S-NSSAI to UUT Mapping application for Embedded DNS
+  nrfProvisionSnssaiUutMapping: false
+  # NRF Data Configuration - Views application for Embedded DNS
+  nrfEmbeddedDnsView: false
+  # NRF Data Configuration - Address application for Embedded DNS
+  nrfEmbeddedDnsAddress: false
+  # NRF Data Configuration - Zones application for Embedded DNS
+  nrfEmbeddedDnsZone: false
+  # NRF Data Configuration - Root Name Servers application for Embedded DNS
+  nrfEmbeddedDnsRootServer: false
+  # NSSF Data Configuration application
+  nssfProvision: false
+  # Health Check Viewer application
+  healthCheckViewer: false
+  # Metric Viewer application
+  metricViewer: false
+  # Central Configuration Repository application
+  centralConfigurationRepository: false
+  # Whether switch brand base on role. Enter to brand2 after login by default.
+  switchBrandBaseOnRole: false
+  # YANG state data API (alpha feature)
+  yangStateData: false
+  # About
+  about: false
+  # The following features should be enabled with the Data Ingester enabled.
+  # Application Trace application for the IMS
+  applicationTrace: false
+  # Settings
+  settings: false
+  # Network Monitor application
+  networkMonitor: false
+  # Health Check application
+  healthCheck: false
+  # Troubleshooting application
+  troubleShooting: false
+  # UE Trace application
+  tracing: false
+  # Performance Monitor application
+  performanceMonitor: false
+  # BCAT application
+  bcat: false
+  # Data Manager application
+  dcm: false
+  # Graph Analysis application
+  graphAnalysis: false
+  # Integrated Traffic Capture application
+  itc: false
+  # KPI Management application
+  kpiManagement: false
+  # Whether to show switch button(switch to brand1) in brand2
+  brandSwitch: false

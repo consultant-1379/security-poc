@@ -1,0 +1,9 @@
+NAME=eric-enmsg-msapgfm
+DEP=true
+WAIT=true
+WAIT_LIST=neo4j,gossiprouter-cache,gossiprouter-remoting,jms01,postgres,sps
+REQUESTS=true
+REQUESTS_LIST=2048Mi
+LIMITS=true
+LIMITS_LIST=5120Mi
+SVC=msapgfm

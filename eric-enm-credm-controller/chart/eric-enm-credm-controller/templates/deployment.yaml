@@ -1,0 +1,204 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.service.name }}
+  labels:
+{{ include "eric-enm-credm-controller.labels" . | indent 4 }}
+  annotations:
+{{- include "eric-enm-credm-controller.product-info" . | indent 4 }}
+spec:
+  replicas: {{ template "eric-enm-credm-controller.replicas" . }}
+  selector:
+    matchLabels:
+      app: {{ .Values.service.name }}
+  strategy:
+    type: {{ .Values.updateStrategy.type }}
+{{- if and (eq .Values.updateStrategy.type "RollingUpdate") .Values.updateStrategy.rollingUpdate }}
+    rollingUpdate:
+{{ toYaml .Values.updateStrategy.rollingUpdate | indent 6 }}
+{{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.service.name }}
+{{ include "eric-enm-credm-controller.labels" . | indent 8 }}
+    spec:
+{{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+{{- end }}
+{{- if eq .Values.affinity.podAntiAffinity "hard" }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - {{ .Values.service.name }}
+            topologyKey: "kubernetes.io/hostname"
+{{- else if eq .Values.affinity.podAntiAffinity  "soft" }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ .Values.service.name }}
+              topologyKey: "kubernetes.io/hostname"
+{{- end }}
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+      nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.tolerations .Values.global.tolerations }}
+      tolerations:
+{{- if .Values.tolerations }}
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.global.tolerations }}
+{{ toYaml .Values.global.tolerations | indent 8 }}
+{{- end }}
+{{- end }}
+      # give job the permissions
+      serviceAccountName: {{ template "eric-enm-credm-controller.serviceAccountName" . }}
+      # wait container (waiting for SPS)
+{{- if or .Values.extraInitContainers .Values.images.ericCredmControllerInitContainer.enabled .Values.images.enmInitContainer.enabled }}
+      initContainers:
+{{- if .Values.images.ericCredmControllerInitContainer.enabled }}
+      - name: {{ .Values.service.name }}-wait
+        image: {{ template "eric-enm-credm-controller.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "ericCredmControllerInitContainer" "name" }}:{{ index .Values "images" "ericCredmControllerInitContainer" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+{{- if index .Values "images" "ericCredmControllerInitContainer" "command" }}
+{{- if or .Values.resources.initcontainer.requests.enabled .Values.resources.initcontainer.limits.enabled }}
+        resources:
+{{- if  .Values.resources.initcontainer.requests.enabled }}
+          requests:
+{{- if  .Values.resources.initcontainer.requests.memory }}
+            memory: {{ .Values.resources.initcontainer.requests.memory | quote }}
+{{- end }}
+{{- if  .Values.resources.initcontainer.requests.cpu }}
+            cpu: {{ .Values.resources.initcontainer.requests.cpu | quote }}
+{{- end }}
+{{- end }}
+{{- if  .Values.resources.initcontainer.limits.enabled }}
+          limits:
+{{- if  .Values.resources.initcontainer.limits.memory }}
+            memory: {{ .Values.resources.initcontainer.limits.memory | quote }}
+{{- end }}
+{{- if  .Values.resources.initcontainer.limits.cpu }}
+            cpu: {{ .Values.resources.initcontainer.limits.cpu | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+        command: {{ index .Values "images" "ericCredmControllerInitContainer" "command" }}
+{{- end }}
+        env:
+          - name: TZ
+            value: {{ .Values.global.timezone }}
+          - name: NAMESPACE
+            value: {{ .Release.Namespace }}
+          - name: DEBUG
+            value: {{ .Values.credmController.debug | quote }}
+{{- if .Values.images.ericCredmControllerInitContainer.env }}
+{{ toYaml .Values.images.ericCredmControllerInitContainer.env | indent 10 }}
+{{- end }}
+{{- end }}
+{{- end }}
+#end waitContainer
+      # rest server
+      containers:
+      - name: {{ .Values.service.name }}
+        image: {{ template "eric-enm-credm-controller.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "eric-enm-credm-controller" "name" }}:{{ index .Values "images" "eric-enm-credm-controller" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+{{- if or .Values.resources.requests.enabled .Values.resources.limits.enabled }}
+        resources:
+{{- if  .Values.resources.requests.enabled }}
+          requests:
+{{- if  .Values.resources.requests.memory }}
+            memory: {{ .Values.resources.requests.memory | quote }}
+{{- end }}
+{{- if  .Values.resources.requests.cpu }}
+            cpu: {{ .Values.resources.requests.cpu | quote }}
+{{- end }}
+{{- end }}
+{{- if  .Values.resources.limits.enabled }}
+          limits:
+{{- if  .Values.resources.limits.memory }}
+            memory: {{ .Values.resources.limits.memory | quote }}
+{{- end }}
+{{- if  .Values.resources.limits.cpu }}
+            cpu: {{ .Values.resources.limits.cpu | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+        env:
+{{ tpl (.Files.Get "appconfig/envvars/controllerenv.yaml") . | indent 10 }}
+{{- if .Values.extraEnv.enabled }}
+{{ tpl (.Files.Get "appconfig/envvars/extraenv.yaml") . | indent 10 }}
+{{- end }}
+{{- if .Values.extraPorts.enabled }}
+        ports:
+          - containerPort: {{ .Values.global.enmProperties.CREDM_REST_PORT }}
+            name: rest
+{{ tpl (.Files.Get "appconfig/containerPorts.txt") . | indent 10 }}
+{{- end }}
+{{- if .Values.livenessProbe.enabled }}
+        livenessProbe:
+          exec:
+            command: {{ .Values.livenessProbe.livenessCommand }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+{{- end }}
+{{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          exec:
+            command: {{ .Values.readinessProbe.readinessCommand }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+{{- end }}
+        volumeMounts:
+        - name: gpmap
+          mountPath: {{ .Values.gpMaps.mountPath }}
+{{- if .Values.persistentVolumeClaim.enabled }}
+        - name: pv-{{ template "eric-enm-credm-controller.name" . }}
+          mountPath: {{ .Values.persistentVolumeClaim.mountPath }}
+{{- end }}
+{{- if .Values.configMaps.enabled }}
+        - name: configurations
+          mountPath: {{ .Values.configMaps.mountPath }}
+{{- end }}
+{{- if .Values.extraVolumeMounts.enabled }}
+{{ .Files.Get "appconfig/volumeMounts.txt" | indent 8 }}
+{{- end }}
+{{- if include "eric-enm-credm-controller.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-enm-credm-controller.pullSecrets" . }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+{{- end }}
+      volumes:
+      - name: gpmap
+        configMap:
+{{- if .Values.gpMaps.enabled }}
+          name: {{ .Values.gpMaps.name }}
+{{- else }}
+          name: gpcloud
+{{- end }}
+{{- if .Values.persistentVolumeClaim.enabled }}
+      - name: pv-{{ template "eric-enm-credm-controller.name" . }}
+        persistentVolumeClaim:
+          claimName: pvc-{{ template "eric-enm-credm-controller.name" . }}
+{{- end }}

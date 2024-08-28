@@ -1,0 +1,62 @@
+- name: tmp
+  emptyDir: {}
+- name: amos
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-amos
+- name: batch
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-batch
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-configmgt
+- name: cron
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-cron
+- name: custom
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-custom
+- name: data
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-data
+- name: dlms
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-dlms
+- name: hcdumps
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-hcdumps
+- name: home
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-home
+- name: mdt
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-mdt
+- name: netlog
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-netlog
+- name: norollback
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-norollback
+- name: pm1
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-pm1
+- name: pm2
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-pm2
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-pmlinks
+- name: pmul
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-pmul
+- name: sdn
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-sdn
+- name: smrs
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-smrs
+- name: tfd
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-tfd
+- name: upgind
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-upgind

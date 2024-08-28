@@ -1,0 +1,95 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<artifactId>pki-manager</artifactId>
+		<version>1.0.5-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>pki-manager-profilemanagement-ejb</artifactId>
+	<packaging>ejb</packaging>
+
+	<name>[${project.parent.artifactId}] Profile Management EJB module</name>
+
+	<properties>
+		<version.maven-ejb-plugin>2.3</version.maven-ejb-plugin>
+		<sonar.tests>src/test/java</sonar.tests>
+		<consolidated.jacoco.path>${project.basedir}/../target/jacoco.exec</consolidated.jacoco.path>
+	</properties>
+
+	<build>
+		<!-- DO NOT DELETE RESOURCE FILTERING. FILTERING IS REQUIRED BY SERVICE 
+			FRAMEWORK. YOU CAN EXCLUDE FILES YOU DO NOT WANT TO BE FILTERED. -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ejb-plugin</artifactId>
+				<version>${version.maven-ejb-plugin}</version>
+				<configuration>
+					<ejbVersion>${version.ejb}</ejbVersion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>${version.jboss-as-maven-plugin}</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-instrumentation-jar</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-access-control-jar</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pki-manager-profilemanagement-jar</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pki-manager-validation-service-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${version.mockito}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-6.0</artifactId>
+			<version>${version.jboss.javaee}</version>
+			<type>pom</type>
+		</dependency>
+        <dependency>
+            <groupId>com.ericsson.cds</groupId>
+            <artifactId>cdi-test-support</artifactId>
+            <version>${cdi.test.support.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.org.slf4j.api}</version>
+        </dependency>
+	</dependencies>
+
+</project>

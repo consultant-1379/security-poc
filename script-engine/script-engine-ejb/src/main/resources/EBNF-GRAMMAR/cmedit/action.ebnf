@@ -1,0 +1,71 @@
+"cmedit" (* slogan = "Command set to read, manipulate, and export Configuration Management data" *) WS "action" (* slogan = "Executes an MO Action on one or more MO instances" *) ( ACTION_BY_FDN | ACTION_BY_QUERY )
+
+ACTION_BY_FDN ::= WS PREDEF_FDN_LAZY_HIDDEN { ";" (* slogan = "Semi-colon to add another scope to the list." *) PREDEF_FDN_LAZY_HIDDEN } WS [ ACTION_CLASS_FILTER WS ] ACTION_SPECIFICATION { ACTION_BY_FDN_OPTIONS } (* unique = "true" *)
+ACTION_BY_QUERY ::= ACTION_SCOPE [ ACTION_SCOPE_FILTER_OPTION ] WS ACTION_CLASS_FILTER WS ACTION_SPECIFICATION { ACTION_BY_QUERY_OPTIONS } (* unique = "true" *)
+
+ACTION_SCOPE ::= ( ACTION_SCOPE_WITHOUT_OPTION | ACTION_SCOPE_WITH_OPTION )
+ACTION_SCOPE_WITHOUT_OPTION ::= WS ( PREDEF_FDN_OR_NODENAME_OR_COLLECTION { ";" (* slogan = "Semi-colon to add another scope to the list." *) PREDEF_FDN_OR_NODENAME_OR_COLLECTION } | "*" (* slogan = "Network wide scope" *) )
+ACTION_SCOPE_WITH_OPTION ::= ( ACTION_NE_SCOPE [ ( ACTION_COLLECTION_SCOPE [ ACTION_SAVEDSEARCH_SCOPE ] | ACTION_SAVEDSEARCH_SCOPE [ ACTION_COLLECTION_SCOPE ] ) ] | ACTION_COLLECTION_SCOPE [ ( ACTION_NE_SCOPE [ ACTION_SAVEDSEARCH_SCOPE ] | ACTION_SAVEDSEARCH_SCOPE [ ACTION_NE_SCOPE ] ) ] | ACTION_SAVEDSEARCH_SCOPE [ ( ACTION_NE_SCOPE [ ACTION_COLLECTION_SCOPE ] | ACTION_COLLECTION_SCOPE [ ACTION_NE_SCOPE ] ) ] )
+
+ACTION_NE_SCOPE ::= WS ( "-n" (* hide = "true" *) | "--node" (* slogan = "Option to specify the Network Element to execute command on, e.g. 'ERBS123'. TIP : -n is the shorthand option for --node" *) ) WS  ( ACTION_NODE_NAME { ";" ACTION_NODE_NAME } | "*" (* slogan = "Network wide scope" *) )
+
+ACTION_NODE_NAME ::= ( <node_name> (* slogan = "Enter a node name as scope. Use * for partial node name wildcard, e.g. ERBS*" *) | ACTION_PARTIAL_NODE_NAME )
+ACTION_PARTIAL_NODE_NAME ::= [ "*" (* hide = "true" *) ] , <node_name> (* hide = "true" *) , [ "*" (* hide = "true" *) ]
+
+ACTION_COLLECTION_SCOPE ::= WS ( "-co" (* hide = "true" *) | "--collection" (* slogan = "Option to execute the command on a predefined collection. TIP : -co is the shorthand option for --collection" *) ) WS <collection_name> (* slogan = "Enter the name of the desired collection" *) { ";" (* slogan = "Semi-colon used to add to the list" *) <collection_name> (* slogan = "Enter the name of the desired collection" *) }
+ACTION_SAVEDSEARCH_SCOPE ::= WS ( "-sa" (* hide = "true" *) | "--savedsearch" (* slogan = "Option to execute the command on a predefined savedsearch. TIP : -sa is the shorthand option for --savedsearch" *) ) WS <savedsearch_name> (* slogan = "Enter the name of the desired savedsearch" *) { ";" (* slogan = "Semi-colon used to add to the list" *) <savedsearch_name> (* slogan = "Enter the name of the desired savedsearch" *) }
+
+ACTION_SCOPE_FILTER_OPTION ::= WS "--scopefilter" WS (* slogan = "Option to specify the scope filter to execute the command with" *) ACTION_SCOPE_FILTER
+ACTION_SCOPE_FILTER ::= "(" ACTION_CLASS_FILTER_LIST_IN_SCOPE_FILTER ")"
+
+ACTION_CLASS_FILTER_LIST_IN_SCOPE_FILTER ::= ACTION_CLASS_FILTER_IN_SCOPE_FILTER { WS "AND" WS (* slogan = "operator used to add another scope to the list." *) ACTION_CLASS_FILTER_IN_SCOPE_FILTER }
+
+ACTION_CLASS_FILTER ::= <MO_class_type> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Query Network Data by MO Class Type. E.g. EUtranCellFDD" *) ( [ "=" (* slogan = "perform action on a MO using it's Id" *) [ "*" (* hide = "true" *) ] <MO_id> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" regex = "^[a-zA-Z0-9\\._-]+[a-zA-Z0-9\\._-]*$" slogan = "A star can be used as a wildcard at the start and/or end of the value i.e. *cell01." *) [ "*" (* hide = "true" *) ] ] | [ "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( ACTION_ATTRIBUTE_FILTER | ACTION_ATTRIBUTE_FILTER_LIST ) ] )
+ACTION_CLASS_FILTER_IN_SCOPE_FILTER ::= <MO_class_type> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Query Network Data by MO Class Type. E.g. EUtranCellFDD" *) "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( ACTION_ATTRIBUTE_FILTER_IN_SCOPE_FILTER | ACTION_ATTRIBUTE_FILTER_LIST_IN_SCOPE_FILTER )
+ACTION_SPECIFICATION ::= <action_name> (* slogan = "Name of MO Action to execute. e.g. 'manualrestart'" *) [ "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( ACTION_ATTRIBUTE_SETTER | ACTION_ATTRIBUTE_SETTER_LIST ) ]
+ACTION_ATTRIBUTE_SETTER_LIST ::= "(" (* slogan = "Open bracket used to start a list of attributes.  e.g. 'eutrancellfdd.(tac, administrativestate)'" *) ACTION_ATTRIBUTE_SETTER { ( ";" (* hide = "true" slogan = "Semi-colon used to add another attribute to the list." *) | "," (* slogan = "Comma used to add another attribute to a list." *) ) ACTION_ATTRIBUTE_SETTER } ")" (* slogan = "Close bracket used to close a list of attributes.  e.g. 'eutrancellfdd.(tac, administrativestate)'" *)
+ACTION_ATTRIBUTE_SETTER ::= <action_parameter_name> (* slogan = "Name of Action Parameter e.g. 'manualrestart.(restartRank)'" *) "=" <action_parameter_value> (* inputType = "attributeValue" slogan = "Value of Action Parameter e.g. 'manualrestart.(restartRank=RESTART_COLD)'" *)
+ACTION_ATTRIBUTE_FILTER_LIST ::= "(" (* slogan = "Open bracket used to start a list of attributes.  e.g. 'eutrancellfdd.(tac, administrativestate)'" *) ACTION_ATTRIBUTE_FILTER { "," (* slogan = "Comma used to add another attribute filter to a list." *) ACTION_ATTRIBUTE_FILTER } ")" (* slogan = "Close bracket used to close a list of attributes.  e.g. 'eutrancellfdd.(tac, administrativestate)'" *)
+ACTION_ATTRIBUTE_FILTER_LIST_IN_SCOPE_FILTER ::= "(" (* slogan = "Open bracket used to start a list of attributes.  e.g. 'eutrancellfdd.(tac, administrativestate)'" *) ACTION_ATTRIBUTE_FILTER_IN_SCOPE_FILTER { "," (* slogan = "Comma used to add another attribute filter to a list." *) ACTION_ATTRIBUTE_FILTER_IN_SCOPE_FILTER } ")" (* slogan = "Close bracket used to close a list of attributes.  e.g. 'eutrancellfdd.(tac, administrativestate)'" *)
+
+ACTION_ATTRIBUTE_LIST_VALUE ::= """ <attribute_list_value> (* regex = "^([^"]+)$" slogan = "Enter a list item value" *) """
+ACTION_ATTRIBUTE_LIST_AND_OPERATOR_WITH_VALUE ::= { "&&" (* slogan = "and" *) ACTION_ATTRIBUTE_LIST_VALUE }
+ACTION_ATTRIBUTE_LIST_OR_OPERATOR_WITH_VALUE ::= { "||" (* slogan = "or" *) ACTION_ATTRIBUTE_LIST_VALUE }
+ACTION_COMPARISON_OPERATORS ::= ( ACTION_COMPARISON_OPERATOR_LT | ACTION_COMPARISON_OPERATOR_GT | ACTION_COMPARISON_OPERATOR_LTEQ | ACTION_COMPARISON_OPERATOR_GTEQ | ACTION_COMPARISON_OPERATOR_NEQ | ACTION_COMPARISON_OPERATOR_NLT | ACTION_COMPARISON_OPERATOR_NGT | ACTION_COMPARISON_OPERATOR_EQEQ | ACTION_COMPARISON_OPERATOR_LIST_CONTAINS | ACTION_COMPARISON_OPERATOR_LIST_CONTAINS_RETURNS_MATCHING_MEMBER_ONLY )
+ACTION_MEMBER_COMPARISON_OPERATORS ::= ( ACTION_COMPARISON_OPERATOR_LT | ACTION_COMPARISON_OPERATOR_GT | ACTION_COMPARISON_OPERATOR_LTEQ | ACTION_COMPARISON_OPERATOR_GTEQ | ACTION_COMPARISON_OPERATOR_NEQ | ACTION_COMPARISON_OPERATOR_NLT | ACTION_COMPARISON_OPERATOR_NGT | ACTION_COMPARISON_OPERATOR_EQEQ )
+ACTION_COMPARISON_OPERATOR_LT ::= "<" (* slogan = "less than" *) ACTION_ATTRIBUTE_VALUE
+ACTION_COMPARISON_OPERATOR_GT ::= ">" (* slogan = "greater than" *) ACTION_ATTRIBUTE_VALUE
+ACTION_COMPARISON_OPERATOR_LTEQ ::= "<=" (* slogan = "less than or equal to" *) ACTION_ATTRIBUTE_VALUE
+ACTION_COMPARISON_OPERATOR_GTEQ ::= ">=" (* slogan = "greater than or equal to" *) ACTION_ATTRIBUTE_VALUE
+ACTION_COMPARISON_OPERATOR_NEQ ::= "!=" (* slogan = "not equal to" *) ACTION_ATTRIBUTE_VALUE
+ACTION_COMPARISON_OPERATOR_NLT ::= "!<" (* slogan = "not less than" *) ACTION_ATTRIBUTE_VALUE
+ACTION_COMPARISON_OPERATOR_NGT ::= "!>" (* slogan = "not greater than" *) ACTION_ATTRIBUTE_VALUE
+ACTION_COMPARISON_OPERATOR_EQEQ ::= "==" (* slogan = "equal to" *) ACTION_ATTRIBUTE_VALUE
+ACTION_COMPARISON_OPERATOR_LIST_CONTAINS ::= "~~" (* slogan = "list contains" *) "[" (* slogan = "start list" *) ( ACTION_ATTRIBUTE_LIST_OF_STRINGS | ACTION_ATTRIBUTE_LIST_OF_STRUCTS ) "]" (* slogan = "end list" *)
+ACTION_COMPARISON_OPERATOR_LIST_CONTAINS_RETURNS_MATCHING_STRUCT_ONLY ::= "~&" (* slogan = "Separator used to attach member filters to the attribute" *) "[" (* slogan = "start list" *) ACTION_ATTRIBUTE_LIST_OF_STRUCTS "]" (* slogan = "end list" *)
+ACTION_COMPARISON_OPERATOR_LIST_CONTAINS_RETURNS_MATCHING_MEMBER_ONLY ::= "." (* slogan = "Separator used to attach member filters to the attribute" *) "[" (* slogan = "start list" *) ACTION_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET "]" (* slogan = "end list" *)
+ACTION_ATTRIBUTE_LIST_OF_STRINGS ::= ACTION_ATTRIBUTE_LIST_VALUE ( ACTION_ATTRIBUTE_LIST_AND_OPERATOR_WITH_VALUE | ACTION_ATTRIBUTE_LIST_OR_OPERATOR_WITH_VALUE )
+ACTION_ATTRIBUTE_LIST_OF_STRUCTS ::= "{" (* slogan = "start struct" *) ACTION_COMPLEX_MEMBER_FILTER_LIST_IN_LIST_CONTAINS "}" (* slogan = "end struct" *)
+ACTION_ATTRIBUTE_VALUE ::= <attribute_value> (* regex = "^(?:\-\d|[\w\$\=]+)[\w\$\-]*$" inputType = "wrapDoubleQuotes,wrapSingleQuotes,wrapSquareBrackets,wrapParentheses,wrapCurlyBrackets" slogan = "When matching Strings using '==' a star can be used as a wildcard at the start and/or end of the value i.e. userLabel==Test*. When matching Strings using '!=' a star is not permitted." *)
+ACTION_ATTRIBUTE_FILTER ::= <attribute_name> (* slogan = "Attribute name to filter on." *) [ ( ACTION_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *) | "." (* slogan = "Separator used to attach member filters to the attribute" *) ACTION_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET ) ]
+ACTION_ATTRIBUTE_FILTER_IN_SCOPE_FILTER ::= <attribute_name> (* slogan = "Attribute name to filter on." *) ( ACTION_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *) | "." (* slogan = "Separator used to attach member filters to the attribute" *) ACTION_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET_IN_SCOPE_FILTER )
+
+ACTION_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET ::= ( "{" | "(" (* hide = "true" *) ) ACTION_COMPLEX_MEMBER_FILTER_LIST ( "}" | ")" (* hide = "true" *) )
+ACTION_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET_IN_SCOPE_FILTER ::= ( "{" | "(" (* hide = "true" *) ) ACTION_COMPLEX_MEMBER_FILTER_LIST_IN_LIST_CONTAINS ( "}" | ")" (* hide = "true" *) )
+ACTION_COMPLEX_MEMBER_FILTER_LIST ::= ACTION_COMPLEX_MEMBER_FILTER { "," (* slogan = "Comma used to add another member filter to a list." *) ACTION_COMPLEX_MEMBER_FILTER }
+ACTION_COMPLEX_MEMBER_FILTER_LIST_IN_LIST_CONTAINS ::= ACTION_COMPLEX_MEMBER_FILTER_IN_LIST_CONTAINS { "," (* slogan = "Comma used to add another member filter to a list." *) ACTION_COMPLEX_MEMBER_FILTER_IN_LIST_CONTAINS }
+ACTION_COMPLEX_MEMBER_FILTER ::=  <member_name> (* slogan = "Member name to filter on." *) [ ACTION_MEMBER_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *) ]
+ACTION_COMPLEX_MEMBER_FILTER_IN_LIST_CONTAINS ::=  <member_name> (* slogan = "Member name to filter on." *) ACTION_MEMBER_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *)
+
+ACTION_BY_FDN_OPTIONS ::= ( OUTPUT_FORMAT | ( FORCE | PREVIEW ) )
+ACTION_BY_QUERY_OPTIONS ::= ( ACTION_NAMESPACE | ACTION_VERSION | NETYPE | OUTPUT_FORMAT | ( FORCE | PREVIEW ) )
+
+ACTION_NAMESPACE ::= WS ( "-ns" (* hide = "true" *) | "-namespace" (* hide = "true" *) | "--namespace" (* slogan = "[Optional] Query Network Data by specific modeled namespace. Tip: -ns for short" *) ) ACTION_NAMESPACE_INPUT
+ACTION_NAMESPACE_INPUT ::= ( WS | "=" (* hide = "true" *) ) <namespace> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Name of specific Modeled Namespace to query towards. E.g. MSRBS_V1_eNodeBFunction" *)
+ACTION_VERSION ::= WS ( "-v" (* hide = "true" *) | "-version" (* hide = "true" *) | "--version" (* slogan = "[Optional] Query Network Data by modeled version. Tip: -v for short" *) ) ACTION_VERSION_INPUT
+ACTION_VERSION_INPUT ::= ( WS | "=" (* hide = "true" *) ) <version> (* inputType = "version" slogan = "Name of specific modeled version to query towards.  E.g. H.1.140" *)
+NETYPE ::= WS ( "-ne" (* hide = "true" *) | "-netype" (* hide = "true" *) | "--netype" (* slogan = "Query Network Data by NE type.  Tip: -ne for short" *) ) "=" <NE_type> (* slogan = "Query network data by NE Type. E.g. ERBS" *)
+FORCE ::= WS "--force" (* slogan = "[Optional] Force the command execution." *)
+PREVIEW ::= WS ( "-pre" (* hide = "true" *) | "--preview" (* slogan = "[Optional] Preview the MOI(s) involved in the command. Tip: -pre for short" *) )
+OUTPUT_FORMAT ::= WS ( "-l" (* hide = "true" *) | "-list" (* hide = "true" *) | "--list" (* slogan = "[Optional] Display output results in list format. This is default output format.  Tip: -l for short" *) | "-t" (* hide = "true" *) | "-table" (* hide = "true" *) | "--table" (* slogan = "[Optional] Display output results in tabular format.  Tip: -t for short" *) )
+CONFIGURATION ::= WS ( "-c" (* hide = "true" *) | "--config" (* slogan = "[Optional] Execute command on an existing Configuration. Tip: shorthand is -c. Note: 'live' is default" *) ) "=" <configuration> (* slogan = "Name of Configuration to execute the command against. 'Live' is default" *)

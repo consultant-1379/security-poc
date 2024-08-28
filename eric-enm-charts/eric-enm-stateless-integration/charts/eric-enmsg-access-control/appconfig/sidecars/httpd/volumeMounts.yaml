@@ -1,0 +1,4 @@
+- name: data
+  mountPath: /ericsson/tor/data
+- name: mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment

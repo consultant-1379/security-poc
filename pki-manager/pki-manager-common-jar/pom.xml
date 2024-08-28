@@ -1,0 +1,132 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<artifactId>pki-manager</artifactId>
+		<version>1.0.5-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>pki-manager-common-jar</artifactId>
+	<packaging>jar</packaging>
+
+	<name>[${project.parent.artifactId}] Common JAR module</name>
+	<properties>
+		<sonar.tests>src/test/java</sonar.tests>
+		<consolidated.jacoco.path>${project.basedir}/../target/jacoco.exec</consolidated.jacoco.path>
+	</properties>
+	<build>
+		<finalName>pki-manager-common-${project.version}</finalName>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>${version.jboss-as-maven-plugin}</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-common-model</artifactId>
+			<version>${version.pki.manager.api}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-common-model</artifactId>
+			<version>${version.pki.common}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-common-jar</artifactId>
+			<version>${version.pki.common}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-persistence-entities</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-rest-service-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- DO NOT DELETE THIS DEPENDENCY. IT CONTAINS SERVICE FRAMEWORK ANNOTATION 
+			PROCESSORS AND IS REQUIRED TO AUTOMATICALLY GENERATE ARTIFACTS REQUIRED BY 
+			SERVICE FRAMEWORK. -->
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-core-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency> 	
+		 	<groupId>com.ericsson.oss.services.fm</groupId> 			
+		  	<artifactId>internal-alarm-service-api</artifactId> 			
+		   	<version>${version.internal.alarm.service.api}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>service-framework-dist</artifactId>
+					<groupId>com.ericsson.oss.itpf.sdk</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>${version.resteasy}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-client</artifactId>
+			<version>${version.resteasy.client}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${version.httpclient}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${version.jackson.mapper}</version>
+		</dependency> 
+        <dependency>
+            <groupId>com.ericsson.cds</groupId>
+            <artifactId>cdi-test-support</artifactId>
+            <version>${cdi.test.support.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.org.slf4j.api}</version>
+        </dependency>
+	</dependencies>
+
+</project>

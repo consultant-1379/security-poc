@@ -1,0 +1,14 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg-sso.service-prometheus") -}}
+  {{- define "eric-enmsg-sso.service-prometheus" -}}
+metadata:
+  name: {{ index .Values.service.additionalServiceNames  0 }}
+  labels:
+    service: {{ index .Values.service.additionalServiceNames  0 }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/heimdallr/json/metrics/prometheus"
+spec:
+  clusterIP: None
+  {{- end -}}
+

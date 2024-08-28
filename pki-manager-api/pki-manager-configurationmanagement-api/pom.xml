@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<artifactId>pki-manager-api</artifactId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>pki-manager-configurationmanagement-api</artifactId>
+	<name>[${project.parent.artifactId}] Configuration Management API JAR module</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.parent.groupId}</groupId>
+			<artifactId>pki-manager-common-model</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+		<!-- DO NOT DELETE THIS DEPENDENCY. IT CONTAINS SERVICE FRAMEWORK ANNOTATION 
+			PROCESSORS AND IS REQUIRED TO AUTOMATICALLY GENERATE ARTIFACTS REQUIRED BY 
+			SERVICE FRAMEWORK. -->
+	</dependencies>
+</project> 

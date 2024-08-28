@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+	<application>
+		<certificates>
+			<certificate>
+				<tbscertificate>
+					<version>3</version>
+					<subject>
+						<distinguishname>CN=HOST_APACHE</distinguishname>
+					</subject>
+					<issuer>
+						<distinguishname>TORWebCA</distinguishname>
+					</issuer>
+					<certificateextension>
+						<subjectalternativename>
+							<dns>BLADE-HOST_APACHE</dns>
+							<ipaddress>IP_ADDRESS</ipaddress>
+						</subjectalternativename>
+					</certificateextension>
+				</tbscertificate>
+				<endentityprofilename>TOREndEntityProfile</endentityprofilename>
+				<signaturealgorithm>SHA256WithRSAEncryption</signaturealgorithm>
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+
+				<keystore>
+					<base64keystore>
+						<keystorelocation>
+							<privatekeyfilelocation>PRIVATE_KEY_LOCATION</privatekeyfilelocation>
+							<certicatefilelocation>CERTS_LOCATION</certicatefilelocation>
+						</keystorelocation>
+					</base64keystore>
+				</keystore>
+
+				<truststore>
+					<base64truststore>
+						<cacertificates>
+							<cacertificate>
+								<subject>TORWebCA</subject>
+							</cacertificate>
+						</cacertificates>
+						<truststorelocation>CA_LOCATIONmgmtrootca.cer</truststorelocation>
+					</base64truststore>
+				</truststore> 
+			</certificate>
+		</certificates>
+	</application>
+</applications>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+	<application>
+		<certificates>
+			<certificate>			
+				<tbscertificate>
+					<subject>
+						<entityname>atclvm501##HOSTNAME##</entityname>
+					</subject>
+				</tbscertificate>
+				<endentityprofilename>CMPRA_EP</endentityprofilename>
+				<keystore>
+					<jkskeystore>
+						<storealias>short</storealias >
+						<storelocation>certs/Short.JKS</storelocation>
+						<storepassword>changeit</storepassword>
+					</jkskeystore>					
+				</keystore>
+			</certificate>
+			
+		</certificates>
+		
+			<crlupdatemode>CrlSelfManaged</crlupdatemode>		
+			
+	</application>
+	<user>
+		<!-- keep in the same line to allow grep researches -->
+		<username>myUser</username>
+		<usergroup>myGroup</usergroup>
+	</user>
+</applications>

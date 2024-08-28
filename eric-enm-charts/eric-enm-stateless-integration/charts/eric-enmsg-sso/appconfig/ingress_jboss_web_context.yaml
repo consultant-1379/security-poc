@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: sso
+      port:
+        number: 443
+  path: /oss/sso/utilities
+  pathType: ImplementationSpecific

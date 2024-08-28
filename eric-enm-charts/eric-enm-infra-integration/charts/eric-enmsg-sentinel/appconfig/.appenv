@@ -1,0 +1,11 @@
+STS=true
+NAME=eric-enmsg-sentinel
+PERSIST=true
+PERSIST_LIST=ReadWriteMany,1Gi,/ericsson/sentinel_lic
+SVC=sentinel
+EXTRASVC=true
+ESVC_LIST=sentinelhost
+REQUESTS=true
+REQUESTS_LIST=4096Mi
+LIMITS=true
+LIMITS_LIST=4096Mi

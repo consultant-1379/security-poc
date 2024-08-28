@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+<Trust-Profiles>
+	<!-- Used only for SubCA's certificate -->
+
+	<TrustProfile Name="ENM PKI Root CA" >
+		<InternalCA>CN=ENM PKI Root CA</InternalCA>
+	</TrustProfile>	
+		
+
+	<TrustProfile Name="ENM Infrastructure CA">
+		<InternalCA>CN=ENM PKI Root CA</InternalCA>
+		<InternalCA>CN=ENM Infrastructure CA</InternalCA>
+	</TrustProfile>	
+	
+	<TrustProfile Name="ENM OAM CA">
+		<InternalCA>CN=ENM PKI Root CA</InternalCA>
+		<InternalCA>CN=ENM Infrastructure CA</InternalCA>
+		<InternalCA>CN=ENM OAM CA</InternalCA>
+	</TrustProfile>	
+	
+	<TrustProfile Name="ENM Management CA">
+		<InternalCA>CN=ENM PKI Root CA</InternalCA>
+		<InternalCA>CN=ENM Infrastructure CA</InternalCA>
+		<InternalCA>CN=ENM Management CA</InternalCA>
+	</TrustProfile>	
+	
+	<TrustProfile Name="ENM UI CA">
+		<InternalCA>CN=ENM PKI Root CA</InternalCA>
+		<InternalCA>CN=ENM Infrastructure CA</InternalCA>
+		<InternalCA>CN=ENM UI CA</InternalCA>
+	</TrustProfile>	
+	
+	<TrustProfile Name="ENM NBI CA">
+		<InternalCA>CN=ENM PKI Root CA</InternalCA>
+		<InternalCA>CN=ENM Infrastructure CA</InternalCA>
+		<InternalCA>CN=ENM NBI CA</InternalCA>
+	</TrustProfile>	
+    
+    <TrustProfile Name="EPPKI_TP">
+        <ExternalCA>VC_Root_CA_A1</ExternalCA>
+    </TrustProfile> 
+    
+    <TrustProfile Name="EPPKI_A1B1_TP">
+        <ExternalCA>VC_Root_CA_A1</ExternalCA>
+        <ExternalCA>VC_Root_CA_B1</ExternalCA>
+    </TrustProfile> 
+	
+</Trust-Profiles>	
+</Profiles>
+
+
+
+

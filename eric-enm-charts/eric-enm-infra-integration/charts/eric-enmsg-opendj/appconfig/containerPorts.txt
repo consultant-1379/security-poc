@@ -1,0 +1,12 @@
+- containerPort: {{ .Values.global.enmProperties.COM_INF_LDAP_PORT }}
+  name: ldaps
+- containerPort: 4444
+  name: admin
+- containerPort: 8989
+  name: replication
+- containerPort: 8447
+  name: https
+- containerPort: 1689
+  name: jmx
+- containerPort: {{ .Values.config.port.prometheusMonitoring }}
+  name: metrics

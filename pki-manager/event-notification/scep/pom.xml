@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>pki-manager-event-notification</artifactId>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<version>1.0.5-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>pki-manager-event-notification-scep</artifactId>
+	<name>[${project.parent.artifactId}] SCEP Event Notification Handling</name>
+	<properties>
+		<sonar.tests>src/test/java</sonar.tests>
+		<consolidated.jacoco.path>${project.basedir}/../target/jacoco.exec</consolidated.jacoco.path>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-ra-scep-model-deploy-model</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-profilemanagement-api</artifactId>
+			<version>${version.pki.manager.api}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-certificatemanagement-api</artifactId>
+			<version>${version.pki.manager.api}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-crlmanagement-api</artifactId>
+			<version>${version.pki.manager.api}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pki-manager-local-service-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pki-credentialsmanagement-jar</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-common-scep</artifactId>
+			<version>${version.pki.common}</version>
+		</dependency>
+	</dependencies>
+</project>

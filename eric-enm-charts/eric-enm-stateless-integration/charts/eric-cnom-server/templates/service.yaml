@@ -1,0 +1,39 @@
+{{- $global := fromJson (include "eric-cnom-server.global" .) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "eric-cnom-server.fullname" . }}
+  labels:
+    {{- include "eric-cnom-server.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-cnom-server.product-info" . | nindent 4 }}
+    {{- if .Values.annotations }}
+    {{- .Values.annotations | toYaml | nindent 4 }}
+    {{- end }}
+spec:
+  type: {{ .Values.service.type | quote }}
+  selector:
+    {{- include "eric-cnom-server.selectorLabels" . | nindent 4 }}
+  {{- if .Values.global }}
+  {{- if .Values.global.internalIPFamily }}
+  ipFamilies:
+    - {{ .Values.global.internalIPFamily | quote }}
+  {{- end }}
+  {{- end }}
+  ports:
+    - name: http-api
+      port: {{ .Values.service.endpoints.api.port }}
+      targetPort: http-api
+      protocol: TCP
+      {{- if semverCompare ">=1.22.0-0" .Capabilities.KubeVersion.Version }}
+      appProtocol: {{ and $global.security.tls.enabled (eq .Values.service.endpoints.api.tls.enforced "required") | ternary "https" "http" }}
+      {{- end }}
+    {{- if .Values.features.yangStateData }}
+    - name: http-yangstate
+      port: {{ .Values.service.endpoints.yangStateData.port }}
+      targetPort: http-yangstate
+      protocol: TCP
+      {{- if semverCompare ">=1.22.0-0" .Capabilities.KubeVersion.Version }}
+      appProtocol: {{ and $global.security.tls.enabled (eq .Values.service.endpoints.yangStateData.tls.enforced "required") | ternary "https" "http" }}
+      {{- end }}
+    {{- end }}

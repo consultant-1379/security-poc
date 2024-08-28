@@ -1,0 +1,12 @@
+{{- template "eric-enm-common-helmchart-library.ingress" (list . "eric-enmsg-ebs-controller.ingress_jboss_web_context") -}}
+{{- define "eric-enmsg-ebs-controller.ingress_jboss_web_context" -}}
+metadata:
+  annotations:
+     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  rules:
+  - host: {{ template "eric-enm-common-helmchart-library.enmHost" . }}
+    http:
+      paths:
+{{ tpl (.Files.Get "appconfig/ingress_jboss_web_context.yaml") . | indent 6 }}
+{{- end -}}

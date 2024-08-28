@@ -1,0 +1,38 @@
+{{- if .Values.replicaSet.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ template "eric-cnom-document-database-mg.name" . }}
+    app.kubernetes.io/version: {{ template "eric-cnom-document-database-mg.version" . }}
+    app.kubernetes.io/instance : {{ .Release.Name }}
+    chart: {{ template "eric-cnom-document-database-mg.chart" . }}
+    heritage: {{ .Release.Service }}
+  name: {{ template "eric-cnom-document-database-mg.name" . }}-replicaset-scripts
+  annotations:
+    {{- include "eric-cnom-document-database-mg.product-info" . | nindent 4 }}
+data:
+  run-replicas: |-
+    #!/bin/bash
+
+    # Load libraries
+    . /libmongodb.sh
+
+    # Load MongoDB env. variables
+    mongodb_env
+
+    if [[ "$MONGODB_POD_NAME" = "{{ template "eric-cnom-document-database-mg.name" . }}-0" ]]; then
+        info "Configuring node as a primary"
+        export MONGODB_REPLICA_SET_MODE="primary"
+    else
+        info "Configuring node as a secondary"
+        export MONGODB_REPLICA_SET_MODE="secondary"
+    fi
+
+    exec /entrypoint.sh \
+    {{- if and (or .Values.logging.logshipper.enabled (has "file" .Values.logging.output)) (has "stdout" .Values.logging.output) }}
+    /stdout-redirect -logfile /logs/mongodb.log -run /run.sh -redirect all
+    {{- else }}
+    /run.sh
+    {{- end }}
+{{- end }}

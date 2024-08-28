@@ -1,0 +1,21 @@
+{{- if .Values.global.ericIngress.enabled }}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: msfm
+spec:
+  virtualServiceIP: {{ .Values.global.vips.fm_vip_address }}
+  backends:
+    name: msfm
+    config:
+      - portRange:
+          vipPortRange:
+            start: 4569
+            end: 4582
+          svcPortRange:
+            start: 4569
+            end: 4582
+        protocol: tcp
+        algo: sh
+        mode: nat
+{{- end }}

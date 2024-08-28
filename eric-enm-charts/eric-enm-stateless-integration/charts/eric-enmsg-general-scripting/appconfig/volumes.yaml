@@ -1,0 +1,77 @@
+- name: cgroups-host-volume
+  hostPath:
+    # directory location on host
+    path: /sys/fs/cgroup
+    # this field is optional
+    type: Directory
+- name: run-volume
+  emptyDir:
+    medium: Memory
+    sizeLimit: 100Mi
+- name: tmp-volume
+  emptyDir:
+    medium: Memory
+    sizeLimit: 100Mi
+- name: gp
+  configMap:
+    name: gpscripting
+- name: sshd-config
+  configMap:
+    name: sshd
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: home
+  persistentVolumeClaim:
+    claimName: home
+- name: cron
+  persistentVolumeClaim:
+    claimName: cron
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: batch
+  persistentVolumeClaim:
+    claimName: batch
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: amos
+  persistentVolumeClaim:
+    claimName: amos
+- name: tfd
+  persistentVolumeClaim:
+    claimName: tfd
+- name: pmul
+  persistentVolumeClaim:
+    claimName: pmul
+- name: pm1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pm2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: smrs
+  persistentVolumeClaim:
+    claimName: smrs
+- name: dlms
+  persistentVolumeClaim:
+    claimName: dlms
+- name: netlog
+  persistentVolumeClaim:
+    claimName: netlog
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: upgind
+  persistentVolumeClaim:
+    claimName: upgind
+- name: elect
+  persistentVolumeClaim:
+    claimName: elect

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.name.legacy }}
+  labels:
+    app: {{ .Values.service.name.main }}
+    heritage: "{{ .Release.Service }}"
+    app.kubernetes.io/name: "{{ .Values.service.name.legacy }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-enm-kvstore-hc.chart" . }}
+  annotations:
+{{- include "eric-enm-kvstore-hc.product-info" . | indent 4 }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+{{ .Files.Get "appconfig/servicePorts.txt" | indent 4 }}
+  selector:
+    app: {{ .Values.service.name.main }}

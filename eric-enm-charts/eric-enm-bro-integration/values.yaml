@@ -1,0 +1,72 @@
+global:
+  registry:
+    url: armdocker.rnd.ericsson.se
+    imagePullPolicy: Always
+  timezone: UTC
+  security:
+    tls:
+      enabled: false
+
+productInfo:
+  name: "Ericsson Network Manager"
+  type: "Network Manager"
+  number: "AOM 901 151 R1DM"
+  productSet: "22.08"
+  date: 2022-06-21T13:00:07Z # production date is inserted during helm-package
+  description: "ENM"
+
+eric-ctrl-bro:
+  enabled: true
+  log:
+    outputs:
+      - tcp
+      - console
+  bro:
+    enableAgentDiscovery: true
+    appProductInfoConfigMap: product-version-configmap
+    productMatchType: EXACT_MATCH # Validation of : product number - product set
+    immediateFailedBackupDeletion: true
+    grpc:
+      restore:
+        dataChannelTimeoutSecs: "1800"
+  persistence:
+    persistentVolumeClaim:
+      # eric-enm-integration-production-values.yml contain no overrides so the
+      # default value here is set to 100Gi. This will eventually be the
+      # production value of 2 Ti. Overrides for KaaS and OpenStack will be added
+      # in their respective values files
+      size: "100Gi"
+      storageClassName: "default"
+  security:
+    tls:
+      broToAgent:
+        enabled: false
+  service:
+    endpoints:
+      broToAgent:
+        tls:
+          enforced: optional
+          verifyClientCertificate: optional
+  sftp:
+    archive:
+      # During SFTP export, BRO's default backup compression level is set to
+      # BEST_SPEED. We are overriding this value to NO_COMPRESSION as each SG
+      # bragent is already applying the best compression to it's backup based
+      # on the type of data that is backed up.
+      compressionLevel: NO_COMPRESSION
+  resources:
+    backupAndRestore:
+      limits:
+        cpu: "4"
+        memory: "4Gi"
+        ephemeral-storage: "1Gi"
+      requests:
+        cpu: "2"
+        memory: "2Gi"
+        ephemeral-storage: "500Mi"
+
+eric-ctrl-brocli:
+  enabled: true
+  nameOverride: "brocli"
+  logshipper:
+    enabled: true

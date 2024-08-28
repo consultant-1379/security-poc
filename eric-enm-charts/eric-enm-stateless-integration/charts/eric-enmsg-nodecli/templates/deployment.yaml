@@ -1,0 +1,3 @@
+{{- template "eric-enm-common-helmchart-library.deployment" (list . "eric-enmsg-nodecli.deployment") -}}
+{{- define "eric-enmsg-nodecli.deployment" -}}
+{{- end -}}

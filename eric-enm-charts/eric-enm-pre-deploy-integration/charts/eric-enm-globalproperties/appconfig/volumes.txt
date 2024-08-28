@@ -1,0 +1,6 @@
+- name: pv-smrs
+  persistentVolumeClaim:
+    claimName: smrs
+- name: tz-config
+  hostPath:
+    path: /etc/localtime

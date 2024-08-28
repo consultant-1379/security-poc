@@ -1,0 +1,3 @@
+preStop:
+  exec:
+    command: [ '/bin/sh', '-c', '/ericsson/3pp/jboss/bin/post-stop/cm_events_nbi_store_files.sh' ]

@@ -1,0 +1,49 @@
+# ------------------------------------------------------------------------------------------------
+#Check these log files once a day and for each *\.log 
+#   if file is zero length 
+#     do nothing
+#   else
+#     rotate file if the size is greater than 2M by copying it
+#     after copying truncate the file
+#     keep maximum of 15 previous versions of the file (file.log.1,...,file.log.15
+#     and do enhance the rotated file with the date info, rotated files to be moved in the old dir
+# ------------------------------------------------------------------------------------------------
+/var/log/enmcertificates/CredManagerCliShell.log  /var/log/enmcertificates/enmCertificatesCrontab.log   /var/log/enmcertificates/enmCertificatesLocal.log{
+  daily
+  create
+  dateext
+  notifempty
+  missingok
+# each run is taking about 3K for each day 3k *48= 144K 
+# each log file is taking about 2 weeks 
+  rotate 10
+  minsize 2M
+  copytruncate
+  olddir  /var/log/enmcertificates/oldlogs
+}
+
+/var/log/credentialmanager/stdout.out.3 {
+  daily
+  missingok
+  compress
+# nodateext
+  size 1M
+  rotate 2
+}
+
+/var/log/credentialmanager/CredentialManagerCLI*.log {
+  daily
+  missingok
+  size 100
+  rotate 2
+# maxage 5
+  sharedscripts
+  prerotate
+    /usr/bin/find /var/log/credentialmanager/CredentialManagerCLI*.* -size +1M -mtime +1 -exec rm {} \;
+	/usr/bin/find /var/log/credentialmanager/CredentialManagerCLI*.* -mtime +14 -exec rm {} \;
+  endscript
+  postrotate
+    /usr/bin/find /var/log/credentialmanager -size 0 -print0 | /usr/bin/xargs -0 rm
+  endscript
+}
+

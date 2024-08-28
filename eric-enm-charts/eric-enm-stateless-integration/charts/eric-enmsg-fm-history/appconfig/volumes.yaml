@@ -1,0 +1,45 @@
+- name: gp
+  configMap:
+    name: gpfmhistory
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: batch
+  persistentVolumeClaim:
+    claimName: batch
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: upgind
+  persistentVolumeClaim:
+    claimName: upgind
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dlms
+  persistentVolumeClaim:
+    claimName: dlms
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: netlog
+  persistentVolumeClaim:
+    claimName: netlog
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: norollback
+  persistentVolumeClaim:
+    claimName: norollback
+- name: pm1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pm2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks
+- name: georep
+  persistentVolumeClaim:
+    claimName: georep

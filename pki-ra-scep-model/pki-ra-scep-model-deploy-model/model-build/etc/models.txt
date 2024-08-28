@@ -1,0 +1,17 @@
+/oss_cache/global/ScepCrlCache
+/oss_cdt/pki-ra-scep/ScepCrl/1.0.0
+/oss_channel/global/ClusteredScepRequestChannel
+/oss_channel/global/ClusteredScepResponseChannel
+/oss_confparam/global/keyStoreFilePath
+/oss_confparam/global/keyStoreFileType
+/oss_confparam/global/scepCRLPath
+/oss_confparam/global/scepDBCleanupSchedulerTime
+/oss_confparam/global/scepRAInfraCertAliasName
+/oss_confparam/global/scepRATrustStoreFilePath
+/oss_confparam/global/scepRequestRecordPurgePeriod
+/oss_confparam/global/schedulerTime
+/oss_confparam/global/trustStoreFileType
+/oss_eventtype/pki-ra-scep/ScepReponse/1.0.0
+/oss_eventtype/pki-ra-scep/ScepRequest/1.0.0
+/oss_eventtype/pki-ra-scep/SignedScepReponse/1.0.0
+/oss_eventtype/pki-ra-scep/SignedScepRequest/1.0.0

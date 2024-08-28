@@ -1,0 +1,15 @@
+- containerPort: 3528
+- containerPort: 4447
+- containerPort: 8009
+- containerPort: 8080
+- containerPort: 9990
+- containerPort: 9999
+- containerPort: 12987
+- containerPort: 38467
+- containerPort: 46001
+- containerPort: 54200
+- containerPort: 55631
+- containerPort: 56164
+- containerPort: 58156
+- containerPort: 63167
+- containerPort: 9600

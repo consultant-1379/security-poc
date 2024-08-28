@@ -1,0 +1,3 @@
+{{- template "eric-enm-common-helmchart-library.deployment" (list . "eric-enmsg-openidm.deployment") -}}
+{{- define "eric-enmsg-openidm.deployment" -}}
+{{- end -}}

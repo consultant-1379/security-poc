@@ -1,0 +1,12 @@
+if (outcome == success) of /core-service=management/security-realm=SSLRealm:add()
+end-if
+if (outcome == success) of /core-service=management/security-realm=SSLRealm/server-identity=ssl:add(keystore-password="secret",keystore-path="/ericsson/credm/service/data/certs/CredMService.jks")
+end-if
+if (outcome == success) of  /core-service=management/security-realm=SSLRealm/authentication=truststore:add(keystore-password="secret" , keystore-path="/ericsson/credm/service/data/certs/CredMServiceTS.jks")
+end-if
+
+
+if (outcome == success) of /subsystem=remoting/connector=remoting-connector:remove()
+end-if
+if (outcome == success) of /subsystem=remoting/connector=remoting-connector:add(socket-binding="remoting", security-realm="SSLRealm")
+end-if

@@ -1,0 +1,9 @@
+DEP=true
+NAME=eric-enmsg-msap
+SVC=cmserv
+WAIT=true
+WAIT_LIST=gossiprouter-cache,gossiprouter-eap7,jms01,postgres,sps
+REQUESTS=true
+REQUESTS_LIST=1800Mi
+LIMITS=true
+LIMITS_LIST=5120Mi

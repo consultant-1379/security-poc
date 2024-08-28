@@ -1,0 +1,36 @@
+<Entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="EntitiesSchema.xsd">
+    <Entity>
+        <PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+        <EntityProfile Name="Pkipoc_EP"/>      
+	<SubjectUniqueIdentifierValue>pkipoc</SubjectUniqueIdentifierValue>
+        <KeyGenerationAlgorithm>
+            <Name>RSA</Name>
+            <KeySize>2048</KeySize>
+        </KeyGenerationAlgorithm>
+        <Category>
+            <Modifiable>true</Modifiable>
+            <Name>USER-SLS</Name>
+        </Category>
+        <EntityInfo>
+            <Name>pkipoc</Name>          
+            <Subject>
+                <SubjectField>
+                    <Type>COMMON_NAME</Type>
+                    <Value>pkipoc</Value>
+                </SubjectField>
+            </Subject>
+            <SubjectAltName>
+                <SubjectAltNameField>
+                    <Type>DIRECTORY_NAME</Type>
+                    <Value xsi:type="SubjectAltNameString" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                        <StringValue>CN=COMUser</StringValue>
+                    </Value>
+                </SubjectAltNameField>
+            </SubjectAltName>  
+            <OTP>pkipoc</OTP>
+            <OTPCount>999</OTPCount>
+        </EntityInfo>
+    </Entity>
+</Entities>
+

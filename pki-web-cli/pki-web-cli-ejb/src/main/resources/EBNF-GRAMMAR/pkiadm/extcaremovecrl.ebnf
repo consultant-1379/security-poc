@@ -1,0 +1,7 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "extcaremovecrl" (* slogan = "External Certificate Authority Removal with CRL" *) WS ( EXTCAREMOVECRL_EXT_CA_NAME | EXTCAREMOVECRL_EXT_ISSUER_NAME )
+
+EXTCAREMOVECRL_EXT_CA_NAME ::= ( "--name" (* slogan = "Remove the Certificate by a specific modeled name. Tip: -n for short" *) | "-n" (* hide = "true" *) ) WS EXTCAREMOVECRL_CA_NAME_VALUE
+EXTCAREMOVECRL_EXT_ISSUER_NAME ::= ( "--issuername" (* slogan = "Remove the Certificate by a specific issuer name. Tip: -in for short" *) | "-in" (* hide = "true" *) ) WS EXTCAREMOVECRL_ISSUER_NAME_VALUE
+
+EXTCAREMOVECRL_CA_NAME_VALUE ::= <ca_name_value> (* inputType = "wrapDoubleQuotes" slogan = "Specify the name of the external CA" *) [ WS EXTCAREMOVECRL_EXT_ISSUER_NAME ]
+EXTCAREMOVECRL_ISSUER_NAME_VALUE ::= <issuer_name_value> (* inputType = "wrapDoubleQuotes" slogan = "Specify the Issuer name of the CRL" *)

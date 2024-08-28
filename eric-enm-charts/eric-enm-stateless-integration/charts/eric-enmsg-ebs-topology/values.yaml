@@ -1,0 +1,112 @@
+global:
+  registry:
+    url: armdocker.rnd.ericsson.se
+    pullSecret:
+  ingress:
+    enmHost:
+  timezone:
+  enmProperties:
+    dps_persistence_provider:
+    postgres_service:
+productInfo:
+  number: CXC Placeholder
+  rstate: R13K
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-ebs-topology: 3
+images:
+  eric-enmsg-ebs-topology:
+    name: eric-enmsg-ebs-topology
+    tag: 1.12.9-1
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s gossiprouter-cache,gossiprouter-remoting,jms01,postgres,sps,impexpserv'
+      ]"
+  eric-enm-monitoring:
+    enabled: true
+    name: eric-enm-monitoring-eap7
+    tag: 1.27.9-1
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  registry:
+    url:
+    pullSecret:
+# Configure the service
+service:
+  name: ebstopology
+  sgname: ebstopology
+  annotations: {}
+  labels: {}
+ingress:
+  enabled: false
+ingress_jboss_web_context:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+# Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 15584Mi
+    cpu: 1200m
+  limits:
+    enabled: true
+    memory: 15884Mi
+    cpu: 4000m
+  monitoring:
+    enabled: true
+    requests:
+      memory: 200Mi
+      cpu: 50m
+    limits:
+      memory: 300Mi
+      cpu: 200m
+# StartupProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 60
+  timeoutSeconds: 15
+  periodSeconds: 15
+  failureThreshold: 20
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 15
+  timeoutSeconds: 15
+  failureThreshold: 2
+# Extra Annotations to be added to pod
+podAnnotations: {}
+# Grace period to terminate gracefully
+terminationGracePeriodSeconds: 3
+# Tolerations for pod assignment
+tolerations: []
+# Affinity for pod assignment
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+# Constrain which nodes your pod is eligible to be scheduled on
+nodeAffinity: {}
+priorityClassName: ""
+# Node selector
+nodeSelector: {}
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+# Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1

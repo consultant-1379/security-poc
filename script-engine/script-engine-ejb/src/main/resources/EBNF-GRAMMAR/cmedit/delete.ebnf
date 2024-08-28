@@ -1,0 +1,72 @@
+"cmedit" (* slogan = "Command set to read, manipulate, and export Configuration Management data" *) WS "delete" (* slogan = "Deletes an MO instance. To delete all children under MO (requires -ALL option)." *) ( DELETE_BY_FDN | DELETE_BY_QUERY )
+
+DELETE_BY_FDN ::= WS PREDEF_FDN_LAZY_HIDDEN { ";" (* slogan = "Semi-colon to add another scope to the list." *) PREDEF_FDN_LAZY_HIDDEN } { DELETE_BY_FDN_OPTIONS } (* unique = "true" *)
+DELETE_BY_QUERY ::= DELETE_SCOPE [ DELETE_SCOPE_FILTER_OPTION ] WS ( ( DELETE_CLASS_FILTER | DELETE_CLASS_FILTER_FOR_MO_BY_ID ) { DELETE_BY_QUERY_OPTIONS } (* unique = "true" *) | ( DELETE_FILTER_LIST | DELETE_CLASS_FILTER_FOR_MO_BY_ID ) WS <MO_class_type> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Query Network Data by MO Class Type. E.g. EUtranCellFDD" *) { DELETE_BY_QUERY_OPTIONS } (* unique = "true" *) )
+
+DELETE_SCOPE ::= ( DELETE_SCOPE_WITHOUT_OPTION | DELETE_SCOPE_WITH_OPTION )
+DELETE_SCOPE_WITHOUT_OPTION ::= WS ( PREDEF_FDN_OR_NODENAME_OR_COLLECTION { ";" (* slogan = "Semi-colon to add another scope to the list." *) PREDEF_FDN_OR_NODENAME_OR_COLLECTION } | "*" (* slogan = "Network wide scope" *) )
+DELETE_SCOPE_WITH_OPTION ::= ( DELETE_NE_SCOPE [ ( DELETE_COLLECTION_SCOPE [ DELETE_SAVEDSEARCH_SCOPE ] | DELETE_SAVEDSEARCH_SCOPE [ DELETE_COLLECTION_SCOPE ] ) ] | DELETE_COLLECTION_SCOPE [ ( DELETE_NE_SCOPE [ DELETE_SAVEDSEARCH_SCOPE ] | DELETE_SAVEDSEARCH_SCOPE [ DELETE_NE_SCOPE ] ) ] | DELETE_SAVEDSEARCH_SCOPE [ ( DELETE_NE_SCOPE [ DELETE_COLLECTION_SCOPE ] | DELETE_COLLECTION_SCOPE [ DELETE_NE_SCOPE ] ) ] )
+
+DELETE_NE_SCOPE ::= WS ( "-n" (* hide = "true" *) | "--node" (* slogan = "Option to specify the Network Element to execute command on, e.g. 'ERBS123'. TIP : -n is the shorthand option for --node" *) ) WS  ( DELETE_NODE_NAME { ";" DELETE_NODE_NAME } | "*" (* slogan = "Network wide scope" *) )
+
+DELETE_NODE_NAME ::= ( <node_name> (* slogan = "Enter a node name as scope. Use * for partial node name wildcard, e.g. ERBS*" *) | DELETE_PARTIAL_NODE_NAME )
+DELETE_PARTIAL_NODE_NAME ::= [ "*" (* hide = "true" *) ] , <node_name> (* hide = "true" *) , [ "*" (* hide = "true" *) ]
+
+DELETE_COLLECTION_SCOPE ::= WS ( "-co" (* hide = "true" *) | "--collection" (* slogan = "Option to execute the command on a predefined collection. TIP : -co is the shorthand option for --collection" *) ) WS <collection_name> (* slogan = "Enter the name of the desired collection" *) { ";" (* slogan = "Semi-colon used to add to the list" *) <collection_name> (* slogan = "Enter the name of the desired collection" *) }
+DELETE_SAVEDSEARCH_SCOPE ::= WS ( "-sa" (* hide = "true" *) | "--savedsearch" (* slogan = "Option to execute the command on a predefined savedsearch. TIP : -sa is the shorthand option for --savedsearch" *) ) WS <savedsearch_name> (* slogan = "Enter the name of the desired savedsearch" *) { ";" (* slogan = "Semi-colon used to add to the list" *) <savedsearch_name> (* slogan = "Enter the name of the desired savedsearch" *) }
+
+DELETE_SCOPE_FILTER_OPTION ::= WS "--scopefilter" WS (* slogan = "Option to specify the scope filter to execute the command with" *) DELETE_SCOPE_FILTER
+DELETE_SCOPE_FILTER ::= "(" DELETE_FILTER_LIST_IN_SCOPE_FILTER ")"
+
+DELETE_CLASS_FILTER_FOR_MO_BY_ID ::= <MO_class_type> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Filter queried results by MO Class Type. E.g. EUtranCellFDD" *) ( [ "=" (* slogan = "Delete a MO by it's Id" *) [ "*" (* hide = "true" *) ]  <MO_id> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" regex = "^[a-zA-Z0-9\\._-]+[a-zA-Z0-9\\._-]*$" slogan = "A star can be used as a wildcard at the start and/or end of the value i.e. *cell01." *) [ "*" (* hide = "true" *) ] ] | [ "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( DELETE_AUTO_ATTRIBUTE_FILTERS | DELETE_ATTRIBUTE_FILTER | DELETE_ATTRIBUTE_FILTER_LIST ) ] )
+
+DELETE_FILTER_LIST ::= DELETE_FILTER { ";" (* slogan = "Semi-colon used to add another MO Class Type filter to the list." *) DELETE_FILTER }
+DELETE_FILTER_LIST_IN_SCOPE_FILTER ::= DELETE_FILTER_IN_SCOPE_FILTER { WS "AND" WS (* slogan = "operator used to add another scope to the list." *) DELETE_FILTER_IN_SCOPE_FILTER }
+DELETE_FILTER ::= DELETE_CLASS_FILTER [ "," (* slogan = "Comma used to add another MO Class Type to a list." *) DELETE_CHILD_CLASS_FILTER ]
+DELETE_FILTER_IN_SCOPE_FILTER ::= <MO_class_type> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Filter queried results by MO Class Type. E.g. EUtranCellFDD" *) "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( DELETE_ATTRIBUTE_FILTER_IN_SCOPE_FILTER | DELETE_ATTRIBUTE_FILTER_LIST_IN_SCOPE_FILTER )
+DELETE_CLASS_FILTER ::= <MO_class_type> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Filter queried results by MO Class Type. E.g. EUtranCellFDD" *) [ "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( DELETE_AUTO_ATTRIBUTE_FILTERS | DELETE_ATTRIBUTE_FILTER | DELETE_ATTRIBUTE_FILTER_LIST ) ]
+DELETE_CHILD_CLASS_FILTER ::= ( "*" (* slogan = "MO Class Type  wildcard. Can be used at the start/or end of the value." *) | DELETE_FILTER | DELETE_FILTER_LIST )
+DELETE_AUTO_ATTRIBUTE_FILTERS ::= ( "*" (* slogan = "Wildcard. Can be used at the start/or end of the value.  E.g. userLabel==Test*" *) | "<pm>" (* slogan = "Use the special identifier <pm> to select all Performance Management (PM) attributes of the specified MO Class" *) | "<cm>" (* slogan = "Use the special identifier <cm> to select all Configuration Management (CM) attributes of the specified MO Class." *) )
+DELETE_ATTRIBUTE_FILTER_LIST ::= "(" DELETE_ATTRIBUTE_FILTER { "," DELETE_ATTRIBUTE_FILTER } ")"
+DELETE_ATTRIBUTE_FILTER_LIST_IN_SCOPE_FILTER ::= "(" DELETE_ATTRIBUTE_FILTER_IN_SCOPE_FILTER { "," DELETE_ATTRIBUTE_FILTER_IN_SCOPE_FILTER } ")"
+DELETE_BY_FDN_OPTIONS ::= ( ALL_OPTION | OUTPUT_FORMAT | ( FORCE | PREVIEW ) )
+DELETE_BY_QUERY_OPTIONS ::= ( ALL_OPTION | DELETE_NAMESPACE DELETE_VERSION | OUTPUT_FORMAT | ( FORCE | PREVIEW ) )
+
+DELETE_ATTRIBUTE_LIST_VALUE ::= """ <attribute_list_value> (* regex = "^([^"]+)$" slogan = "Enter a list item value" *) """
+DELETE_ATTRIBUTE_LIST_AND_OPERATOR_WITH_VALUE ::= { "&&" (* slogan = "and" *) DELETE_ATTRIBUTE_LIST_VALUE }
+DELETE_ATTRIBUTE_LIST_OR_OPERATOR_WITH_VALUE ::= { "||" (* slogan = "or" *) DELETE_ATTRIBUTE_LIST_VALUE }
+DELETE_COMPARISON_OPERATORS ::= ( DELETE_COMPARISON_OPERATOR_LT | DELETE_COMPARISON_OPERATOR_GT | DELETE_COMPARISON_OPERATOR_LTEQ | DELETE_COMPARISON_OPERATOR_GTEQ | DELETE_COMPARISON_OPERATOR_NEQ | DELETE_COMPARISON_OPERATOR_NLT | DELETE_COMPARISON_OPERATOR_NGT | DELETE_COMPARISON_OPERATOR_EQEQ | DELETE_COMPARISON_OPERATOR_LIST_CONTAINS | DELETE_COMPARISON_OPERATOR_LIST_CONTAINS_RETURNS_MATCHING_MEMBER_ONLY )
+DELETE_MEMBER_COMPARISON_OPERATORS ::= ( DELETE_COMPARISON_OPERATOR_LT | DELETE_COMPARISON_OPERATOR_GT | DELETE_COMPARISON_OPERATOR_LTEQ | DELETE_COMPARISON_OPERATOR_GTEQ | DELETE_COMPARISON_OPERATOR_NEQ | DELETE_COMPARISON_OPERATOR_NLT | DELETE_COMPARISON_OPERATOR_NGT | DELETE_COMPARISON_OPERATOR_EQEQ )
+DELETE_COMPARISON_OPERATOR_LT ::= "<" (* slogan = "less than" *) DELETE_ATTRIBUTE_VALUE
+DELETE_COMPARISON_OPERATOR_GT ::= ">" (* slogan = "greater than" *) DELETE_ATTRIBUTE_VALUE
+DELETE_COMPARISON_OPERATOR_LTEQ ::= "<=" (* slogan = "less than or equal to" *) DELETE_ATTRIBUTE_VALUE
+DELETE_COMPARISON_OPERATOR_GTEQ ::= ">=" (* slogan = "greater than or equal to" *) DELETE_ATTRIBUTE_VALUE
+DELETE_COMPARISON_OPERATOR_NEQ ::= "!=" (* slogan = "not equal to" *) DELETE_ATTRIBUTE_VALUE
+DELETE_COMPARISON_OPERATOR_NLT ::= "!<" (* slogan = "not less than" *) DELETE_ATTRIBUTE_VALUE
+DELETE_COMPARISON_OPERATOR_NGT ::= "!>" (* slogan = "not greater than" *) DELETE_ATTRIBUTE_VALUE
+DELETE_COMPARISON_OPERATOR_EQEQ ::= "==" (* slogan = "equal to" *) DELETE_ATTRIBUTE_VALUE
+DELETE_COMPARISON_OPERATOR_LIST_CONTAINS ::= "~~" (* slogan = "list contains" *) "[" (* slogan = "start list" *) ( DELETE_ATTRIBUTE_LIST_OF_STRINGS | DELETE_ATTRIBUTE_LIST_OF_STRUCTS ) "]" (* slogan = "end list" *)
+DELETE_COMPARISON_OPERATOR_LIST_CONTAINS_RETURNS_MATCHING_STRUCT_ONLY ::= "~&" (* slogan = "Separator used to attach member filters to the attribute" *) "[" (* slogan = "start list" *) DELETE_ATTRIBUTE_LIST_OF_STRUCTS "]" (* slogan = "end list" *)
+DELETE_COMPARISON_OPERATOR_LIST_CONTAINS_RETURNS_MATCHING_MEMBER_ONLY ::= "." (* slogan = "Separator used to attach member filters to the attribute" *) "[" (* slogan = "start list" *) DELETE_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET "]" (* slogan = "end list" *)
+DELETE_ATTRIBUTE_LIST_OF_STRINGS ::= DELETE_ATTRIBUTE_LIST_VALUE ( DELETE_ATTRIBUTE_LIST_AND_OPERATOR_WITH_VALUE | DELETE_ATTRIBUTE_LIST_OR_OPERATOR_WITH_VALUE )
+DELETE_ATTRIBUTE_LIST_OF_STRUCTS ::= "{" (* slogan = "start struct" *) DELETE_COMPLEX_MEMBER_FILTER_LIST_IN_LIST_CONTAINS "}" (* slogan = "end struct" *)
+DELETE_ATTRIBUTE_VALUE ::= <attribute_value> (* regex = "^(?:\-\d|[\w\$\=]+)[\w\$\-]*$" inputType = "wrapDoubleQuotes,wrapSingleQuotes,wrapSquareBrackets,wrapParentheses,wrapCurlyBrackets" slogan = "When matching Strings using '==' a star can be used as a wildcard at the start and/or end of the value i.e. userLabel==Test*. When matching Strings using '!=' a star is not permitted." *)
+DELETE_ATTRIBUTE_FILTER ::= <attribute_name> (* slogan = "Attribute name to filter on." *) [ ( DELETE_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *) | "." (* slogan = "Separator used to attach member filters to the attribute" *) DELETE_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET ) ]
+DELETE_ATTRIBUTE_FILTER_IN_SCOPE_FILTER ::= <attribute_name> (* slogan = "Attribute name to filter on." *) ( DELETE_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *) | "." (* slogan = "Separator used to attach member filters to the attribute" *) DELETE_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET_IN_SCOPE_FILTER )
+
+DELETE_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET ::= ( "{" | "(" (* hide = "true" *) ) DELETE_COMPLEX_MEMBER_FILTER_LIST ( "}" | ")" (* hide = "true" *) )
+DELETE_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET_IN_SCOPE_FILTER ::= ( "{" | "(" (* hide = "true" *) ) DELETE_COMPLEX_MEMBER_FILTER_LIST_IN_LIST_CONTAINS ( "}" | ")" (* hide = "true" *) )
+DELETE_COMPLEX_MEMBER_FILTER_LIST ::= DELETE_COMPLEX_MEMBER_FILTER { "," (* slogan = "Comma used to add another member filter to a list." *) DELETE_COMPLEX_MEMBER_FILTER }
+DELETE_COMPLEX_MEMBER_FILTER_LIST_IN_LIST_CONTAINS ::= DELETE_COMPLEX_MEMBER_FILTER_IN_LIST_CONTAINS { "," (* slogan = "Comma used to add another member filter to a list." *) DELETE_COMPLEX_MEMBER_FILTER_IN_LIST_CONTAINS }
+DELETE_COMPLEX_MEMBER_FILTER ::=  <member_name> (* slogan = "Member name to filter on." *) [ DELETE_MEMBER_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *) ]
+DELETE_COMPLEX_MEMBER_FILTER_IN_LIST_CONTAINS ::= <member_name> (* slogan = "Member name to filter on." *) DELETE_MEMBER_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *)
+
+DELETE_NAMESPACE ::= WS ( "-ns" (* hide = "true" *) | "-namespace" (* hide = "true" *) | "--namespace" (* slogan = "[Optional] Query Network Data by specific modeled namespace. Tip: -ns for short" *) ) DELETE_NAMESPACE_INPUT
+DELETE_NAMESPACE_INPUT ::= ( WS | "=" (* hide = "true" *) ) <namespace> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes", slogan = "Name of specific Modeled Namespace to query towards. E.g. MSRBS_V1_eNodeBFunction" *)
+DELETE_VERSION ::= WS ( "-v" (* hide = "true" *) | "-version" (* hide = "true" *) | "--version" (* slogan = "[Optional] Query Network Data by modeled version. Tip: -v for short" *) ) DELETE_VERSION_INPUT
+DELETE_VERSION_INPUT ::= ( WS | "=" (* hide = "true" *) ) <version> (* inputType = "version" slogan = "Name of specific modeled version to query towards.  E.g. H.1.140" *)
+ALL_OPTION ::= WS "-ALL" (* slogan = "[Optional] With the -ALL option, the delete command will delete the specified MOI(s) and their children" *)
+CONFIGURATION ::= WS ( "-c" (* hide = "true" *) | "--config" (* slogan = "[Optional] Execute command on an existing Configuration. Tip: shorthand is -c. Note: 'live' is default" *) ) "=" <configuration> (* slogan = "Name of Configuration to execute the command against. 'Live' is default" *)
+FORCE ::= WS "--force" (* slogan = "[Optional] Force the command execution." *)
+PREVIEW ::= WS ( "-pre" (* hide = "true" *) | "--preview" (* slogan = "[Optional] Preview the MOI(s) involved in the command. Tip: -prev for short" *) )
+OUTPUT_FORMAT ::= WS ( "-l" (* hide = "true" *) | "-list" (* hide = "true" *) | "--list" (* slogan = "[Optional] Display output results in list format. This is default output format.  Tip: -l for short" *) | "-t" (* hide = "true" *) | "-table" (* hide = "true" *) | "--table" (* slogan = "[Optional] Display output results in tabular format.  Tip: -t for short" *) )

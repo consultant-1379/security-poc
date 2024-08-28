@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: List
+metadata:
+  name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-namespacerole-list"
+  annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" .| nindent 4 }}
+    "helm.sh/hook": "pre-install, pre-upgrade"
+    "helm.sh/hook-weight": "-4"
+    "helm.sh/hook-delete-policy": "before-hook-creation, hook-succeeded, hook-failed"
+  labels:
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 4 }}
+items:
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-namespace-role-binding"
+      annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" .| nindent 8 }}
+      labels:
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 8 }}
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-namespace-role"
+    subjects:
+      - kind: ServiceAccount
+        name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-serviceaccount-tfd"
+        namespace: {{ .Release.Namespace }}
+  - aggregationRule:
+      clusterRoleSelectors:
+        - matchLabels:
+            rbac.authorization.k8s.io/aggregate-to-view: "true"
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-namespace-role"
+      annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" .| nindent 8 }}
+      labels:
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 8 }}
+    rules: []
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" .| nindent 8 }}
+      labels:
+        rbac.authorization.k8s.io/aggregate-to-view: "true"
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 8 }}
+      name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-secret-reader"
+    rules:
+      - apiGroups: [""]
+        resources: ["secrets"]
+        verbs: ["get", "watch", "list"]
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" .| nindent 8 }}
+      labels:
+        rbac.authorization.k8s.io/aggregate-to-view: "true"
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 8 }}
+      name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-pod-admin"
+    rules:
+      - apiGroups: ["", "metrics.k8s.io"]
+        resources: ["pods", "pods/exec", "pods/attach"]
+        verbs: ["*"]

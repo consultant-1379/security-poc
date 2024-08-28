@@ -1,0 +1,28 @@
+- name: TZ
+  value: {{ .Values.global.timezone }}
+# TODO move value to enmProperties
+- name: REST_PORT
+  value: {{ .Values.global.enmProperties.CREDM_REST_PORT | quote }}
+# TODO move value to enmProperties
+- name: CONTROLLER_NAME
+  value: {{ .Values.service.name | quote }}
+- name: NAMESPACE
+  value: {{ .Release.Namespace }}
+- name: DEBUG
+  value: {{ .Values.credmController.debug | quote }}
+- name: LOG_DEBUG_FLAG
+  value: {{ .Values.credmController.logdebugflag | quote }}
+- name: LOG_FILE_DEBUG_FLAG
+  value: {{ .Values.credmController.logfiledebugflag | quote }}
+- name: JAVA_MOCK_FLAG
+  value: {{ .Values.credmController.javamockflag | quote }}
+- name: RSYSLOG_FLAG
+  value: {{ .Values.credmController.rsyslogflag | quote }}
+- name: RSYSLOG_FILE
+  value: {{ .Values.credmController.rsyslogfile | quote }}
+- name: SPS_APP_LABEL
+  value: {{ .Values.credmController.spsappname | quote }}
+- name: MS8MS9_CRONJOB_NAME
+  value: {{ .Values.ms8ms9Parameters.cronjobname | quote }}
+- name: MS8MS9_JOB_NAME
+  value: {{ .Values.ms8ms9Parameters.jobname | quote }}

@@ -1,0 +1,43 @@
+1.0.1-SNAPSHOT        Initial delivery aligned to:
+                      - eric-enm-bro-integration-1.23.8-0.tgz
+                      - eric-enm-pre-deploy-integration-1.23.8-1.tgz
+                      - eric-enm-infra-integration-1.28.8-1.tgz
+                      - eric-enm-stateless-integration-1.28.8-1.tgz
+                      - eric-enm-single-instance-production-integration-values-1.24.8-0.yaml
+
+1.0.2-SNAPSHOT        Shrinked version:
+                      - eric-enm-bro-integration aligned to eric-enm-bro-integration-1.23.8-0.tgz
+                      - eric-enm-pre-deploy-integration aligned to eric-enm-pre-deploy-integration-1.23.8-1.tgz
+                      - Removed from eric-enm-infra-integration unnecessary components for POC demo
+                      - Removed from eric-enm-stateless-integration all services other than sps, websps, pkiraserv
+                        and eric-enm-credm-controller
+                      - Removed from eric-enm-single-instance-production-integration-values all services other than
+                        sps, websps, pkiraserv, eric-enm-credm-controller and all unnecessary infra components.
+
+1.0.3-SNAPSHOT        Shrinked version with SNAPSHOT stateless:
+                      - eric-enm-bro-integration aligned to eric-enm-bro-integration-1.23.8-0.tgz
+                      - eric-enm-pre-deploy-integration aligned to eric-enm-pre-deploy-integration-1.23.8-1.tgz
+                      - Removed from eric-enm-infra-integration unnecessary components for POC demo
+                      - Removed from eric-enm-stateless-integration all services other than sps, pkiraserv
+                        and eric-enm-credm-controller and used POC SNAPSHOT versions for sps, pkiraserv
+                      - Removed from eric-enm-single-instance-production-integration-values all services other than
+                        sps, pkiraserv, eric-enm-credm-controller and all unnecessary infra components.
+
+1.0.4-SNAPSHOT        Updated pkiraserv XML certificate request files with correct POC CA names and
+                      updated POC SNAPSHOT versions for sps and pkiraserv containing fix for NE enrollment.
+                      Current status is:
+                      - eric-enm-bro-integration:
+                        - aligned to eric-enm-bro-integration-1.23.8-0.tgz
+                      - eric-enm-pre-deploy-integration:
+                        - aligned to eric-enm-pre-deploy-integration-1.23.8-1.tgz
+                      - eric-enm-infra-integration:
+                        - removed unnecessary components for POC demo
+                      - eric-enm-stateless-integration:
+                        - removed all services other than sps, pkiraserv and eric-enm-credm-controller
+                        - used POC SNAPSHOT versions for sps, pkiraserv
+                        - updated pkiraserv XML certificate request files to use the correct POC CA names and
+                          updated POC SNAPSHOT versions for sps and pkiraserv containing fix for NE enrollment.
+                      - eric-enm-single-instance-production-integration-values:
+                        - removed all services other than sps, pkiraserv, eric-enm-credm-controller
+                          and all unnecessary infra components.
+

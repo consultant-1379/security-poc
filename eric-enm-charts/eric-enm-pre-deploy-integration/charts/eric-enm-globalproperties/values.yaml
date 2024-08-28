@@ -1,0 +1,25 @@
+## eric-enm-globalproperties image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  replicas-eric-enm-globalproperties: 1
+  ingress:
+    enmhost:
+  vips:
+    fm_vip_address:
+    cm_vip_address:
+    pm_vip_address:
+    cm_vip_ipv6address:
+    fm_vip_ipv6address:
+  enmProperties:
+    COM_INF_LDAP_ADMIN_CN:
+    COM_INF_LDAP_ROOT_SUFFIX:
+    host_system_identifier:
+
+labels: {}
+
+ingress:
+  enmhost:
+

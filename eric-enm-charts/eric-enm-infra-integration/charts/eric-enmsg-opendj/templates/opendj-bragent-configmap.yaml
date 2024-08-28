@@ -1,0 +1,42 @@
+{{- if .Values.brAgent.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.service.name }}-bragent-config
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    chart: {{ template "{{.Chart.Name}}.chart" . }}
+    app.kubernetes.io/name: {{ template "{{.Chart.Name}}.name" . }}
+    app.kubernetes.io/version: {{ template "{{.Chart.Name}}.version" . }}
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+data:
+  config.yaml: |
+    agent:
+      registration:
+        name: {{ .Values.service.name }}-bragent
+        {{- if .Values.brAgent.backupTypeList }}
+        scopes: {{ template "{{.Chart.Name}}.backupTypes" . }}
+        {{- end }}
+        id: {{ .Values.service.name }}-bragent
+      subagent:
+        grpcServerPort: "10000"
+    {{- if eq (include "{{.Chart.Name}}.restore.state" .) "ongoing" }}
+        enabled: true
+    {{- end }}
+    backup:
+      paths:
+        - path: "/backup/opendj"
+          excludes:
+            - ".snapshot"
+      preCmd: "/ericsson/opendj/opendj/preBackup.sh"
+      postCmd: "/ericsson/opendj/opendj/postBackup.sh"
+    softwareVersion:
+      description: "OpenDj (ldap) database"
+      productName: {{ template "{{.Chart.Name}}.name" . }}
+      productNumber: "CXC Placeholder"
+      productionDate: {{ .Values.productionDate | quote }}
+      revision: {{ .Values.revision | quote }}
+      type: "opendj"
+    bro:
+      host: {{ .Values.brAgent.broServiceName | quote }}
+{{- end }}

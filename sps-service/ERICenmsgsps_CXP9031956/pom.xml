@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ericsson.oss.poc.servicegroupcontainers</groupId>
+        <artifactId>sps-service</artifactId>
+        <version>1.0.2-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.ericsson.oss.poc.servicegroupcontainers</groupId>
+    <artifactId>ERICenmsgsps_CXP9031956</artifactId>
+    <packaging>${rpm.packaging}</packaging>
+    <name>sps-service feature CXP module</name>
+
+    <properties>
+        <com.ericsson.oss.rpm.architecture>noarch</com.ericsson.oss.rpm.architecture>
+        <rpm-root>ericsson</rpm-root>
+        <comp-name>enm</comp-name>
+        <install-path>jboss</install-path>
+        <postinstall-path>sps_cliconf</postinstall-path>
+        <publish_artifact>true</publish_artifact>
+        <media.category>service</media.category>
+        <vm.jboss-install-path>/ericsson/3pp/jboss</vm.jboss-install-path>
+        <super-user>root</super-user>
+        <super-group>root</super-group>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.ericsson.oss.itpf.deployment</groupId>
+                <artifactId>deployment-descriptor-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>configurable-entity</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configEntity>
+                        <stereotype>SERVICE_PKG</stereotype>
+                        <parameters>
+                            <property name="vm_service_name" defaultValue="sps" />
+                            <itemType name="vm-package">
+                                <property name="name" defaultValue="ERICenmsgsps_CXP9031956" />
+                            </itemType>
+                        </parameters>
+                        <deploymentDependencies>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf.deployment.tools</groupId>
+                                <artifactId>virtual-machine</artifactId>
+                                <qualifier>CONTAINER</qualifier>
+                                <alias>vm</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+                                <artifactId>ERICpkimanagerconfigmodel_CXP9032043</artifactId>
+                                <alias>pkimanagerconfigmodel</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+                                <artifactId>ERICpkicdpsmodel_CXP9032532</artifactId>
+                                <alias>pkicdpsmodel</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+                                <artifactId>ERICpkicoremodel_CXP9032529</artifactId>
+                                <alias>pkicoremodel</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+                                <artifactId>ERICcredentialmanagerconfigmodel_CXP9032685</artifactId>
+                                <alias>credentialmanagersecuritymodel</alias>
+                            </deploymentDependency>
+                            <!--Global config variables go into here-->
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf</groupId>
+                                <artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+                                <alias>spsConfig1</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf</groupId>
+                                <artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+                                <alias>spsConfig2</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf</groupId>
+                                <artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+                                <alias>sps_pkiConfig1</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf</groupId>
+                                <artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+                                <alias>sps_pkiConfig2</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf</groupId>
+                                <artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+                                <alias>sps_pkiConfig3</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf</groupId>
+                                <artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+                                <alias>sps_certificateCpds1</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf</groupId>
+                                <artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+                                <alias>sps_certificateCpds2</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf</groupId>
+                                <artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+                                <alias>sps_certificateCpds3</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf</groupId>
+                                <artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+                                <alias>sps_certificateCpds4</alias>
+                            </deploymentDependency>
+
+                            <!--End of global config variables for sps-->
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf.common</groupId>
+                                <artifactId>ERICpibmodel_CXP9030858</artifactId>
+                                <alias>pibmodels</alias>
+                            </deploymentDependency>
+                            <deploymentDependency>
+                                <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+                                <artifactId>ERICpkiracmpmodel_CXP9032010</artifactId>
+                                <alias>pkiracmpmodel</alias>
+                            </deploymentDependency>
+                        </deploymentDependencies>
+                        <assignments>
+                            <assign>
+                                <path>vm</path>
+                                <property name="routable_interfaces" value="0" />
+                                <itemType name="vm-service">
+                                    <property name="service_name" value="sps" />
+                                    <property name="cpus" value="2" />
+                                    <property name="ram" value="5120M" />
+                                    <property name="image_name" value="rhel7-jboss-image" />
+                                </itemType>
+                                <itemType name="vcs-clustered-service">
+                                    <property name="active" value=":2" />
+                                    <property name="online_timeout" value="780" />
+                                    <property name="standby" value="0" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>spsConfig1</path>
+                                <itemType name="config-manager-property">
+                                    <property name="key" value="sps1" />
+                                    <property name="value" value="%%sps_1_ip_internal%%" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>spsConfig2</path>
+                                <itemType name="config-manager-property">
+                                    <property name="key" value="sps2" />
+                                    <property name="value" value="%%sps_2_ip_internal%%" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>sps_pkiConfig1</path>
+                                <itemType name="config-manager-property">
+                                    <property name="key" value="PKI_EntityProfile_DN_COUNTRY_NAME" />
+                                    <property name="value" value="%%PKI_EntityProfile_DN_COUNTRY_NAME%%" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>sps_pkiConfig2</path>
+                                <itemType name="config-manager-property">
+                                    <property name="key" value="PKI_EntityProfile_DN_ORGANIZATION_UNIT" />
+                                    <property name="value" value="%%PKI_EntityProfile_DN_ORGANIZATION_UNIT%%" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>sps_pkiConfig3</path>
+                                <itemType name="config-manager-property">
+                                    <property name="key" value="PKI_EntityProfile_DN_ORGANIZATION" />
+                                    <property name="value" value="%%PKI_EntityProfile_DN_ORGANIZATION%%" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>sps_certificateCpds1</path>
+                                <itemType name="config-manager-property">
+                                    <property name="key" value="certificatesRevListDistributionPointServiceIpv4Enable" />
+                                    <property name="value" value="%%certificatesRevListDistributionPointServiceIpv4Enable%%" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>sps_certificateCpds2</path>
+                                <itemType name="config-manager-property">
+                                    <property name="key" value="certificatesRevListDistributionPointServiceIpv6Enable" />
+                                    <property name="value" value="%%certificatesRevListDistributionPointServiceIpv6Enable%%" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>sps_certificateCpds3</path>
+                                <itemType name="config-manager-property">
+                                    <property name="key" value="certificatesRevListDistributionPointServiceDnsEnable" />
+                                    <property name="value" value="%%certificatesRevListDistributionPointServiceDnsEnable%%" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>sps_certificateCpds4</path>
+                                <itemType name="config-manager-property">
+                                    <property name="key" value="publicKeyInfraRegAutorithyPublicServerName" />
+                                    <property name="value" value="%%publicKeyInfraRegAutorithyPublicServerName%%" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>vm</path>
+                                <scope>CLOUD</scope>
+                                <itemType name="vcs-clustered-service">
+                                    <property name="online_timeout" value="900" />
+                                </itemType>
+                            </assign>
+                            <assign>
+                                <path>vm</path>
+                                <scope>PHYSICAL_TEST</scope>
+                                <itemType name="vm-service">
+                                    <property name="cpus" value="2" />
+                                    <property name="ram" value="5120M" />
+                                </itemType>
+                            </assign>
+                        </assignments>
+                    </configEntity>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <skip>true</skip>
+                    <inherited>true</inherited>
+                    <copyright>2014 Ericsson AB All rights reserved</copyright>
+                    <description>${ericsson.rstate}</description>
+                    <group>ERI-NMS</group>
+                    <vendor>Ericsson AB</vendor>
+                    <url>www.ericsson.com</url>
+                    <requires>
+                        <!--The following is an example, non-exhaustive or specific list of required RPM's for most JEE Service Groups -->
+                        <require>EXTReap7_CXP9037438</require>
+                        <require>EXTRserverjre_CXP9035480</require>
+                        <require>ERICeap7config_CXP9037440</require>
+                        <require>ERICpostgresqljdbc_CXP9031176</require>
+                        <require>ERICserviceframework4_CXP9037454</require>
+                        <require>ERICserviceframeworkmodule4_CXP9037453</require>
+                        <require>ERICmodelserviceapi_CXP9030594</require>
+                        <require>ERICmodelservice_CXP9030595</require>
+                        <require>ERICpostgresqlclient_CXP9034390</require>
+                        <require>ERICpostgresutils_CXP9038493</require>
+                        <require>ERICpkiservicedb_CXP9031995</require>
+                        <require>ERICpkicore_CXP9031876</require>
+                        <require>ERICkeyaccessproviderservice_CXP9032385</require>
+                        <require>ERICpkimanager_CXP9031873</require>
+                        <require>ERICcredentialmanagerwebclihandler_CXP9031827</require>
+                        <require>ERICcredentialmanagerservice_CXP9031868</require>
+                        <require>ERICpib2_CXP9037459</require>
+                        <require>ERICpkimanagerapi_CXP9031871</require>
+                        <require>ERICpkicoreapi_CXP9031872</require>
+                        <require>ERICpkiwebcli_CXP9031880</require>
+                        <require>ERICddc_CXP9030294</require>
+                        <require>ERICvaultloginmodule_CXP9036201</require>
+                        <!--Include the remainder of the dependent RPMs -->
+                    </requires>
+                    <mappings>
+                        <mapping>
+                            <directory>${vm.jboss-install-path}</directory>
+                            <filemode>755</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                            <configuration>false</configuration>
+                            <directoryIncluded>false</directoryIncluded>
+                            <recurseDirectories>false</recurseDirectories>
+                            <sources>
+                               <source>
+                                    <location>src/main/resources</location>
+                                    <includes>
+                                        <include>jboss-as.conf</include>
+                                    </includes>
+                               </source>
+                               <source>
+                                    <location>src/main/resources/jboss-as.conf</location>
+                                    <destination>jboss-as-flavour-2G.conf</destination>
+                                </source>
+                                <source>
+                                    <location>src/main/resources/jboss-as.conf</location>
+                                    <destination>jboss-as-flavour-4G.conf</destination>
+                                </source>
+                                <source>
+                                    <location>src/main/resources/jboss-as.conf</location>
+                                    <destination>jboss-as-flavour-6G.conf</destination>
+                                </source>
+                                <source>
+                                    <location>src/main/resources/app-server.conf</location>
+                                    <destination>app-server.conf</destination>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>${vm.jboss-install-path}/bin/pre-stop</directory>
+                            <filemode>755</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                            <configuration>false</configuration>
+                            <directoryIncluded>false</directoryIncluded>
+                            <recurseDirectories>false</recurseDirectories>
+                            <sources>
+                                <source>
+                                    <location>src/main/scripts/pre_stop</location>
+                                    <includes>
+                                        <include>removeSharedFile.sh</include>
+                                        <include>cacheReplicationStateCheck.sh</include>
+                                    </includes>
+                                </source>
+                            </sources>
+                        </mapping>
+
+                        <mapping>
+                            <directory>${vm.jboss-install-path}/bin/post-start</directory>
+                            <filemode>755</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                            <configuration>false</configuration>
+                            <directoryIncluded>false</directoryIncluded>
+                            <recurseDirectories>false</recurseDirectories>
+                            <sources>
+                                <source>
+                                    <location>src/main/scripts/post_start</location>
+                                    <includes>
+                                        <include>setRAServiceAddress.sh</include>
+                                    </includes>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>${vm.jboss-install-path}/bin/post-start</directory>
+                            <filemode>755</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                            <configuration>false</configuration>
+                            <directoryIncluded>false</directoryIncluded>
+                            <recurseDirectories>false</recurseDirectories>
+                            <sources>
+                                <source>
+                                    <location>src/main/scripts/post_start</location>
+                                    <includes>
+                                        <include>setCredCPDSValues.sh</include>
+                                    </includes>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>${vm.jboss-install-path}/bin/pre-start</directory>
+                            <filemode>755</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                            <configuration>false</configuration>
+                            <directoryIncluded>false</directoryIncluded>
+                            <recurseDirectories>false</recurseDirectories>
+                            <sources>
+                                <source>
+                                    <location>src/main/scripts/pre_start</location>
+                                    <includes>
+                                        <include>copy_cache_replication_config_xml_files.sh</include>
+                                        <include>oomKillerTuning.sh</include>
+                                        <include>secure_kaps_db.sh</include>
+                                        <include>secure_pkicore_db.sh</include>
+                                        <include>secure_pkimanager_db.sh</include>
+                                    </includes>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/${rpm-root}/${comp-name}/${postinstall-path}</directory>
+                            <filemode>644</filemode>
+                            <username>${super-group}</username>
+                            <groupname>${super-group}</groupname>
+                            <configuration>false</configuration>
+                            <sources>
+                                <source>
+                                    <location>src/main/conf</location>
+                                    <includes>
+                                        <include>credManagerCLI.conf</include>
+                                    </includes>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/${rpm-root}/${comp-name}/${postinstall-path}</directory>
+                            <filemode>755</filemode>
+                            <username>${super-user}</username>
+                            <groupname>${super-group}</groupname>
+                            <configuration>false</configuration>
+                            <sources>
+                                <source>
+                                    <location>src/main/scripts/post_credmanagercli_conf</location>
+                                    <includes>
+                                        <include>credentialmanagercliconfig.sh</include>
+                                    </includes>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                        <directory>/etc/simple_availability_manager_agents/config/</directory>
+                        <filemode>755</filemode>
+                        <username>${super-user}</username>
+                        <groupname>${super-group}</groupname>
+                        <configuration>false</configuration>
+                        <directoryIncluded>false</directoryIncluded>
+                        <recurseDirectories>false</recurseDirectories>
+                        <sources>
+                            <source>
+                                <location>src/main/resources</location>
+                                <includes>
+                                    <include>healthcheck.ini</include>
+                                </includes>
+                            </source>
+                        </sources>
+                    </mapping>
+                    <mapping>
+                        <directory>/usr/lib/ocf/resource.d/</directory>
+                        <filemode>755</filemode>
+                        <username>${super-user}</username>
+                        <groupname>${super-group}</groupname>
+                        <configuration>false</configuration>
+                        <directoryIncluded>false</directoryIncluded>
+                        <recurseDirectories>false</recurseDirectories>
+                        <sources>
+                            <source>
+                                <location>src/main/resources</location>
+                                <includes>
+                                    <include>deploy_failure_detection.sh</include>
+                                </includes>
+                            </source>
+                        </sources>
+                    </mapping>
+                    <mapping>
+                            <directory>${vm.jboss-install-path}/bin/cli/services/</directory>
+                            <filemode>550</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                            <sources>
+                                <source>
+                                    <location>src/main/resources/cli</location>
+                                    <includes>
+                                        <include>create_security_domain.cli</include>
+                                        <include>create_security_realm.cli</include>
+                                        <include>create_jms_queue.cli</include>
+                                        <include>create_properties.cli</include>
+                                    </includes>
+                                </source>
+                            </sources>
+                        </mapping>
+                    <mapping>
+                        <directory>/${rpm-root}/${comp-name}/${postinstall-path}</directory>
+                        <filemode>755</filemode>
+                        <username>${super-user}</username>
+                        <groupname>${super-group}</groupname>
+                        <configuration>false</configuration>
+                        <directoryIncluded>false</directoryIncluded>
+                        <recurseDirectories>false</recurseDirectories>
+                        <sources>
+                            <source>
+                                <location>src/main/resources</location>
+                                <includes>
+                                    <include>SupportedAlgorithmsCacheConfig.xml</include>
+                                    <include>PkiWebCliExportCacheConfig.xml</include>
+                                </includes>
+                            </source>
+                        </sources>
+                    </mapping>
+                    <mapping>
+                        <directory>/${rpm-root}/${comp-name}/${postinstall-path}</directory>
+                        <filemode>755</filemode>
+                        <username>${super-user}</username>
+                        <groupname>${super-group}</groupname>
+                        <configuration>false</configuration>
+                        <directoryIncluded>false</directoryIncluded>
+                        <recurseDirectories>false</recurseDirectories>
+                        <sources>
+                            <source>
+                                <location>src/main/resources</location>
+                                <includes>
+                                    <include>SupportedAlgorithmsCacheConfig.xml</include>
+                                    <include>PkiWebCliExportCacheConfig.xml</include>
+                                </includes>
+                            </source>
+                        </sources>
+                    </mapping>
+                </mappings>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+</project>
+

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+	<application>
+		<certificates>
+			<certificate>
+			
+			    <!--This flag is not used by CLI and CLI-API but credmApi certificate is requested with chain -->
+				<certificatechain>true</certificatechain>
+			
+				<tbscertificate>
+					<subject>
+						<entityname>credmApi##hostname##</entityname>
+						<!-- <distinguishname>CN=credmApi##hostname##, O=ericsson, OU=enm, C=IT</distinguishname>  -->
+					</subject>
+					
+					<!--now certificateextension not present: default SubjectAlternativeName (profile) is used -->			
+				</tbscertificate>
+				
+                                <!-- credMServiceProfile NOT sent on unsecure REST channel -->
+                                <!-- credMServiceProfile is hard coded on CredM Service  -->
+                                <endentityprofilename>credMServiceProfile</endentityprofilename>
+				
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+				
+				<keystore>
+					<jkskeystore>
+						<!--please refer also to jboss standalone.xml -->								 
+						<storealias>credmApi</storealias >
+						<storelocation>/ericsson/credm/cli/data/certs/credmApiKS.JKS</storelocation> 
+						<storepassword>credmKS</storepassword>
+					</jkskeystore>
+				</keystore>
+
+				<truststore>
+					<jkstruststore>
+						<!--please refer also to jboss standalone.xml -->
+						<storealias>credmApiCA</storealias >
+						<storelocation>/ericsson/credm/cli/data/certs/credmApiTS.JKS</storelocation>
+						<storepassword>credmTS</storepassword>
+					</jkstruststore>
+				</truststore>
+
+				<!-- crl store not used yet 
+				<crlstore>
+					<base64crlstore>
+						<storealias>credmApiCRL</storealias>
+						<storelocation>/ericsson/credm/cli/data/certs/credmApiCRL.pem</storelocation>
+						<storepassword></storepassword>
+					</base64crlstore> 			
+				</crlstore>
+				-->
+
+				<!--need restart
+				<connectormanaged>undefined</connectormanaged>  -->
+
+			</certificate>
+		</certificates>
+		     
+		    <!--worst case-->
+			<crlupdatemode>CrlRequired</crlupdatemode>
+			
+		    <!--keyrequests not present for CredM API / Standalone CLI -->
+						
+	</application>
+	
+	<user>
+		<!-- temporary : user = root -->
+		<!-- keep in the same line to allow grep researches -->
+		<username>root</username>
+		<usergroup>root</usergroup>
+	</user>
+	
+</applications>

@@ -1,0 +1,472 @@
+<xs:schema attributeFormDefault="unqualified"
+
+	elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<!-- Root element to support multiple applications -->
+	<xs:element name="applications" type="ApplicationsType" />
+
+	<xs:complexType name="ApplicationsType">
+
+		<xs:sequence>
+			<xs:element name="application" type="ApplicationType"
+				minOccurs="1" maxOccurs="unbounded" />
+
+			<xs:element name="user" type="UserType" 
+				minOccurs="1" maxOccurs="1" />
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+
+	<!-- Application element to hold certificate information about an individual 
+		application -->
+	<xs:complexType name="ApplicationType">
+
+		<xs:sequence>
+			<xs:element name="certificates" type="CertificatesType"
+				minOccurs="0" maxOccurs="1" />
+				
+			<xs:element name="truststores" type="TrustStoresOnlyType"
+				minOccurs="0" maxOccurs="1" />	
+
+			<xs:element name="crlupdatemode" type="CrlUpdateModeType" 
+				minOccurs="1" maxOccurs="1" />
+
+			<xs:element name="keyrequests" type="KeyRequestsType"
+				minOccurs="0" maxOccurs="1" />
+
+		</xs:sequence>
+
+	</xs:complexType>
+
+
+	<!-- Support generating multiple certificates for single application -->
+	<xs:complexType name="CertificatesType">
+
+		<xs:sequence>
+			<xs:element name="certificate" type="CertificateType"
+				minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+
+	</xs:complexType>
+
+
+	<!-- Certificate, keystore and truststore information -->
+	<xs:complexType name="CertificateType">
+
+		<xs:sequence>
+			<xs:element name="certificatechain" type="xs:boolean"
+             minOccurs="0" default="false"/>
+		
+			<xs:element name="tbscertificate" type="TBSCertificateType"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="endentityprofilename" type="xs:string"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="keypair" type="KeypairType" 
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="keystore"  type="KeyStoreType" 
+				minOccurs="1" maxOccurs="unbounded" />
+			<xs:element name="truststore" type="TrustStoreType"
+				minOccurs="0" maxOccurs="unbounded" />
+
+			<xs:element name="crlstore" type="CrlStoreType"  
+				minOccurs="0" maxOccurs="unbounded" />
+
+			<xs:element name="postscript" type="CommandType"
+				minOccurs="0" maxOccurs="1" />
+
+			<xs:element name="oncheckresult" type="CheckActionListType"
+				minOccurs="0" maxOccurs="1" />
+
+		</xs:sequence>
+
+	</xs:complexType>
+	
+	
+	<xs:complexType name="TrustStoresOnlyType">
+
+		<xs:sequence>
+			<xs:element name="truststoreonly" type="TrustStoreOnlyType"
+				minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+
+	</xs:complexType>
+	
+	
+	<!-- truststore for client that don't need a certificate -->
+	<xs:complexType name="TrustStoreOnlyType">
+
+		<xs:sequence>
+		
+			<xs:element name="trustprofilename" type="xs:string"
+				minOccurs="1" maxOccurs="1" />		
+	
+			<xs:element name="truststore" type="TrustStoreType"
+				minOccurs="1" maxOccurs="unbounded" />
+
+			<xs:element name="crlstore" type="CrlStoreType"  
+				minOccurs="0" maxOccurs="unbounded" />
+				
+			<xs:element name="postscript" type="CommandType"
+				minOccurs="0" maxOccurs="1" />
+
+			<xs:element name="oncheckresult" type="CheckActionListType"
+				minOccurs="0" maxOccurs="1" />
+				
+		</xs:sequence>
+
+	</xs:complexType>
+	
+
+
+<!-- how the service retrieves the CRL update -->
+	<xs:simpleType name="CrlUpdateModeType"  >
+
+   	 	<xs:restriction base="xs:string">
+        		<xs:enumeration value="CrlSelfManaged" />
+        		<xs:enumeration value="CrlRequired" />
+      		 <xs:enumeration value="CrlNotManaged" />
+    	</xs:restriction>
+
+	</xs:simpleType>
+
+
+	<!-- Support generating keys for single application -->
+	<xs:complexType name="KeyRequestsType">
+		<xs:sequence>
+
+			<xs:element name="secretkeyrequest" type="SecretKeyRequestType" 
+				minOccurs="0" maxOccurs="unbounded" />
+
+			<xs:element name="keypairrequest" type="KeyPairRequestType" 
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+<!-- parameters to define a symmetric key -->
+	<xs:complexType name="SecretKeyRequestType">
+
+		<xs:sequence>
+			<!-- Key size -->
+			<xs:element name="keysize" type="xs:positiveInteger" 
+ 				minOccurs="1" maxOccurs="1" />
+
+			<!-- Key pair algorithm like DES -->
+			<xs:element name="keyalgorithm" type="xs:string" 
+				minOccurs="1" maxOccurs="1" />
+
+			<xs:element name="keystore" type="SecretStoreType"  
+				minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+<!-- parameters to define a pair of keys (public private) -->
+	<xs:complexType name="KeyPairRequestType">
+		<xs:sequence>
+			<!-- Key size -->
+			<xs:element name="keysize" type="xs:positiveInteger" 
+ 				minOccurs="1" maxOccurs="1" />
+
+			<!-- Key pair algorithm like RSA -->
+			<xs:element name="keyalgorithm" type="xs:string" 
+				minOccurs="1" maxOccurs="1" />
+
+			<xs:element name="keystore" type="KeyPairStoreType"  
+				minOccurs="1" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="KeyStoreType">
+		<xs:choice>
+			<xs:element name="jcekskeystore" type="KStoreType"  />
+			<xs:element name="jkskeystore" type="KStoreType"  />
+			<xs:element name="pkcs12keystore" type="KStoreType"  />
+			<xs:element name="base64keystore" type="Base64KStoreType"  />
+		</xs:choice>
+	</xs:complexType>
+
+
+	<xs:complexType name="KStoreType">
+		<xs:sequence>
+			<xs:element name="storealias" type="xs:string" 
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="storelocation" type="xs:string"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="storepassword" type="xs:string" 
+				minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="Base64KStoreType">
+        <xs:sequence>
+			<xs:element name="storealias" type="xs:string" 
+				minOccurs="1" maxOccurs="1" />
+			<xs:choice>
+
+		        <xs:sequence>
+					<xs:element name="keyfilelocation" type="xs:string" 
+						minOccurs="1" maxOccurs="1" />
+					<xs:element name="certificatefilelocation" type="xs:string" 
+						minOccurs="0" maxOccurs="1" />
+		        </xs:sequence>
+
+       			<xs:element type="xs:string" name="storelocation" />
+			</xs:choice>
+
+			<xs:element type="xs:string" name="storepassword"
+				minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="TrustStoreType">
+        <xs:sequence>
+			<xs:element name="trustsource" type="TrustSourceType" 
+				minOccurs="0" maxOccurs="1" default="both"/>
+		<xs:choice>
+			<xs:element name="jcekstruststore" type="TStoreType" />
+			<xs:element name="jkstruststore" type="TStoreType" />
+			<xs:element name="pkcs12truststore" type="TStoreType" />
+			<xs:element name="base64truststore" type="Base64TStoreType"  />
+		</xs:choice>
+        </xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="TrustSourceType"  >
+	    <xs:restriction base="xs:string">
+	        <xs:enumeration value="internal" />
+	        <xs:enumeration value="external" />
+	        <xs:enumeration value="both" />
+	    </xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:complexType name="TStoreType">
+		<xs:sequence>
+			<xs:element name="storealias" type="xs:string" 
+				minOccurs="1" maxOccurs="1" />
+
+			<xs:choice>
+				<xs:element name="storelocation" type="xs:string" />
+				<xs:element name="storefolder" type="xs:string"  />
+			</xs:choice>
+
+			<xs:element name="storepassword" type="xs:string" 
+				minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="Base64TStoreType">
+        <xs:sequence>
+			<xs:element name="storealias" type="xs:string" 
+				minOccurs="1" maxOccurs="1" />
+			<xs:choice>
+       			<xs:element type="xs:string" name="storelocation" />
+       			<xs:element type="xs:string" name="storefolder" />
+			</xs:choice>
+
+			<xs:element type="xs:string" name="storepassword"
+				minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="SecretStoreType">
+
+		<xs:choice>
+			<xs:element name="jcekssecretstore" type="KStoreType"  />
+			<xs:element name="pkcs12secretstore" type="KStoreType"  />
+			<xs:element name="base64secretstore" type="Base64KStoreType" />
+		</xs:choice>
+
+	</xs:complexType>
+
+
+	<xs:complexType name="KeyPairStoreType">
+
+		<xs:choice>
+			<xs:element name="jcekskeypairstore" type="KStoreType"  />
+			<xs:element name="jkskeypairstore" type="KStoreType"  />
+			<xs:element name="pkcs12keypairstore" type="KStoreType"  />
+			<xs:element name="base64keypairstore" type="Base64KStoreType" />
+		</xs:choice>
+
+	</xs:complexType>
+
+
+	<xs:complexType name="CrlStoreType">
+	   <xs:sequence>
+		<xs:element name="crlsource" type="CrlSourceType" 
+				minOccurs="0" maxOccurs="1" default="both"/>
+
+		<xs:choice>
+			<xs:element name="base64crlstore" type="Base64TStoreType" />
+		</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:simpleType name="CrlSourceType"  >
+	    <xs:restriction base="xs:string">
+	        <xs:enumeration value="internal" />
+	        <xs:enumeration value="external" />
+	        <xs:enumeration value="both" />
+	    </xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:complexType name="TBSCertificateType">
+
+		<xs:sequence>
+			<!-- Certificate Subject -->
+			<xs:element name="subject" type="SubjectType" 
+				minOccurs="1" maxOccurs="1" />
+			<!-- Certificate Extensions -->
+			<xs:element name="certificateextension" type="CertificateExtensionType"
+				minOccurs="0" maxOccurs="1" />
+
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="SubjectType">
+		<xs:sequence>
+			<xs:element name="entityname" type="xs:string"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="distinguishname" type="xs:string"
+				minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="CertificateExtensionType">
+		<xs:sequence>
+			<xs:element name="subjectalternativename" type="SubjectAlternativeNameType"
+				minOccurs="0" maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="SubjectAlternativeNameType">
+		<xs:sequence>
+			<xs:element name="directoryname" minOccurs="0" maxOccurs="unbounded"
+				type="xs:string" />
+			<xs:element name="dns" minOccurs="0" maxOccurs="unbounded"
+				type="xs:string" />
+			<xs:element name="email" minOccurs="0" maxOccurs="unbounded"
+				type="xs:string" />
+			<xs:element name="uri" minOccurs="0" maxOccurs="unbounded"
+				type="xs:string" />
+			<xs:element name="ipaddress" minOccurs="0" maxOccurs="unbounded"
+				type="xs:string" />
+			<xs:element name="othername" minOccurs="0" maxOccurs="unbounded"
+				type="xs:string" />
+			<xs:element name="registeredid" minOccurs="0" maxOccurs="unbounded"
+				type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="KeypairType">
+		<xs:sequence>
+			<!-- Key pair size -->
+			<xs:element name="keypairsize" type="xs:positiveInteger" 
+				minOccurs="1" maxOccurs="1" />
+
+			<!-- Key pair algorithm like RSA -->
+			<xs:element name="keypairalgorithm" type="xs:string" 
+				minOccurs="1" maxOccurs="1" />
+
+		</xs:sequence>
+	</xs:complexType>
+
+
+<!-- On check actions management start -->
+
+	<xs:simpleType name="ActionCauseType">
+	    <xs:restriction base="xs:string">
+	        <xs:enumeration value="certificateUpdate"/>
+	        <xs:enumeration value="trustUpdate"/>
+	        <xs:enumeration value="crlUpdate"/>
+	    </xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ActionType">
+	    <xs:restriction base="xs:string">
+	        <xs:enumeration value="VMRestart"/>
+	        <xs:enumeration value="HTTPSConnectorRestart"/>
+	        <xs:enumeration value="RunScript"/>
+	    </xs:restriction>
+	</xs:simpleType>		
+
+	<xs:complexType name="ParameterType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="value" type="xs:string"/> 
+		</xs:sequence>
+	</xs:complexType>		
+	
+	<xs:complexType name="CommandType">
+		<xs:sequence>
+			<xs:element name="pathname" type="xs:string" 
+				minOccurs="1" maxOccurs="unbounded"/>		
+			<xs:element name="parameter" type="ParameterType" 
+				minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>		
+
+	<xs:complexType name="CheckActionType">
+		<xs:sequence>
+			<!-- List of action cause -->
+			<xs:element name="checkcause" type="ActionCauseType" 
+				minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="action" type="ActionType"/>
+			<!-- Script to call -->
+			<xs:element name="command" type="CommandType"
+				minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="CheckActionListType">
+		<xs:sequence>
+			<xs:element name="actionlist" type="CheckActionType" 
+				minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+<!-- On check actions management end -->
+
+
+<!-- TO BE REMOVED
+
+<xs:simpleType name="ConnectorManagedType"  >
+
+    <xs:restriction base="xs:string">
+        <xs:enumeration value="httpsConnector" />
+        <xs:enumeration value="undefined" />
+    </xs:restriction>
+</xs:simpleType>
+-->
+
+	<xs:complexType name="UserType">
+
+		<xs:sequence>
+<!-- keep in the same line to allow grep researches -->
+			<xs:element name="username" type="xs:string" 
+				minOccurs="1" maxOccurs="1" />
+
+<!-- keep in the same line to allow grep researches -->
+			<xs:element name="usergroup" type="xs:string" 
+				minOccurs="1" maxOccurs="1" />
+		</xs:sequence>
+
+	</xs:complexType>
+
+
+</xs:schema>

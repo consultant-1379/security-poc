@@ -1,0 +1,15 @@
+{{- if .Values.configMaps.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMaps.name }}
+  labels:
+    app: {{ .Values.service.name.main }}
+    app.kubernetes.io/name: "{{ .Values.service.name.main }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-enm-kvstore-hc.chart" . }}
+  annotations:
+{{- include "eric-enm-kvstore-hc.product-info" . | indent 4 }}
+data:
+{{ .Files.Get "appconfig/configMaps.yaml" | indent 2 }}
+{{- end }}

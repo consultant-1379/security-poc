@@ -1,0 +1,14 @@
+- name: gp
+  mountPath: /gp
+- name: mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment
+- name: custom
+  mountPath: /ericsson/custom
+- name: hcdumps
+  mountPath: /ericsson/enm/dumps
+- name: data
+  mountPath: /ericsson/tor/data
+- name: norollback
+  mountPath: /ericsson/tor/no_rollback
+- name: tz-config
+  mountPath: /etc/localtime

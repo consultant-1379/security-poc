@@ -1,0 +1,46 @@
+{{- if .Values.global.ericIngress.enabled }}
+---
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: secserv
+spec:
+  virtualServiceIP: {{ .Values.global.vips.cm_vip_address }}
+  backends:
+    name: secserv
+    config:
+      - ports:
+          vipPort: 1389
+          svcPort: 1389
+        protocol: tcp
+        algo: lc
+        mode: nat
+      - ports:
+          vipPort: 1636
+          svcPort: 1636
+        protocol: tcp
+        algo: lc
+        mode: nat
+---
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: secserv2
+spec:
+  virtualServiceIP: {{ .Values.global.vips.fm_vip_address }}
+  backends:
+    name: secserv
+    config:
+      - ports:
+          vipPort: 1389
+          svcPort: 1389
+        protocol: tcp
+        algo: lc
+        mode: nat
+      - ports:
+          vipPort: 1636
+          svcPort: 1636
+        protocol: tcp
+        algo: lc
+        mode: nat
+{{- end }}

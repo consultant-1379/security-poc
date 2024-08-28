@@ -1,0 +1,37 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: "{{ .Values.service.name }}-namespace-role"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 8 }}
+  annotations:
+    {{- include "eric-enm-common-helmchart-library.product-info" .| nindent 8 }}
+rules:
+  - apiGroups: ["", "metrics.k8s.io"]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["get", "create"]
+  - apiGroups: ["batch", "extensions"]
+    resources: ["jobs", "cronjobs"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: ["routing.ericingress.ericsson.com"]
+    resources: ["ericingresses"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: [""]
+    resources: ["secrets", "persistentvolumeclaims", "services", "replicationcontrollers", "configmaps", "events"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: ["apps"]
+    resources: ["statefulsets", "deployments", "daemonsets", "replicasets"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "networkpolicies"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: [ "policy" ]
+    resources: [ "poddisruptionbudgets" ]
+    verbs: [ "get", "watch", "list" ]

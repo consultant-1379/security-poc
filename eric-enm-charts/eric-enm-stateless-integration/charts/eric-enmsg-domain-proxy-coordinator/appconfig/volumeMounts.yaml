@@ -1,0 +1,18 @@
+- name: gp
+  mountPath: /gp
+- name: data
+  mountPath: /ericsson/tor/data
+- name: mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment
+- name: dumps
+  mountPath: /ericsson/enm/dumps
+- name: tls-secret-1
+  mountPath: {{ .Values.service.tlsMountPath }}/tls1
+- name: tls-secret-2
+  mountPath: {{ .Values.service.tlsMountPath }}/tls2
+- name: tls-secret-3
+  mountPath: {{ .Values.service.tlsMountPath }}/tls3
+- name: tls-secret-4
+  mountPath: {{ .Values.service.tlsMountPath }}/tls4
+- name: tls-secret-5
+  mountPath: {{ .Values.service.tlsMountPath }}/tls5

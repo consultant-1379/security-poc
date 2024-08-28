@@ -1,0 +1,11 @@
+global.properties: |
+  DDC_ON_CLOUD=TRUE
+  COM_INF_LDAP_ROOT_SUFFIX={{ .Values.global.enmProperties.COM_INF_LDAP_ROOT_SUFFIX }}
+  COM_INF_LDAP_ADMIN_ACCESS={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_ACCESS }}
+  COM_INF_LDAP_ADMIN_CN={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_CN }}
+  COM_INF_LDAP_PORT={{ .Values.global.enmProperties.COM_INF_LDAP_PORT }}
+  postgresql01_admin_password={{ .Values.global.enmProperties.postgresql01_admin_password }}
+  UI_PRES_SERVER={{ .Values.global.ingress.enmHost }}
+  hqs_persistence_provider={{ .Values.global.enmProperties.hqs_persistence_provider }}
+  hqs_persistence_provider_port={{ .Values.global.enmProperties.hqs_persistence_provider_port }}
+

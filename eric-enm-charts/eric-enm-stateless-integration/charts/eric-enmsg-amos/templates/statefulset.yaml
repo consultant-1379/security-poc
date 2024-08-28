@@ -1,0 +1,28 @@
+{{- template "eric-enm-common-helmchart-library.statefulset" (list . "eric-enmsg-amos.statefulset") -}}
+{{- define "eric-enmsg-amos.statefulset" -}}
+spec:
+  updateStrategy:
+    type: {{ .Values.updateStrategy.type }}
+    {{- if .Values.updateStrategy.rollingUpdate }}
+    rollingUpdate:
+      partition: {{ .Values.updateStrategy.rollingUpdate.partition }}
+  {{- end }}
+  template:
+    spec:
+    {{- if .Values.terminationGracePeriod.enabled }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriod.seconds }}
+    {{- end }}
+    {{- if .Values.affinity }}
+      affinity:
+        podAntiAffinity:
+          {{ .Values.affinity }}:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                    #The next line varies depending on how the service retrieves the name, it can be - {{ .Values.service.name }} or  - "{{ .Release.Name }}"
+                - {{ .Values.service.name }}
+            topologyKey: "kubernetes.io/hostname"
+    {{- end }}
+{{- end -}}

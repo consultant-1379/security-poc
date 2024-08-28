@@ -1,0 +1,2 @@
+UPDATE db_version SET status='old' WHERE status='current' and version='2.13.0';
+INSERT INTO db_version(id,version,comments,updated_date,status) SELECT 17,'2.14.0','populated data into otp_generated_time and otp_validity_period columns the otp generated time and validity period for an entity of entity table in pkimanagerdb',CURRENT_DATE,'current' WHERE NOT EXISTS (SELECT * FROM db_version WHERE id = 17);

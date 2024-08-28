@@ -1,0 +1,111 @@
+"cmedit" (* slogan = "Read, manipulate, and export Configuration Management data" *) WS "get" (* slogan = "Return MO instances according to FDN, Node name or node SCOPE and MO Class/Attribute FILTER criteria" *) ( GET_BY_FDN | GET_BY_QUERY | GET_BY_NE )
+
+
+GET_BY_FDN ::= ( GET_ATTRIBUTE_BY_FDN | GET_BY_FDN_QUERY ) (* unique = "true" *)
+GET_BY_NE ::= GET_SCOPE_BY_NE { GET_BY_NE_OPTIONS } (* unique = "true" *)
+GET_BY_QUERY ::= GET_SCOPE_BY_QUERY [ GET_SCOPE_FILTER_OPTION ] ( GET_FILTER_LIST [ GET_OUTPUT_SPECIFICATIONS ] | GET_CLASS_FILTER_FOR_MO_BY_ID ) { GET_BY_QUERY_OPTIONS } (* unique = "true" *)
+
+GET_BY_FDN_QUERY ::= WS PREDEF_FDN_LAZY_HIDDEN { ";" (* slogan = "Semi-colon to add another scope to the list." *) PREDEF_FDN_OR_NODENAME_OR_COLLECTION } [ [ GET_SCOPE_FILTER_OPTION ] ( GET_FILTER_LIST [ GET_OUTPUT_SPECIFICATIONS ] | GET_CLASS_FILTER_FOR_MO_BY_ID ) { GET_BY_QUERY_OPTIONS } (* unique = "true" *) ] GET_BY_FDN_OPTIONS (* unique = "true" *)
+GET_ATTRIBUTE_BY_FDN ::= WS PREDEF_FDN_LAZY_HIDDEN { ";" (* slogan = "Semi-colon to add another scope to the list." *) PREDEF_FDN_LAZY_HIDDEN } { GET_ATTRIBTE_BY_FDN_OPTIONS } (* unique = "true" *)
+
+GET_SCOPE_BY_NE ::= ( GET_SCOPE_WITHOUT_OPTION | GET_SCOPE_BY_NE_WITH_OPTION | WS "*" (* slogan = "Network wide scope" *) )
+GET_SCOPE_BY_QUERY ::= ( GET_SCOPE_WITHOUT_OPTION | GET_SCOPE_BY_QUERY_WITH_OPTION | WS "*" (* slogan = "Network wide scope" *) )
+
+WS_PREDEF_NODENAME_OR_COLLECTION ::= WS PREDEF_NODENAME_OR_COLLECTION
+GET_SCOPE_WITHOUT_OPTION ::= WS_PREDEF_NODENAME_OR_COLLECTION { ";" (* slogan = "Semi-colon to add another scope to the list." *) ( PREDEF_NODENAME_OR_COLLECTION | WS_PREDEF_NODENAME_OR_COLLECTION ) }
+
+GET_SCOPE_BY_NE_WITH_OPTION ::= ( GET_NE_BY_NE_SCOPE [ GET_COLLECTION_SCOPE ] |  GET_COLLECTION_SCOPE [ GET_NE_BY_NE_SCOPE ]  )
+GET_SCOPE_BY_QUERY_WITH_OPTION ::= ( GET_NE_SCOPE [ ( GET_COLLECTION_SCOPE [ GET_SAVEDSEARCH_SCOPE ] | GET_SAVEDSEARCH_SCOPE [ GET_COLLECTION_SCOPE ] ) ] | GET_COLLECTION_SCOPE [ ( GET_NE_SCOPE [ GET_SAVEDSEARCH_SCOPE ] | GET_SAVEDSEARCH_SCOPE [ GET_NE_SCOPE ] ) ] | GET_SAVEDSEARCH_SCOPE [ ( GET_NE_SCOPE [ GET_COLLECTION_SCOPE ] | GET_COLLECTION_SCOPE [ GET_NE_SCOPE ] ) ] )
+
+GET_NE_BY_NE_SCOPE ::= WS ( "-n" (* hide = "true" *) | "--node" (* slogan = "Option to specify the Network Element to execute command on, e.g. 'ERBS123'. TIP : -n is the shorthand option for --node" *) ) WS GET_NODE_NAME { ";" GET_NODE_NAME }
+GET_NE_SCOPE ::= WS ( "-n" (* hide = "true" *) | "--node" (* slogan = "Option to specify the Network Element to execute command on, e.g. 'ERBS123'. TIP : -n is the shorthand option for --node" *) ) WS  ( GET_NODE_NAME { ";" GET_NODE_NAME } | "*" (* slogan = "Network wide scope" *) )
+
+GET_NODE_NAME ::= ( <node_name> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Enter a node name as scope. Use * for partial node name wildcard, e.g. ERBS*" *) | GET_PARTIAL_NODE_NAME )
+GET_PARTIAL_NODE_NAME ::= [ "*" (* hide = "true" *) ] , <node_name> (* hide = "true" *) , [ "*" (* hide = "true" *) ]
+
+GET_COLLECTION_SCOPE ::= WS ( "-co" (* hide = "true" *) | "--collection" (* slogan = "Option to execute the command on a predefined collection. TIP : -co is the shorthand option for --collection" *) ) WS <collection_name> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Enter the name of the desired collection" *) { ";" (* slogan = "Semi-colon used to add to the list" *) <collection_name> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Enter the name of the desired collection" *) }
+GET_SAVEDSEARCH_SCOPE ::= WS ( "-sa" (* hide = "true" *) | "--savedsearch" (* slogan = "Option to execute the command on a predefined savedsearch. TIP : -sa is the shorthand option for --savedsearch" *) ) WS <savedsearch_name> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Enter the name of the desired savedsearch" *) { ";" (* slogan = "Semi-colon used to add to the list" *) <savedsearch_name> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Enter the name of the desired savedsearch" *) }
+
+GET_SCOPE_FILTER_OPTION ::= WS "--scopefilter" WS (* slogan = "Option to specify the scope filter to execute the command with" *) GET_SCOPE_FILTER
+GET_SCOPE_FILTER ::= "(" GET_FILTER_LIST_IN_SCOPE_FILTER ")"
+
+GET_MO ::= ( WS <MO_class_type> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "MO Class to query towards" *) | <MO_class_type> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "MO Class to query towards" *) )
+
+GET_CLASS_FILTER_FOR_MO_BY_ID ::= GET_MO [ "=" (* slogan = "Get a MO by its Id" *) [ "*" (* hide = "true" *) ] <MO_id> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" regex = "^[a-zA-Z0-9\\._-]+[a-zA-Z0-9\\._-]*$" slogan = "A star can be used as a wildcard at the start and/or end of the value i.e. *cell01." *) [ "*" (* hide = "true" *) ] [ WS ( GET_AUTO_ATTRIBUTE_FILTERS | GET_ATTRIBUTE_FILTER | GET_ATTRIBUTE_FILTER_LIST ) ] ]
+GET_FILTER_LIST ::= GET_FILTER { ";" (* slogan = "Semi-colon to add another scope to the list." *) GET_FILTER }
+GET_FILTER_LIST_IN_SCOPE_FILTER ::= GET_CLASS_FILTER_IN_SCOPE_FILTER { WS "AND" WS (* slogan = "operator to add another scope to the list." *) GET_CLASS_FILTER_IN_SCOPE_FILTER }
+GET_FILTER ::= GET_CLASS_FILTER [ "," (* slogan = "Comma to add another child filter." *) GET_CHILD_FILTER ]
+GET_CLASS_FILTER ::= GET_MO [ "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( GET_AUTO_ATTRIBUTE_FILTERS | GET_ATTRIBUTE_FILTER | GET_ATTRIBUTE_FILTER_LIST_WITH_BRACKET ) ]
+GET_CLASS_FILTER_IN_SCOPE_FILTER ::= GET_MO "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( GET_ATTRIBUTE_FILTER_IN_SCOPE_FILTER | GET_ATTRIBUTE_FILTER_LIST_WITH_BRACKET_IN_SCOPE_FILTER )
+
+GET_ATTRIBUTE_FILTER_LIST_WITH_BRACKET ::= "(" GET_ATTRIBUTE_FILTER_LIST ")"
+GET_ATTRIBUTE_FILTER_LIST_WITH_BRACKET_IN_SCOPE_FILTER ::= "(" GET_ATTRIBUTE_FILTER_LIST_IN_SCOPE_FILTER ")"
+GET_ATTRIBUTE_FILTER_LIST ::= GET_ATTRIBUTE_FILTER { "," (* slogan = "Comma to add another attribute to the list. e.g. 'eutrancellfdd.(tac,administrativestate)'" *) GET_ATTRIBUTE_FILTER }
+GET_ATTRIBUTE_FILTER_LIST_IN_SCOPE_FILTER ::= GET_ATTRIBUTE_FILTER_IN_SCOPE_FILTER { "," (* slogan = "Comma to add another attribute to the list. e.g. 'eutrancellfdd.(tac,administrativestate)'" *) GET_ATTRIBUTE_FILTER_IN_SCOPE_FILTER }
+
+GET_AUTO_ATTRIBUTE_FILTERS ::= ( "*" (* slogan = "Retrieve all attributes" *) | "<pm>" | "<cm>" | "<w>" | "<m>" )
+GET_CHILD_FILTER ::= ( "*" (* slogan = "Retrieve all attributes" *) | GET_FILTER )
+
+GET_ATTRIBUTE_FILTER ::=  <attribute_name> (* slogan = "Attribute name to filter on." *) [ ( GET_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *) | "." (* slogan = "Separator used to attach member filters to the attribute" *) GET_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET ) ]
+GET_ATTRIBUTE_FILTER_IN_SCOPE_FILTER ::= <attribute_name> (* slogan = "Attribute name to filter on." *) ( GET_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *) | "." (* slogan = "Separator used to attach member filters to the attribute" *) GET_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET_IN_SCOPE_FILTER )
+
+GET_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET ::= ( "{" | "(" (* hide = "true" *) ) GET_COMPLEX_MEMBER_FILTER_LIST ( "}" | ")" (* hide = "true" *) )
+GET_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET_IN_SCOPE_FILTER ::= ( "{" | "(" (* hide = "true" *) ) GET_COMPLEX_MEMBER_FILTER_LIST_IN_LIST_CONTAINS ( "}" | ")" (* hide = "true" *) )
+GET_COMPLEX_MEMBER_FILTER_LIST ::= GET_COMPLEX_MEMBER_FILTER { "," (* slogan = "Comma used to add another member filter to a list." *) GET_COMPLEX_MEMBER_FILTER }
+GET_COMPLEX_MEMBER_FILTER_LIST_IN_LIST_CONTAINS ::= GET_COMPLEX_MEMBER_FILTER_IN_LIST_CONTAINS { "," (* slogan = "Comma used to add another member filter to a list." *) GET_COMPLEX_MEMBER_FILTER_IN_LIST_CONTAINS }
+GET_COMPLEX_MEMBER_FILTER ::=  <member_name> (* slogan = "Member name to filter on." *) [ GET_MEMBER_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *) ]
+GET_COMPLEX_MEMBER_FILTER_IN_LIST_CONTAINS ::=  <member_name> (* slogan = "Member name to filter on." *) GET_MEMBER_COMPARISON_OPERATORS (* slogan = "Choose a comparison operator" placeholder = "operators" *)
+
+GET_ATTRIBUTE_LIST_VALUE ::= """ <attribute_list_value> (* regex = "^([^"]+)$" slogan = "Enter a list item value" *) """
+GET_ATTRIBUTE_LIST_AND_OPERATOR_WITH_VALUE ::= { "&&" (* slogan = "and" *) GET_ATTRIBUTE_LIST_VALUE }
+GET_ATTRIBUTE_LIST_OR_OPERATOR_WITH_VALUE ::= { "||" (* slogan = "or" *) GET_ATTRIBUTE_LIST_VALUE }
+GET_COMPARISON_OPERATORS ::= ( GET_COMPARISON_OPERATOR_LT | GET_COMPARISON_OPERATOR_GT | GET_COMPARISON_OPERATOR_LTEQ | GET_COMPARISON_OPERATOR_GTEQ | GET_COMPARISON_OPERATOR_NEQ | GET_COMPARISON_OPERATOR_NLT | GET_COMPARISON_OPERATOR_NGT | GET_COMPARISON_OPERATOR_EQEQ | GET_COMPARISON_OPERATOR_LIST_CONTAINS | GET_COMPARISON_OPERATOR_LIST_CONTAINS_RETURNS_MATCHING_STRUCT_ONLY | GET_COMPARISON_OPERATOR_LIST_CONTAINS_RETURNS_MATCHING_MEMBER_ONLY )
+GET_MEMBER_COMPARISON_OPERATORS ::= ( GET_COMPARISON_OPERATOR_LT | GET_COMPARISON_OPERATOR_GT | GET_COMPARISON_OPERATOR_LTEQ | GET_COMPARISON_OPERATOR_GTEQ | GET_COMPARISON_OPERATOR_NEQ | GET_COMPARISON_OPERATOR_NLT | GET_COMPARISON_OPERATOR_NGT | GET_COMPARISON_OPERATOR_EQEQ )
+GET_COMPARISON_OPERATOR_LT ::= "<" (* slogan = "less than" *) GET_ATTRIBUTE_VALUE
+GET_COMPARISON_OPERATOR_GT ::= ">" (* slogan = "greater than" *) GET_ATTRIBUTE_VALUE
+GET_COMPARISON_OPERATOR_LTEQ ::= "<=" (* slogan = "less than or equal to" *) GET_ATTRIBUTE_VALUE
+GET_COMPARISON_OPERATOR_GTEQ ::= ">=" (* slogan = "greater than or equal to" *) GET_ATTRIBUTE_VALUE
+GET_COMPARISON_OPERATOR_NEQ ::= "!=" (* slogan = "not equal to" *) GET_ATTRIBUTE_VALUE
+GET_COMPARISON_OPERATOR_NLT ::= "!<" (* slogan = "not less than" *) GET_ATTRIBUTE_VALUE
+GET_COMPARISON_OPERATOR_NGT ::= "!>" (* slogan = "not greater than" *) GET_ATTRIBUTE_VALUE
+GET_COMPARISON_OPERATOR_EQEQ ::= "==" (* slogan = "equal to" *) GET_ATTRIBUTE_VALUE
+GET_COMPARISON_OPERATOR_LIST_CONTAINS ::= "~~" (* slogan = "list contains" *) "[" (* slogan = "start list" *) ( GET_ATTRIBUTE_LIST_OF_STRINGS | GET_ATTRIBUTE_LIST_OF_STRUCTS ) "]" (* slogan = "end list" *)
+GET_COMPARISON_OPERATOR_LIST_CONTAINS_RETURNS_MATCHING_STRUCT_ONLY ::= "~&" (* slogan = "Separator used to attach member filters to the attribute" *) "[" (* slogan = "start list" *) GET_ATTRIBUTE_LIST_OF_STRUCTS "]" (* slogan = "end list" *)
+GET_COMPARISON_OPERATOR_LIST_CONTAINS_RETURNS_MATCHING_MEMBER_ONLY ::= "." (* slogan = "Separator used to attach member filters to the attribute" *) "[" (* slogan = "start list" *) GET_COMPLEX_ATTRIBUTE_FILTER_LIST_WITH_BRACKET "]" (* slogan = "end list" *)
+
+GET_ATTRIBUTE_LIST_OF_STRINGS ::= GET_ATTRIBUTE_LIST_VALUE ( GET_ATTRIBUTE_LIST_AND_OPERATOR_WITH_VALUE | GET_ATTRIBUTE_LIST_OR_OPERATOR_WITH_VALUE )
+GET_ATTRIBUTE_LIST_OF_STRUCTS ::= "{" (* slogan = "start struct" *) GET_COMPLEX_MEMBER_FILTER_LIST_IN_LIST_CONTAINS "}" (* slogan = "end struct" *)
+GET_ATTRIBUTE_VALUE ::= <attribute_value> (* regex = "^(?:\-\d|[\w\$\=]+)[\w\$\-]*$" inputType = "wrapDoubleQuotes,wrapSingleQuotes,wrapSquareBrackets,wrapParentheses,wrapCurlyBrackets" slogan = "When matching Strings using '==' a star can be used as a wildcard at the start and/or end of the value i.e. userLabel==Test*. When matching Strings using '!=' a star is not permitted." *)
+
+GET_OUTPUT_SPECIFICATIONS ::= GET_OUTPUT_SPECIFICATION { ";" (* slogan = "Semi-colon to add another scope to the list." *)  GET_OUTPUT_SPECIFICATION }
+GET_OUTPUT_SPECIFICATION ::=  WS <MO_class_filter_type> (* slogan = "MO Class to filter results for" *) [ "." (* slogan = "Separator used to attach attribute filters to the MO Class" *) ( GET_AUTO_ATTRIBUTE_FILTERS | GET_ATTRIBUTE_NAME | GET_ATTRIBUTE_LIST ) ]
+GET_ATTRIBUTE_LIST ::= "(" GET_ATTRIBUTE_NAME { "," (* slogan = "Comma to add another attribute to the list. e.g. 'eutrancellfdd.(tac,administrativestate)'" *) GET_ATTRIBUTE_NAME } ")"
+GET_ATTRIBUTE_NAME ::= <attribute_name> (* slogan = "Attribute name to list." *) [ "." (* slogan = "Separator used to attach member attribute filters to the attribute filter" *) GET_OUTPUT_COMPLEX_ATTRIBUTE_LIST_WITH_BRACKET ]
+GET_OUTPUT_COMPLEX_ATTRIBUTE_LIST_WITH_BRACKET ::= ( "{" | "(" (* hide = "true" *) ) GET_OUTPUT_COMPLEX_MEMBER_LIST ( "}" | ")" (* hide = "true" *) )
+GET_OUTPUT_COMPLEX_MEMBER_LIST ::= GET_OUTPUT_COMPLEX_MEMBER { "," (* slogan = "Comma used to add another member filter to a list." *) GET_OUTPUT_COMPLEX_MEMBER }
+GET_OUTPUT_COMPLEX_MEMBER ::=  <member_name> (* slogan = "Member name to filter on." *)
+
+GET_BY_QUERY_OPTIONS ::= ( GET_NAMESPACE | GET_VERSION | NETYPE | OUTPUT_FORMAT | COUNT | DYNAMIC_EXPORT_FORMAT | SYNCSTATUS_FLAG | OUTPUT_OPTION )
+GET_ATTRIBTE_BY_FDN_OPTIONS ::= ( OUTPUT_FORMAT | ATTRIBUTES | SYNCSTATUS_FLAG | OUTPUT_OPTION )
+GET_BY_FDN_OPTIONS ::= ( OUTPUT_FORMAT | SYNCSTATUS_FLAG | OUTPUT_OPTION )
+GET_BY_NE_OPTIONS ::= ( DETAIL_FLAG | OUTPUT_FORMAT | COUNT | NETYPE | DYNAMIC_EXPORT_FORMAT | SYNCSTATUS_FLAG | OUTPUT_OPTION )
+
+GET_NAMESPACE ::= WS ( "-ns" (* hide = "true" *) | "-namespace" (* hide = "true" *) | "--namespace" (* slogan = "Optional parameter to query towards a specific modeled namespace. Tip: shorthand for --namespace is -ns" *) ) GET_NAMESPACE_INPUT
+GET_NAMESPACE_INPUT ::= ( WS | "=" (* hide = "true" *) ) <namespace> (* inputType = "wrapDoubleQuotes,wrapSingleQuotes" slogan = "Name of specific modeled Namespace to query" *)
+GET_VERSION ::= WS ( "-v" (* hide = "true" *) | "-version" (* hide = "true" *) | "--version" (* slogan = "Optional parameter to query towards a specific modeled version. Tip: shorthand for --version is -v" *) ) GET_VERSION_INPUT
+GET_VERSION_INPUT ::= ( WS | "=" (* hide = "true" *) ) <version> (* inputType = "version" slogan = "Name of specific version to query" *)
+NETYPE ::= WS ( "-ne" (* hide = "true" *) | "-netype" (* hide = "true" *) | "--netype" (* slogan = "Query towards the specified NE type.  Tip: shorthand for --netype is -ne" *) ) "=" <NE_type> (* slogan = "NE type to query towards.  e.g. ERBS" *)
+CONFIGURATION ::= WS ( "-c" (* hide = "true" *) | "--config" (* slogan = "Optional parameter to specify <configuration_name> , where <configuration_name> is the name of an existing configuration. Tip: shorthand for --config is -c" *) ) "=" <configuration> (* slogan = "Name of Configuration to execute the command against. 'Live' is default" *)
+COUNT ::= WS ( "-cn" (* hide = "true" *) | "-count" (* hide = "true" *) | "--count" (* slogan = "Option to return the number of objects. TIP : -cn is the shorthand option for --count" *) )
+OUTPUT_FORMAT ::= WS ( "-l" (* hide = "true" *) | "-list" (* hide = "true" *) | "--list" (* slogan = "Optional parameter to request the results of the command to be output in list format.  This is default output format. Tip: shorthand for --list is -l" *) | "-t" (* hide = "true" *) | "-table" (* hide = "true" *) | "--table" (* slogan = "Optional parameter to request the results of the command to be output in table format.  Tip: shorthand for --table is -t" *) )
+DYNAMIC_EXPORT_FORMAT ::= WS ( "-d" (* hide = "true" *) | "-dynamic" (* hide = "true" *) | "--dynamic" (* slogan = "Optional parameter to request the results of the command to be output in dynamic format.  Tip: shorthand for --dynamic is -d" *) )
+DETAIL_FLAG ::= WS ( "-dn" (* hide = "true" *) | "-detailnode" (* hide = "true" *) | "--detailnode" (* slogan = "Option to return the detail node about neType, Sync Status of nodes. TIP : -dn is the shorthand option for --detailnode" *) )
+SYNCSTATUS_FLAG ::= WS ( "-s" (* hide = "true" *) | "-syncstatus" (* hide = "true" *) | "--syncstatus" (* slogan = "Option to return the Sync Status of nodes. TIP : -s is the shorthand option for --syncstatus" *) )
+ATTRIBUTES ::= WS ( "-attr" (* hide = "true" *) | "-attribute" (* hide = "true" *) | "--attribute" (* slogan = "Optional parameter to specify <attribute_list>, where <attribute_list> is the list of attributes to show. TIP: -attr is the shorthand option for --attribute" *) ) WS GET_ATTRIBUTE_NAME { "," GET_ATTRIBUTE_NAME }
+
+OUTPUT ::= WS ( "-output" (* hide = "true" *) | "--output" (* slogan = "Optional parameter to create <Output Type> with specified <Output Name> using the MO(s) returned from get command output." *) )
+CREATE_PRIVATE_COLLECTION ::= ( "priColl" (* hide = "true" *) | "priColl" (* slogan = "Optional parameter to create a private collection." *) ) CREATE_COLLECTION_INPUT
+CREATE_PUBLIC_COLLECTION ::= ( "pubColl" (* hide = "true" *) | "pubColl" (* slogan = "Optional parameter to create a public collection." *) ) CREATE_COLLECTION_INPUT
+CREATE_COLLECTION_INPUT ::= ( WS | "=" (* hide = "true" *) ) <collection_name> (* slogan = "Collection name to create" *)
+CREATE_COLLECTION_OPTION ::= OUTPUT WS ( CREATE_PRIVATE_COLLECTION | CREATE_PUBLIC_COLLECTION )
+OUTPUT_OPTION ::= CREATE_COLLECTION_OPTION

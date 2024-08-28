@@ -1,0 +1,350 @@
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarmoverview/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarmviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarmsearch/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarm-management/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarmrouting/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /fmlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /nhmwidgetlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /applib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /actionlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /noderankingbyalarmcount/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarmtypesummary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarmseveritysummary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarmtyperanking/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /createalarmroute/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /errevents-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /netlog-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarmcontroldisplayservice/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /internal-alarm-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarmexportservice/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/alarmoverview/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/alarmoverview/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/alarmviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/alarmviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/alarmsearch/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/alarmsearch/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/alarm-management/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/alarm-management/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/alarmrouting/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/alarmrouting/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/nhmwidgetlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/applib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/actionlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/fmlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/noderankingbyalarmcount/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/alarmtypesummary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/alarmseveritysummary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/alarmtyperanking/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/createalarmroute/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /confirmationdialog/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/confirmationdialog/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/confirmationdialog/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /networkviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/networkviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/networkviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /export/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/export/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /editalarmroute/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/editalarmroute/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /alarmdetails/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /locales/en-us/alarmdetails/
+  pathType: ImplementationSpecific

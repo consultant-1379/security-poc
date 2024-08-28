@@ -1,0 +1,57 @@
+{{- template "eric-enm-common-helmchart-library.statefulset" (list . "eric-enm-sso-core-token-service.statefulset") -}}
+{{- define "eric-enm-sso-core-token-service.statefulset" -}}
+spec:
+  template:
+    spec:
+{{- if .Values.terminationGracePeriod.enabled }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriod.seconds }}
+{{- end }}
+{{- if or .Values.extraInitContainers .Values.images.waitInitContainer.enabled }}
+      initContainers:
+{{- if .Values.images.waitInitContainer.enabled }}
+      - name: {{ .Values.service.name }}-wait
+        image: {{ template "eric-enm-sso-core-token-service.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "waitInitContainer" "name" }}:{{ index .Values "images" "waitInitContainer" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+        command: {{ index .Values "images" "waitInitContainer" "command" }}
+{{- if .Values.images.waitInitContainer.privileged.enabled }}
+        securityContext:
+          privileged: true
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.persistentVolumeClaim.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ template "eric-enm-sso-core-token-service.name" . }}
+      spec:
+        accessModes:
+          - {{ .Values.persistentVolumeClaim.accessMode | quote }}
+        storageClassName: {{ template "eric-enm-sso-core-token-service.storageClass" . }}
+        resources:
+          requests:
+            storage: "{{ .Values.persistentVolumeClaim.size }}"
+    - metadata:
+        name: {{ template "eric-enm-sso-core-token-service.name" . }}-config
+        labels:
+          app.kubernetes.io/instance: {{ .Release.Name | quote }}
+      spec:
+        accessModes:
+          - {{ .Values.persistentVolumeClaim.accessMode | quote }}
+        storageClassName: {{ template "eric-enm-sso-core-token-service.storageClass" . }}
+        resources:
+          requests:
+            storage: "{{ .Values.persistentVolumeClaim.configSize }}"
+    - metadata:
+        name: {{ template "eric-enm-sso-core-token-service.name" . }}-changelog
+        labels:
+          app.kubernetes.io/instance: {{ .Release.Name | quote }}
+      spec:
+        accessModes:
+          - {{ .Values.persistentVolumeClaim.accessMode | quote }}
+        storageClassName: {{ template "eric-enm-sso-core-token-service.storageClass" . }}
+        resources:
+          requests:
+            storage: "{{ .Values.persistentVolumeClaim.changeLogSize }}"
+{{- end }}
+{{- end -}}

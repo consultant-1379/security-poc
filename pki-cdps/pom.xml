@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!--Please Use the latest version of integration pom.xml or the one you 
+		want to reference to -->
+	<parent>
+		<groupId>com.ericsson.nms</groupId>
+		<artifactId>integration</artifactId>
+		<version>15.2.0.35</version>
+	</parent>
+
+	<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+	<artifactId>pki-cdps</artifactId>
+	<version>1.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>[${project.artifactId}] JEE8 Project</name>
+
+	<properties>
+		<version.weld>1.1.13.Final</version.weld>
+		<version.ejb>3.2</version.ejb>
+		<version.jee>8</version.jee>
+		<version.junit>4.10</version.junit>
+		<version.jboss.as>7.2.5</version.jboss.as>
+		<!-- Do not use JBoss community version use EAP 6. As JBoss version 7.1.1.Final 
+			is being used by maven plugin(version.jboss-as-maven-plugin) -->
+		<version.jboss-as-maven-plugin>${version.jboss.as}</version.jboss-as-maven-plugin>
+		<version.model.deployment.tool>7.18.1</version.model.deployment.tool>
+		<!--  When you want to switch to new Service Framework version only change 
+			value below -->
+		<version.service.framework>4.10.6</version.service.framework>
+		<version.modeling.bom>21.0.9</version.modeling.bom>
+		<project.ear.defaultLibBundleDir>lib</project.ear.defaultLibBundleDir>
+		<version.geronimoJpa>1.0</version.geronimoJpa>
+		<version.geronimoEJB>1.0</version.geronimoEJB>
+		<version.bcpkix>1.67</version.bcpkix>
+		<version.bcprov>1.67</version.bcprov>
+		<project.ear.Dependencies>org.slf4j</project.ear.Dependencies>
+		<version.jboss.javaee>1.0.0.Final</version.jboss.javaee>
+		<version.mockito.all>1.9.5</version.mockito.all>
+		<version.resteasy>2.3.6.Final</version.resteasy>
+		<version.pkicommon>1.0.1-SNAPSHOT</version.pkicommon>
+		<version.pki.modeling.bom>1.0.1-SNAPSHOT</version.pki.modeling.bom>
+		<version.modeling-annotation>3.3.2</version.modeling-annotation>
+		<version.arquillian.bom>1.1.15.Final</version.arquillian.bom>
+		<version.shrinkwrap.resolver.bom>1.0.0-beta-7</version.shrinkwrap.resolver.bom>
+		<version.power.mockito>1.6.1</version.power.mockito>
+		<!-- CDI and SPOCK dependency versions -->
+		<version.groovy>2.4.11</version.groovy>
+		<version.spock>1.0-groovy-2.4</version.spock>
+		<version.cdi.test.support>1.1.62</version.cdi.test.support>
+		<version.cglib>3.1</version.cglib>
+		<version.objenesis>2.5.1</version.objenesis>
+		<version.gmaven>1.4</version.gmaven>
+		<!-- ENM Check Style version dependencies -->
+		 <version.maven.checkstyle>2.15</version.maven.checkstyle>
+		 <version.checkstyle>6.2</version.checkstyle>
+		 <version.checkstyle.module>1.1.74</version.checkstyle.module>
+		 <!-- Sonar Configuration -->
+		 <sonar.tests />
+
+		<sonar.sources>pom.xml,src/main</sonar.sources>
+		<sonar.coverage.jacoco.xmlReportPaths>target/coverage-reports/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<consolidated.jacoco.path>${project.basedir}/../target/jacoco.exec</consolidated.jacoco.path>
+		<version.jacoco-maven-plugin>0.8.4</version.jacoco-maven-plugin>
+	</properties>
+    <build>
+		<plugins>
+            <!-- For Groovy Test-->			
+			<plugin>
+				<groupId>org.codehaus.gmaven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<version>${version.gmaven}</version>
+				<configuration>
+					<providerSelection>2.0</providerSelection>
+					<source />
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.gmaven.runtime</groupId>
+						<artifactId>gmaven-runtime-2.0</artifactId>
+						<version>${version.gmaven}</version>
+						<exclusions>
+							<exclusion>
+								<groupId>org.codehaus.groovy</groupId>
+								<artifactId>groovy-all</artifactId>
+							</exclusion>
+						</exclusions>
+					</dependency>
+					<dependency>
+						<groupId>org.codehaus.groovy</groupId>
+						<artifactId>groovy-all</artifactId>
+						<version>${version.groovy}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<useSystemClassLoader>true</useSystemClassLoader>
+					<useManifestOnlyJar>false</useManifestOnlyJar>
+					<useFile>false</useFile>
+					<includes>
+						<include>**/*Spec.java</include>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+		   <!-- End For Groovy Test -->
+		   <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${version.maven.checkstyle}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                         <version>${version.checkstyle}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.ericsson.cds</groupId>
+                        <artifactId>checkstyle-module</artifactId>
+                       <version>${version.checkstyle.module}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <consoleOutput>false</consoleOutput>
+                    <logViolationsToConsole>false</logViolationsToConsole>
+                    <configLocation>/cds/cds-checkstyle.xml</configLocation>
+                    <violationSeverity>warning</violationSeverity>
+                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <!-- change this to true if you want the build to fail if there's warnings -->
+                            <failOnViolation>false</failOnViolation>
+                        </configuration>
+                        <id>check-style</id>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>checkstyle-aggregate</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+              </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${version.jacoco-maven-plugin}</version>
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-instrument</id>
+						<goals>
+							<goal>instrument</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-restore-instrumented-classes</id>
+						<goals>
+							<goal>restore-instrumented-classes</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<destFile>${consolidated.jacoco.path}</destFile>
+					<dataFile>${consolidated.jacoco.path}</dataFile>
+					<outputDirectory>${project.build.directory}/coverage-reports/jacoco</outputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencyManagement>
+		<dependencies>
+			<!-- here we specify what version of Service Framework we want to use. 
+				All modules will be imported -->
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.sdk</groupId>
+				<artifactId>ServiceFrameworkJBossBOM</artifactId>
+				<version>${version.service.framework}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-modeling-bom</artifactId>
+				<version>${version.pki.modeling.bom}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.shrinkwrap.resolver</groupId>
+				<artifactId>shrinkwrap-resolver-bom</artifactId>
+				<version>${version.shrinkwrap.resolver.bom}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.arquillian</groupId>
+				<artifactId>arquillian-bom</artifactId>
+				<version>${version.arquillian.bom}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<!--Profiles for site documentation -->
+
+	<!--Profile to deploy latest site -->
+	<profiles>
+		<profile>
+			<id>site_latest</id>
+			<distributionManagement>
+				<site>
+					<id>site</id>
+					<name>Site</name>
+					<url>${site.url}/pki-cdps/latest</url>
+				</site>
+			</distributionManagement>
+		</profile>
+
+		<!--Profile to stage site for review -->
+
+		<profile>
+			<id>site_review</id>
+			<distributionManagement>
+				<site>
+					<id>site</id>
+					<name>Site</name>
+					<url>${site.url}</url>
+				</site>
+			</distributionManagement>
+		</profile>
+	</profiles>
+
+	<!--Deployment of versioned documentation -->
+	<distributionManagement>
+		<site>
+			<id>site</id>
+			<name>Site</name>
+			<url>${site.url}/pki-cdps/${project.version}</url>
+		</site>
+	</distributionManagement>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-8.0</artifactId>
+			<version>${version.jboss.javaee}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>${version.bcprov}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15on</artifactId>
+			<version>${version.bcpkix}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-core-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-instrumentation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-config-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.modeling</groupId>
+			<artifactId>modeling-annotation-jar</artifactId>
+			<version>${version.modeling-annotation}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-modeled-eventbus-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-recording-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${version.mockito.all}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Spock and CDI Support tests -->
+		<dependency>
+			<groupId>com.ericsson.cds</groupId>
+			<artifactId>cdi-test-support</artifactId>
+			<version>${version.cdi.test.support}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.spockframework</groupId>
+			<artifactId>spock-core</artifactId>
+			<version>${version.spock}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>${version.cglib}</version>
+			<scope>test</scope>
+		</dependency>
+		 <!-- enables mocking of classes without default constructor (together with CGLIB) -->
+		<dependency>
+			<groupId>org.objenesis</groupId>
+			<artifactId>objenesis</artifactId>
+			<version>${version.objenesis}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>${version.groovy}</version>
+			<scope>test</scope>
+		</dependency>       
+       <!--End Of Spock and CDI Support tests --> 
+	</dependencies>
+
+	<modules>
+		<module>pki-cdps-api</module>
+		<module>pki-cdps-common-jar</module>
+		<module>pki-cdps-jar</module>
+		<module>pki-cdps-event-notification-handler</module>
+		<module>pki-cdps-ejb</module>
+		<module>pki-cdps-war</module>
+		<module>pki-cdps-ear</module>
+		<module>ERICpkicdps_CXP9032210</module>
+		<module>pki-cdps-local-service-api</module>
+		<module>pki-cdps-local-service-ejb</module>
+	</modules>
+</project>

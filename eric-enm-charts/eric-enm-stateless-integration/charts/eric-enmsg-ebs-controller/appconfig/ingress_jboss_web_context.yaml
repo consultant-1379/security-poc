@@ -1,0 +1,28 @@
+- backend:
+    service:
+      name: ebscontroller
+      port:
+        number: 443
+  path: /ebscountermanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ebscontroller
+      port:
+        number: 443
+  path: /countermanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ebscontroller
+      port:
+        number: 443
+  path: /help/en-us/countermanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ebscontroller
+      port:
+        number: 443
+  path: /locales/en-us/countermanagement/
+  pathType: ImplementationSpecific

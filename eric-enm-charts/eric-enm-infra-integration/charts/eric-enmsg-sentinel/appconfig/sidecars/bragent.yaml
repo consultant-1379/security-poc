@@ -1,0 +1,28 @@
+{{- if .Values.brAgent.enabled }}
+name:  {{ .Values.service.name }}-bragent
+image: {{ template "eric-enm-common-helmchart-library.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "brAgent" "name" }}:{{ index .Values "images" "brAgent" "tag" }}
+command: ["/opt/ericsson/backup-restore-agent/bragent"]
+imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+resources:
+  requests:
+    memory: {{ .Values.resources.brAgent.requests.memory | quote }}
+    cpu: {{ .Values.resources.brAgent.requests.cpu | quote }}
+{{- if index .Values "resources" "brAgent" "requests" "ephemeral-storage" }}
+    ephemeral-storage: {{ index .Values "resources" "brAgent" "requests" "ephemeral-storage" | quote }}
+{{- end }}
+  limits:
+    memory: {{ .Values.resources.brAgent.limits.memory | quote }}
+    cpu: {{ .Values.resources.brAgent.limits.cpu | quote }}
+{{- if index .Values "resources" "brAgent" "limits" "ephemeral-storage" }}
+    ephemeral-storage: {{ index .Values "resources" "brAgent" "limits" "ephemeral-storage" | quote }}
+{{- end }}
+env:
+  - name: TZ
+    value: {{ .Values.global.timezone }}
+volumeMounts:
+  - name: sentinel
+    mountPath: /ericsson/sentinel_lic
+  - name: sentinel-bragent-config
+    mountPath: "/etc/bragent/agent"
+    readOnly: true
+{{- end }}

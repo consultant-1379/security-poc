@@ -1,0 +1,9 @@
+- name: eric-enm-sso-core-token-service
+  persistentVolumeClaim:
+    claimName: eric-enm-sso-core-token-service
+- name: eric-enm-sso-core-token-service-config
+  persistentVolumeClaim:
+    claimName: eric-enm-sso-core-token-service-config
+- name: eric-enm-sso-core-token-service-changelog
+  persistentVolumeClaim:
+    claimName: eric-enm-sso-core-token-service-changelog

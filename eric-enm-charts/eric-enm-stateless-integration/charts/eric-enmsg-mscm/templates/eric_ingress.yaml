@@ -1,0 +1,21 @@
+{{- if .Values.global.ericIngress.enabled }}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: mscm
+spec:
+  virtualServiceIP: {{ .Values.global.vips.cm_vip_address }}
+  backends:
+    name: mscm
+    config:
+      - portRange:
+          vipPortRange:
+            start: 58978
+            end: 58979
+          svcPortRange:
+            start: 58978
+            end: 58979
+        protocol: tcp
+        algo: sh
+        mode: nat
+{{- end }}

@@ -1,0 +1,6 @@
+images:
+  eric-enm-sso-core-token-service:
+    name: "eric-enm-sso-core-token-service"
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "proj-enm"
+    tag: "1.17.9-1"

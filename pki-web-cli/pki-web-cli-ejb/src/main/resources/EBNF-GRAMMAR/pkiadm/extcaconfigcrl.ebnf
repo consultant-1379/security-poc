@@ -1,0 +1,12 @@
+"pkiadm" (* slogan = "Perform CRUD operations on external CA" *) WS "extcaconfigcrl" (* slogan = "Manage automatic configuration of CRL for an external CA" *) WS ( AUTO_UPDATE_ENABLE |  AUTO_UPDATE_DISABLE ) [ WS TIMER ]  
+
+AUTO_UPDATE ::= ( "--autoupdate" (* slogan = "Auto update option. Tip: -au for short" *) | "-au" (* hide = "true" *) )
+TIMER ::= ( "--timer" (* slogan = "Timer for next download of crl for an external CA. Tip: -t for short" *) | "-t" (* hide = "true" *) ) WS TIMER_VALUE
+TIMER_VALUE ::= <timer_value> (* inputType = "wrapDoubleQuotes" slogan = "Specify the timer for next update of crl for an external CA" *)
+
+EXT_CA_NAME ::= ( "--name" (* slogan = "External CA name to be updated. Tip: -n for short" *) | "-n" (* hide = "true" *) ) WS EXT_CA_NAME_VALUE
+EXT_CA_NAME_VALUE ::= <ca_name_value> (* inputType = "wrapDoubleQuotes" slogan = "Specify the name of the external CA" *)
+
+AUTO_UPDATE_ENABLE ::= AUTO_UPDATE WS "enable" WS EXT_CA_NAME
+AUTO_UPDATE_DISABLE ::= AUTO_UPDATE WS "disable" WS EXT_CA_NAME
+

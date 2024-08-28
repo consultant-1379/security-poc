@@ -1,0 +1,3 @@
+{{- template "eric-enm-common-helmchart-library.statefulset" (list . "eric-enmsg-ip-service-management.statefulset") -}}
+{{- define "eric-enmsg-ip-service-management.statefulset" -}}
+{{- end -}}

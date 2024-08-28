@@ -1,0 +1,22 @@
+- containerPort: 22
+- containerPort: 4447
+- containerPort: 8009
+- containerPort: 8080
+- containerPort: 8443
+- containerPort: 7600
+- containerPort: 8443
+- containerPort: 57600
+- containerPort: 55200
+- containerPort: 54200
+- containerPort: 4712
+- containerPort: 4713
+- containerPort: 7500
+- containerPort: 5445
+- containerPort: 53
+  protocol: UDP
+- containerPort: 67
+  protocol: UDP
+- containerPort: 123
+  protocol: UDP
+
+       

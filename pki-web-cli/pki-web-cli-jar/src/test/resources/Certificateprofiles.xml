@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfilesSchema.xsd">
+	
+	<Certificate-Profiles>
+		<CertificateProfile Name="RootCA_Cert_Profile">
+			<IsCAEntity>true</IsCAEntity>
+			<Version>V3</Version>
+			<SignatureAlgorithm>
+				<Name>SHA1WITHRSA</Name>
+			</SignatureAlgorithm>
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>1024</KeySize>
+			</KeyGenerationAlgorithm>
+			<KeyGenerationAlgorithm>
+				<Name>DES</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+			<Validity>345d</Validity>
+			<SubjectUniqueIdentifier>false</SubjectUniqueIdentifier>
+			<IssuerUniqueIdentifier>false</IssuerUniqueIdentifier>
+			<SkewCertificateTime>213m</SkewCertificateTime>
+			<CertificateExtensions>
+			<CertificateExtension xsi:type="SubjectAltName">
+				<Critical>true</Critical>
+				<SupportedSubjectAltNameField>DIRECTORY_NAME</SupportedSubjectAltNameField>
+				<SupportedSubjectAltNameField>IP_ADDRESS</SupportedSubjectAltNameField>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="KeyUsage">
+				<Critical>true</Critical>
+				<KeyUsageType>CRL_SIGN</KeyUsageType>
+				<KeyUsageType>KEY_AGREEMENT</KeyUsageType>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="SubjectKeyIdentifier">
+				<Critical>false</Critical>
+				<Enabled>true</Enabled>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="ExtendedKeyUsage">
+				<Critical>false</Critical>
+				<KeyPurposeId>ID_KP_CLIENT_AUTH</KeyPurposeId>
+				<KeyPurposeId>ID_KP_CODE_SIGNING</KeyPurposeId>
+			</CertificateExtension>
+			</CertificateExtensions> 
+		</CertificateProfile>
+	</Certificate-Profiles>
+</Profiles>

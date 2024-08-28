@@ -1,0 +1,23 @@
+{{- if .Values.global.ericIngress.enabled }}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: {{ .Values.service.name }}
+spec:
+  virtualServiceIP: {{ .Values.global.vips.fm_vip_address }}
+  backends:
+    name: {{ .Values.service.name }}
+    config:
+      - ports:
+          vipPort: {{ .Values.service.port }}
+          svcPort: {{ .Values.service.port }}
+        protocol: tcp
+        algo: rr
+        mode: nat
+      - ports:
+          vipPort: 9955
+          svcPort: 9955
+        protocol: tcp
+        algo: rr
+        mode: nat
+{{- end }}

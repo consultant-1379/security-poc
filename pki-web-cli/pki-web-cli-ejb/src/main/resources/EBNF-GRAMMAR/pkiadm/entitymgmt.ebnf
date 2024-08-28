@@ -1,0 +1,18 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "entitymgmt" (* slogan = "Manage and Retrieve the Entities in the PKI System. Tip: etm for short" *) WS ( ENTITY_MGMT_MANAGE | ENTITY_MGMT_RETRIEVE )
+
+ENTITY_MGMT_MANAGE ::= ( ENTITY_MGMT_CREATE | ENTITY_MGMT_CREATEBULK | ENTITY_MGMT_UPDATE | ENTITY_MGMT_DELETE ) ENTITY_MGMT_INPUT_FILE
+ENTITY_MGMT_RETRIEVE ::= ( ENTITY_MGMT_LIST ENTITY_MGMT_TYPE [ ENTITY_MGMT_NAME_CAT ] | ENTITY_MGMT_DELETE ENTITY_MGMT_SELECTION | ENTITY_MGMT_EXPORT ENTITY_MGMT_TYPE  [ ENTITY_MGMT_NAME_CAT ] [ ENTITY_MGMT_ALLFIELDS ] )
+ENTITY_MGMT_SELECTION ::= ENTITY_MGMT_TYPE ENTITY_MGMT_NAME_CAT
+ENTITY_MGMT_NAME_CAT ::= ( ENTITY_MGMT_NAME | ENTITY_MGMT_CATEGORY )
+
+ENTITY_MGMT_CREATEBULK ::= ( "--createbulk" (* slogan = "Create one or more entities based on the input XML file. Tip: -cb for short" *) | "-cb" (* hide = "true" *) )
+ENTITY_MGMT_EXPORT ::= ( "--export" (* slogan = "Export existing entities based on profile criteria. Tip: -ex for short" *) | "-ex" (* hide = "true" *) )
+ENTITY_MGMT_CREATE ::= ( "--create" (* slogan = "Create the Entity by accepting an XML file with single entity. Tip: -c for short" *) | "-c" (* hide = "true" *) )
+ENTITY_MGMT_LIST ::= ( "--list" (* slogan = "List the entities based on selection. Tip: -l for short" *) | "-l" (* hide = "true" *) )
+ENTITY_MGMT_UPDATE ::= ( "--update" (* slogan = "Update the Entities based on type, name, or category. Tip: -u for short" *) | "-u" (* hide = "true" *) )
+ENTITY_MGMT_DELETE ::= ( "--delete" (* slogan = "Delete an entity based on type, name, or category. Tip: -d for short" *) | "-d" (* hide = "true" *) )
+ENTITY_MGMT_INPUT_FILE ::= WS ( "-xf" (* hide = "true" *) | "--xmlfile" (* slogan = "Include the input XML file. Tip: -xf for short" *) ) WS "file:" <input_xml_filename> (* inputType = "fileName" slogan = "Specify the name of the input XML file" *)
+ENTITY_MGMT_TYPE ::= WS ( "--entitytype" (* slogan = "Base the selection on entity type. Tip: -type for short" *) | "-type" (* hide = "true" *) ) WS ( "ca" (* slogan = "Set entity type as CA" *) | "ee" (* slogan = "Set entity type as EE" *) )
+ENTITY_MGMT_NAME ::= WS ( "--name" (* slogan = "Base the selection on an entity name. Tip: -n for short" *) | "-n" (* hide = "true" *) ) WS <entity_name> (* slogan = "Specify the entity name" *)
+ENTITY_MGMT_CATEGORY ::= WS ( "--name" (* slogan = "Base the selection on an entity name. Tip: -n for short" *) | "-n" (* hide = "true" *) ) WS <category_name> (* slogan = "Specify the category name" *)
+ENTITY_MGMT_ALLFIELDS ::= WS ( "-af" (* hide = "true" *) | "--allfields" (* slogan = "This option is to enable all the fields in xml file. Tip: -af for short" *) )

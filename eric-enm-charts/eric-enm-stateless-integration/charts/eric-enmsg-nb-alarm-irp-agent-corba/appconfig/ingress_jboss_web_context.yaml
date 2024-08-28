@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: nbalarmirp-common
+      port:
+        number: 443
+  path: /corbaserver/
+  pathType: ImplementationSpecific

@@ -1,0 +1,2 @@
+UPDATE db_version SET status='old' WHERE status='current' and version='2.5.0';
+INSERT INTO db_version(id,version,comments,updated_date,status) SELECT 9,'2.6.0','Added new column subject_unique_identifier_value in caentity table and issuer_signature_algorithm,issuer_unique_identifier_value,subject_unique_identifier_value in certificate_generation_info table',CURRENT_DATE,'current' WHERE NOT EXISTS (SELECT * FROM db_version WHERE id = 9);

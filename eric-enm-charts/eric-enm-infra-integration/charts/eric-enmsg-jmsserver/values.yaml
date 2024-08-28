@@ -1,0 +1,103 @@
+## eric-enmsg-jmsserver image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  ingress:
+    enmHost:
+  persistentVolumeClaim:
+    storageClass:
+  timezone: UTC
+# R-State of the product. R State should match helm chart version (3.1.0 -> R2A)
+# To automate it when packaging the helm chart rstate can be generated
+# and below value replaced with correct R-State
+productNumber: CXC 174 1950
+productRevision: R28K
+labels: {}
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-jmsserver: 1
+images:
+  eric-enmsg-jmsserver:
+    name: eric-enmsg-jmsserver
+    tag: 1.27.9-1
+  enmInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'sysctl -w net.core.somaxconn=1028;' ]"
+    privileged:
+      enabled: true
+  eric-enm-monitoring:
+    enabled: true
+    name: eric-enm-monitoring-eap7
+    tag: 1.27.9-1
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  pullSecret:
+  registry:
+    url:
+eric-enm-common-helmchart-library:
+  enabled: true
+service:
+  name1: jms01
+  name: jms
+  sgname: jmsserver
+  annotations: {}
+  labels: {}
+eric-enm-common-helmchart-library:
+  enabled: true
+resources:
+  requests:
+    enabled: true
+    memory: 9216Mi
+  limits:
+    enabled: true
+    memory: 22Gi
+  monitoring:
+    enabled: false
+    requests:
+      memory:
+      cpu:
+    limits:
+      memory:
+      cpu:
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 20
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 3
+readinessProbe:
+  enabled: false
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+podAnnotations: {}
+tolerations: []
+affinity: {}
+nodeAffinity: {}
+priorityClassName: ""
+nodeSelector: {}
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1

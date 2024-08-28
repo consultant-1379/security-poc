@@ -1,0 +1,21 @@
+- name: gp
+  configMap:
+    name: gpnbalarmirp
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: norollback
+  persistentVolumeClaim:
+    claimName: norollback
+- name: hcdumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: tz-config
+  hostPath:
+    path: /etc/localtime

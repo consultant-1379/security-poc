@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+<Entity-Profiles>
+	
+	<EntityProfile Name="ENM System CA EP" >
+		<CertificateProfileName>ENM System CA CP</CertificateProfileName>
+	</EntityProfile>	
+
+</Entity-Profiles>	
+</Profiles>
+
+
+
+

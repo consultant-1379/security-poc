@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: nedoserv
+      port:
+        number: 443
+  path: /ned-topology-service/
+  pathType: ImplementationSpecific

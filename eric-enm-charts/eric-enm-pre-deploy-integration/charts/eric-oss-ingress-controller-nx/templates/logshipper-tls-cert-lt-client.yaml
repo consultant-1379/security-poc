@@ -1,0 +1,3 @@
+{{- if has "stream" .Values.log.outputs }}
+  {{- include "eric-oss-ingress-controller-nx.logshipper-tls-cert-lt-client" . }}
+{{- end }}

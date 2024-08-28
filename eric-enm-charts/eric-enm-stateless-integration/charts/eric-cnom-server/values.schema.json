@@ -1,0 +1,1442 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "Values",
+  "type": "object",
+  "required": [
+    "clusterDomain",
+    "imageCredentials",
+    "images",
+    "replicaCount",
+    "affinity",
+    "terminationGracePeriodSeconds",
+    "service",
+    "ingress",
+    "resources",
+    "probes",
+    "updateStrategy",
+    "logging",
+    "logshipper",
+    "server",
+    "authentication",
+    "demoScripts",
+    "dashboards",
+    "appConfig",
+    "metrics",
+    "yangStateData",
+    "rateLimit",
+    "documentDatabase",
+    "documentDatabasePg",
+    "pmServer",
+    "alarmHandler",
+    "snmpAlarmProvider",
+    "searchEngine",
+    "centralConfigurationRepository",
+    "cmMediator",
+    "dataIngester",
+    "messageBusKF",
+    "nrfProvision",
+    "nssfProvision",
+    "features",
+    "productName",
+    "productNameShort"
+  ],
+  "definitions": {
+    "resources": {
+      "type": "object",
+      "required": ["requests", "limits"],
+      "properties": {
+        "requests": {
+          "type": "object",
+          "properties": {
+            "memory": {
+              "description": "TODO",
+              "type": ["string", "integer", "null"]
+            },
+            "cpu": {
+              "description": "TODO",
+              "type": ["string", "number", "null"]
+            }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "memory": {
+              "description": "TODO",
+              "type": ["string", "integer", "null"]
+            },
+            "cpu": {
+              "description": "TODO",
+              "type": ["string", "number", "null"]
+            }
+          }
+        }
+      }
+    },
+    "endpoint": {
+      "type": "object",
+      "required": ["tls", "port"],
+      "properties": {
+        "port": {
+          "description": "TODO",
+          "type": "integer"
+        },
+        "tls": {
+          "type": "object",
+          "properties": {
+            "enforced": {
+              "description": "TODO",
+              "type": "string",
+              "enum": ["required", "optional"]
+            },
+            "verifyClientCertificate": {
+              "description": "TODO",
+              "type": "string",
+              "enum": ["required", "optional"]
+            },
+            "ca": {
+              "description": "TODO",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "description": "TODO",
+                    "type": "string"
+                  },
+                  "bundle": {
+                    "description": "TODO",
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "key": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            },
+            "cert": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            },
+            "disableSipTls": {
+              "description": "TODO",
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "tls": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "verifyServerCertificate",
+        "sendClientCertificate",
+        "ca"
+      ],
+      "properties": {
+        "enabled": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "verifyServerCertificate": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "sendClientCertificate": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "ca": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "key": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        },
+        "cert": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "addressWhitelist": {
+      "description": "TODO",
+      "type": ["array", "null"],
+      "items": {
+        "type": "string"
+      }
+    },
+    "appArmorProfile": {
+      "description": "TODO",
+      "type": ["object", "null"],
+      "properties": {
+        "type": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        },
+        "localhostProfile": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "seccompProfile": {
+      "description": "TODO",
+      "type": ["object", "null"],
+      "properties": {
+        "type": {
+          "description": "TODO",
+          "enum": ["RuntimeDefault", "Localhost", "Unconfined", "", null]
+        },
+        "localhostProfile": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        }
+      }
+    }
+  },
+  "properties": {
+    "global": {
+      "type": "object",
+      "properties": {
+        "timezone": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        },
+        "registry": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            },
+            "imagePullPolicy": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            }
+          }
+        },
+        "pullSecret": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        },
+        "nodeSelector": {
+          "description": "TODO",
+          "type": ["object", "null"],
+          "additionalProperties": { "type": "string" }
+        },
+        "internalIPFamily": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "tls": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "description": "TODO",
+                  "type": ["boolean", "null"]
+                }
+              }
+            },
+            "policyBinding": {
+              "type": "object",
+              "properties": {
+                "create": {
+                  "description": "TODO",
+                  "type": ["boolean", "null"]
+                }
+              }
+            },
+            "policyReferenceMap": {
+              "description": "TODO",
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "clusterDomain": {
+      "description": "TODO",
+      "type": "string"
+    },
+    "nameOverride": {
+      "description": "TODO",
+      "type": ["string", "null"]
+    },
+    "imageCredentials": {
+      "type": "object",
+      "required": ["server", "logshipper"],
+      "properties": {
+        "server": {
+          "type": "object",
+          "required": ["registry"],
+          "properties": {
+            "repoPath": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            },
+            "registry": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "description": "TODO",
+                  "type": ["string", "null"]
+                },
+                "imagePullPolicy": {
+                  "description": "TODO",
+                  "type": ["string", "null"]
+                }
+              }
+            }
+          }
+        },
+        "logshipper": {
+          "type": "object",
+          "required": ["registry"],
+          "properties": {
+            "repoPath": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            },
+            "registry": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "description": "TODO",
+                  "type": ["string", "null"]
+                },
+                "imagePullPolicy": {
+                  "description": "TODO",
+                  "type": ["string", "null"]
+                }
+              }
+            }
+          }
+        },
+        "repoPath": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        },
+        "registry": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            },
+            "imagePullPolicy": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            }
+          }
+        },
+        "pullSecret": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "images": {
+      "type": "object",
+      "required": ["server", "logshipper"],
+      "properties": {
+        "server": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            },
+            "tag": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            }
+          }
+        },
+        "logshipper": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            },
+            "tag": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            }
+          }
+        }
+      }
+    },
+    "replicaCount": {
+      "description": "TODO",
+      "type": "integer"
+    },
+    "podDisruptionBudget": {
+      "type": ["object", "null"],
+      "properties": {
+        "minAvailable": {
+          "description": "TODO",
+          "type": ["string", "integer", "null"]
+        },
+        "maxUnavailable": {
+          "description": "TODO",
+          "type": ["string", "integer", "null"]
+        }
+      }
+    },
+    "nodeSelector": {
+      "description": "TODO",
+      "type": ["object", "null"],
+      "additionalProperties": { "type": "string" }
+    },
+    "annotations": {
+      "description": "TODO",
+      "type": ["object", "null"],
+      "additionalProperties": { "type": "string" }
+    },
+    "labels": {
+      "description": "TODO",
+      "type": ["object", "null"],
+      "additionalProperties": { "type": "string" }
+    },
+    "affinity": {
+      "type": "object",
+      "required": ["podAntiAffinity"],
+      "properties": {
+        "podAntiAffinity": {
+          "description": "TODO",
+          "type": "string",
+          "enum": ["soft", "hard"]
+        }
+      }
+    },
+    "tolerations": {
+      "description": "TODO",
+      "type": ["array", "null"],
+      "items": {
+        "type": "object"
+      }
+    },
+    "terminationGracePeriodSeconds": {
+      "description": "TODO",
+      "type": "integer"
+    },
+    "topologySpreadConstraints": {
+      "description": "TODO",
+      "type": ["array", "null"],
+      "items": {
+        "type": "object"
+      }
+    },
+    "appArmorProfile": {
+      "type": ["object", "null"],
+      "properties": {
+        "server": { "$ref": "#/definitions/appArmorProfile" }
+      }
+    },
+    "seccompProfile": {
+      "type": ["object", "null"],
+      "properties": {
+        "init": { "$ref": "#/definitions/seccompProfile" },
+        "server": { "$ref": "#/definitions/seccompProfile" }
+      }
+    },
+    "service": {
+      "type": "object",
+      "required": ["type", "endpoints"],
+      "properties": {
+        "type": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "endpoints": {
+          "type": "object",
+          "required": ["api", "yangStateData"],
+          "properties": {
+            "api": { "$ref": "#/definitions/endpoint" },
+            "yangStateData": { "$ref": "#/definitions/endpoint" }
+          }
+        }
+      }
+    },
+    "ingress": {
+      "type": "object",
+      "required": ["ingressClass", "tls", "certificates"],
+      "properties": {
+        "enabled": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "useHttpProxy": {
+          "description": "TODO",
+          "type": ["boolean", "null"]
+        },
+        "ingressClass": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "annotations": {
+          "description": "TODO",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "hostname": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        },
+        "tls": {
+          "type": "object",
+          "properties": {
+            "passthrough": {
+              "description": "TODO",
+              "type": ["boolean", "null"]
+            },
+            "verifyClientCertificate": {
+              "description": "TODO",
+              "type": "string",
+              "enum": ["required", "optional"]
+            }
+          }
+        },
+        "certificates": {
+          "type": "object",
+          "required": [
+            "enabled",
+            "asymmetricKeyCertificateName",
+            "trustedCertificateListName"
+          ],
+          "properties": {
+            "enabled": {
+              "description": "TODO",
+              "type": "boolean"
+            },
+            "asymmetricKeyCertificateName": {
+              "description": "TODO",
+              "type": "string"
+            },
+            "trustedCertificateListName": {
+              "description": "TODO",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "object",
+      "required": ["server", "logshipper", "init"],
+      "properties": {
+        "server": { "$ref": "#/definitions/resources" },
+        "logshipper": { "$ref": "#/definitions/resources" },
+        "init": { "$ref": "#/definitions/resources" }
+      }
+    },
+    "probes": {
+      "type": "object",
+      "required": ["server", "logshipper"],
+      "properties": {
+        "server": {
+          "type": "object",
+          "required": ["livenessProbe", "readinessProbe"],
+          "properties": {
+            "livenessProbe": {
+              "type": "object",
+              "properties": {
+                "initialDelaySeconds": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                },
+                "periodSeconds": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                },
+                "timeoutSeconds": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                },
+                "failureThreshold": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                }
+              }
+            },
+            "readinessProbe": {
+              "type": "object",
+              "properties": {
+                "initialDelaySeconds": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                },
+                "periodSeconds": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                },
+                "timeoutSeconds": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                },
+                "failureThreshold": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                },
+                "successThreshold": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                }
+              }
+            }
+          }
+        },
+        "logshipper": {
+          "type": "object",
+          "required": ["livenessProbe"],
+          "properties": {
+            "livenessProbe": {
+              "type": "object",
+              "properties": {
+                "initialDelaySeconds": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                },
+                "periodSeconds": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                },
+                "timeoutSeconds": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                },
+                "failureThreshold": {
+                  "description": "TODO",
+                  "type": ["integer", "null"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "updateStrategy": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "rollingUpdate": {
+          "type": "object",
+          "properties": {
+            "maxUnavailable": {
+              "description": "TODO",
+              "type": ["string", "integer", "null"]
+            },
+            "maxSurge": {
+              "description": "TODO",
+              "type": ["string", "integer", "null"]
+            }
+          }
+        }
+      }
+    },
+    "legalNotice": {
+      "description": "TODO",
+      "type": ["string", "null"]
+    },
+    "productName": {
+      "description": "TODO",
+      "type": ["string"]
+    },
+    "productNameShort": {
+      "description": "TODO",
+      "type": ["string"]
+    },
+    "logging": {
+      "type": "object",
+      "required": ["format", "debug", "logshipper"],
+      "properties": {
+        "output": {
+          "description": "TODO",
+          "type": ["array", "null"],
+          "items": {
+            "type": "string",
+            "enum": ["none", "stdout", "file"]
+          }
+        },
+        "outputAudit": {
+          "description": "TODO",
+          "type": ["array", "null"],
+          "items": {
+            "type": "string",
+            "enum": ["none", "stdout", "file"]
+          }
+        },
+        "format": {
+          "description": "TODO",
+          "type": "string",
+          "enum": ["text", "json"]
+        },
+        "debug": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "logshipper": {
+          "type": "object",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": {
+              "description": "TODO",
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "logshipper": {
+      "type": "object",
+      "required": ["logplane", "storageAllocation", "logtransformer"],
+      "properties": {
+        "logplane": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "storageAllocation": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "logtransformer": {
+          "type": "object",
+          "required": ["host"],
+          "properties": {
+            "host": {
+              "description": "TODO",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "server": {
+      "type": "object",
+      "properties": {
+        "basePath": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        },
+        "behindProxy": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "domain": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "authentication": {
+      "type": "object",
+      "required": ["enabled", "local", "ldap"],
+      "properties": {
+        "enabled": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "local": {
+          "type": "object",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": {
+              "description": "TODO",
+              "type": "boolean"
+            }
+          }
+        },
+        "ldap": {
+          "type": "object",
+          "required": ["enabled", "host", "port", "basePath", "tls"],
+          "properties": {
+            "enabled": {
+              "description": "TODO",
+              "type": "boolean"
+            },
+            "host": {
+              "description": "TODO",
+              "type": "string"
+            },
+            "port": {
+              "description": "TODO",
+              "type": "integer"
+            },
+            "basePath": {
+              "description": "TODO",
+              "type": "string"
+            },
+            "tls": {
+              "allOf": [
+                { "$ref": "#/definitions/tls" },
+                {
+                  "properties": {
+                    "useNewCA": {
+                      "description": "TODO",
+                      "type": "boolean"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "if": {
+            "properties": { "enabled": { "const": true } }
+          },
+          "then": {
+            "properties": {
+              "roleMapping": {
+                "description": "TODO",
+                "type": "array",
+                "minProperties": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["internalRole", "externalRoles"],
+                  "properties": {
+                    "internalRole": {
+                      "description": "TODO",
+                      "type": "string"
+                    },
+                    "externalRoles": {
+                      "description": "TODO",
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "demoScripts": {
+      "type": "object",
+      "required": ["host", "user", "path", "keySecret"],
+      "properties": {
+        "enabled": {
+          "description": "TODO",
+          "type": ["boolean", "null"]
+        },
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "user": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "path": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "keySecret": {
+          "description": "TODO",
+          "type": "string"
+        }
+      }
+    },
+    "dashboards": {
+      "type": "object",
+      "properties": {
+        "import": {
+          "description": "TODO",
+          "type": ["object", "null"],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "configMap": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        },
+        "configMaps": {
+          "description": "TODO",
+          "type": ["array", "null"],
+          "items": { "type": "string" }
+        },
+        "predefined": {
+          "description": "TODO",
+          "type": ["array", "null"],
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "appConfig": {
+      "type": "object",
+      "required": ["useStandalone"],
+      "properties": {
+        "configMaps": {
+          "description": "TODO",
+          "type": ["array", "null"],
+          "items": { "type": "string" }
+        },
+        "useStandalone": {
+          "description": "TODO",
+          "type": "boolean"
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["hierarchy"],
+      "properties": {
+        "hierarchy": {
+          "type": "object",
+          "properties": {
+            "configMap": {
+              "description": "TODO",
+              "type": ["string", "null"]
+            }
+          }
+        }
+      }
+    },
+    "yangStateData": {
+      "type": "object",
+      "properties": {
+        "configMap": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "rateLimit": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": {
+          "description": "TODO",
+          "type": "boolean"
+        }
+      }
+    },
+    "documentDatabase": {
+      "type": "object",
+      "required": ["enabled", "hosts", "password"],
+      "properties": {
+        "enabled": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "hosts": {
+          "description": "TODO",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "replicaSetName": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "password": {
+          "type": "object",
+          "required": ["enabled", "secret"],
+          "properties": {
+            "enabled": {
+              "description": "TODO",
+              "type": "boolean"
+            },
+            "secret": {
+              "description": "TODO",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "documentDatabasePg": {
+      "type": "object",
+      "required": [
+        "host",
+        "port",
+        "database",
+        "user",
+        "tls",
+        "secretUsernameKey",
+        "secretPasswordKey"
+      ],
+      "properties": {
+        "enabled": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "port": {
+          "description": "TODO",
+          "type": "integer"
+        },
+        "database": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "user": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "secret": {
+          "description": "TODO",
+          "type": ["string", "null"]
+        },
+        "secretUsernameKey": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "secretPasswordKey": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "tls": {
+          "allOf": [
+            { "$ref": "#/definitions/tls" },
+            {
+              "properties": {
+                "adminCa": {
+                  "description": "TODO",
+                  "type": "string"
+                },
+                "adminKey": {
+                  "description": "TODO",
+                  "type": ["string", "null"]
+                },
+                "adminCert": {
+                  "description": "TODO",
+                  "type": ["string", "null"]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "pmServer": {
+      "type": "object",
+      "required": ["host", "basePath", "tls"],
+      "properties": {
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "port": {
+          "description": "TODO",
+          "type": ["integer", "null"]
+        },
+        "basePath": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "tls": {
+          "allOf": [
+            { "$ref": "#/definitions/tls" },
+            {
+              "properties": {
+                "useSipTlsRootCA": {
+                  "description": "TODO",
+                  "type": "boolean"
+                }
+              }
+            }
+          ]
+        },
+        "addressWhitelist": { "$ref": "#/definitions/addressWhitelist" }
+      }
+    },
+    "alarmHandler": {
+      "type": "object",
+      "required": ["host", "basePath", "tls"],
+      "properties": {
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "port": {
+          "description": "TODO",
+          "type": ["integer", "null"]
+        },
+        "basePath": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "tls": { "$ref": "#/definitions/tls" },
+        "addressWhitelist": { "$ref": "#/definitions/addressWhitelist" }
+      }
+    },
+    "snmpAlarmProvider": {
+      "type": "object",
+      "required": ["host", "basePath", "port"],
+      "properties": {
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "port": {
+          "description": "TODO",
+          "type": "integer"
+        },
+        "basePath": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "addressWhitelist": { "$ref": "#/definitions/addressWhitelist" }
+      }
+    },
+    "searchEngine": {
+      "type": "object",
+      "required": ["host", "port", "basePath", "tls"],
+      "properties": {
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "port": {
+          "description": "TODO",
+          "type": "integer"
+        },
+        "basePath": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "tls": { "$ref": "#/definitions/tls" },
+        "addressWhitelist": { "$ref": "#/definitions/addressWhitelist" }
+      }
+    },
+    "centralConfigurationRepository": {
+      "type": "object",
+      "required": ["host", "basePath", "tls"],
+      "properties": {
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "port": {
+          "description": "TODO",
+          "type": ["integer", "null"]
+        },
+        "basePath": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "tls": { "$ref": "#/definitions/tls" },
+        "addressWhitelist": { "$ref": "#/definitions/addressWhitelist" }
+      }
+    },
+    "cmMediator": {
+      "type": "object",
+      "required": ["host", "basePath", "tls"],
+      "properties": {
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "port": {
+          "description": "TODO",
+          "type": ["integer", "null"]
+        },
+        "basePath": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "tls": { "$ref": "#/definitions/tls" }
+      }
+    },
+    "dataIngester": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "host",
+        "port",
+        "supervisor",
+        "encryptionKey",
+        "sharedVolume"
+      ],
+      "properties": {
+        "enabled": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "port": {
+          "description": "TODO",
+          "type": "integer"
+        },
+        "supervisor": {
+          "type": "object",
+          "required": ["port"],
+          "properties": {
+            "port": {
+              "description": "TODO",
+              "type": "integer"
+            }
+          }
+        },
+        "encryptionKey": {
+          "type": "object",
+          "required": ["secret"],
+          "properties": {
+            "secret": {
+              "description": "TODO",
+              "type": "string"
+            }
+          }
+        },
+        "sharedVolume": {
+          "type": "object",
+          "required": ["enabled", "claimName"],
+          "properties": {
+            "enabled": {
+              "description": "TODO",
+              "type": "boolean"
+            },
+            "claimName": {
+              "description": "TODO",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "messageBusKF": {
+      "type": "object",
+      "required": ["servers", "topic"],
+      "properties": {
+        "servers": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "TODO": {
+          "type": "object",
+          "required": ["numPartitions", "replicationFactor"],
+          "properties": {
+            "numPartitions": {
+              "description": "TODO",
+              "type": "integer"
+            },
+            "replicationFactor": {
+              "description": "TODO",
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "nrfProvision": {
+      "type": "object",
+      "required": ["host", "port"],
+      "properties": {
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "port": {
+          "description": "TODO",
+          "type": "integer"
+        }
+      }
+    },
+    "nssfProvision": {
+      "type": "object",
+      "required": ["host", "port"],
+      "properties": {
+        "host": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "port": {
+          "description": "TODO",
+          "type": "integer"
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "required": [
+        "statusOverview",
+        "alarmViewer",
+        "logViewer",
+        "nrfProvisionUeGroupProfile",
+        "nrfProvisionUeIndividualProfile",
+        "nrfProvisionNfProfile",
+        "nrfProvisionNrfAddress",
+        "nrfProvisionSnssaiUutMapping",
+        "nrfEmbeddedDnsView",
+        "nrfEmbeddedDnsAddress",
+        "nrfEmbeddedDnsZone",
+        "nrfEmbeddedDnsRootServer",
+        "nssfProvision",
+        "healthCheckViewer",
+        "metricViewer",
+        "centralConfigurationRepository",
+        "switchBrandBaseOnRole",
+        "yangStateData",
+        "applicationTrace",
+        "about",
+        "settings",
+        "networkMonitor",
+        "healthCheck",
+        "troubleShooting",
+        "tracing",
+        "performanceMonitor",
+        "bcat",
+        "dcm",
+        "graphAnalysis",
+        "itc",
+        "kpiManagement",
+        "brandSwitch"
+      ],
+      "properties": {
+        "statusOverview": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "alarmViewer": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "logViewer": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "nrfProvisionUeGroupProfile": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "nrfProvisionUeIndividualProfile": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "nrfProvisionNfProfile": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "nrfProvisionNrfAddress": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "nrfProvisionSnssaiUutMapping": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "nrfEmbeddedDnsView": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "nrfEmbeddedDnsAddress": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "nrfEmbeddedDnsZone": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "nrfEmbeddedDnsRootServer": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "nssfProvision": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "healthCheckViewer": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "metricViewer": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "centralConfigurationRepository": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "switchBrandBaseOnRole": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "yangStateData": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "applicationTrace": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "about": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "settings": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "networkMonitor": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "healthCheck": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "troubleShooting": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "tracing": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "performanceMonitor": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "bcat": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "dcm": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "graphAnalysis": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "itc": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "kpiManagement": {
+          "description": "TODO",
+          "type": "boolean"
+        },
+        "brandSwitch": {
+          "description": "TODO",
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

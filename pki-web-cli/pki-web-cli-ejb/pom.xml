@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>pki-web-cli</artifactId>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+    	<version>1.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>pki-web-cli-ejb</artifactId>
+	<packaging>ejb</packaging>
+
+	<name>[${project.parent.artifactId}] EJB module</name>
+
+	<properties>
+		<version.maven-ejb-plugin>2.3</version.maven-ejb-plugin>
+		<version.ebnf-to-json-grammar-translator>1.0.29</version.ebnf-to-json-grammar-translator>
+		<consolidated.jacoco.path>${project.basedir}/../target/jacoco.exec</consolidated.jacoco.path>
+	</properties>
+
+	<build>
+		<!-- DO NOT DELETE RESOURCE FILTERING. FILTERING IS REQUIRED BY SERVICE 
+			FRAMEWORK. YOU CAN EXCLUDE FILES YOU DO NOT WANT TO BE FILTERED. -->
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources> 
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ejb-plugin</artifactId>
+				<version>${version.maven-ejb-plugin}</version>
+				<configuration>
+					<ejbVersion>${version.ejb}</ejbVersion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>${version.jboss-as-maven-plugin}</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<id>ebnf-to-json-grammar-translator-jar</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includeProjectDependencies>false</includeProjectDependencies>
+					<includePluginDependencies>true</includePluginDependencies>
+					<executableDependency>
+						<groupId>com.ericsson.oss.presentation.cm</groupId>
+						<artifactId>ebnf-to-json-grammar-translator-jar</artifactId>
+					</executableDependency>
+					<mainClass>com.ericsson.oss.presentation.cm.ebnf2json.Ebnf2JsonController</mainClass>
+					<arguments>
+						<argument>${artifactId}/src/main/resources/EBNF-GRAMMAR</argument>
+						<argument>${artifactId}/src/main/resources/JSON-GRAMMAR/</argument>
+					</arguments>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>com.ericsson.oss.presentation.cm</groupId>
+						<artifactId>ebnf-to-json-grammar-translator-jar</artifactId>
+						<version>${version.ebnf-to-json-grammar-translator}</version>
+						<type>jar</type>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee6-specs-bom</artifactId>
+				<version>1.0.1.Final</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+
+	<dependencies>
+	<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>javax.ejb-api</artifactId>
+			<version>${version.javax.ejb.api}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>${version.easymock}</version>
+			<scope>test</scope>
+		</dependency>
+
+	<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${version.mockito-all}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-jar</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-security-accesscontrol-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+        <groupId>com.ericsson.oss.itpf.sdk</groupId>
+        <artifactId>sdk-recording-api</artifactId>
+		<scope>provided</scope>
+		</dependency>
+
+	</dependencies>
+
+</project>

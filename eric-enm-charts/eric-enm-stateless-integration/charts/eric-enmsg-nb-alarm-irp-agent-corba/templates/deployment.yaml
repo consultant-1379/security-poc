@@ -1,0 +1,13 @@
+{{- template "eric-enm-common-helmchart-library.deployment" (list . "eric-enmsg.deployment1") -}}
+{{- define "eric-enmsg.deployment1" -}}
+spec:
+  selector:
+    matchLabels:
+      commonsvc: nbalarmirp
+  template:
+    metadata:
+      labels:
+        commonsvc: nbalarmirp
+    spec:
+{{ include "eric-enmsg-nb-alarm-irp-agent-corba.affinity.tpl" . | indent 6 }}
+{{- end }}

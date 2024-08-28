@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+  <Trust-Profiles>
+    <TrustProfile Name="DEMO_SecGw_TP">
+      <InternalCA>DEMO_NE_IPsec_CA</InternalCA>
+    </TrustProfile>
+  </Trust-Profiles>
+</Profiles>

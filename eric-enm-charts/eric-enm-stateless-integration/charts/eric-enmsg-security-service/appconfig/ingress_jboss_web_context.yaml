@@ -1,0 +1,476 @@
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /editprofile
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /oss/uiaccesscontrol
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /node-security
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /idmservice
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /com-aa-service
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /security-workflows-war-1.53.2
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /oss/idm
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /camunda-1
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /oss/idm/config
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /oss/sls
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /oss/idmdps
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /syssecconfig/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/syssecconfig/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/syssecconfig/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /securitylibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/securitylibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/securitylibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /usermanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/usermanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/usermanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /usermgmtprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/usermgmtprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/usermgmtprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /usersgroupedit/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/usersgroupedit/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/usersgroupedit/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /usermgmtchangepass/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/usermgmtchangepass/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/usermgmtchangepass/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /identitymgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/identitymgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/identitymgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /usermgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/usermgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/usermgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /userprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/userprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/userprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /userprofilechangepass/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/userprofilechangepass/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/userprofilechangepass/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /userrole/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/userrole/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/userrole/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /rolemanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/rolemanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/rolemanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /rolemgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/rolemgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/rolemgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /nodesecurityconfiguration/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/nodesecurityconfiguration/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/nodesecurityconfiguration/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /nodeseclibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/nodeseclibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/nodeseclibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /compare/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/compare/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/compare/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /targetgroup/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/targetgroup/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/targetgroup/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /targetmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/targetmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/targetmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /targetmgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /locales/en-us/targetmgmtlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: secserv
+      port:
+        number: 443
+  path: /help/en-us/targetmgmtlib/
+  pathType: ImplementationSpecific

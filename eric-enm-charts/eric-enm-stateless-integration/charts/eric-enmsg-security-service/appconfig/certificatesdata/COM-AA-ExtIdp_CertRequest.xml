@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+	<application>
+		<truststores>
+			<truststoreonly>
+			 <trustprofilename>IdP_NBI_TP</trustprofilename>
+				<truststore>
+					<jkstruststore>
+						<storealias>com-aa-service-extidpts</storealias>
+						<storelocation>/opt/ericsson/com.ericsson.oss.services.security.accesscontrol.com-aa-service/truststore</storelocation>
+						<storepassword>passw0rd</storepassword>
+					</jkstruststore>
+				</truststore>
+				<oncheckresult>
+					<actionlist>
+						<checkcause>trustUpdate</checkcause>
+						<action>VMRestart</action>
+					</actionlist>
+				</oncheckresult>
+			</truststoreonly>
+		</truststores>
+		<crlupdatemode>CrlNotManaged</crlupdatemode>
+	</application>
+	<user>
+		<!-- keep in the same line to allow grep researches -->
+		<username>root</username>
+		<usergroup>root</usergroup>
+	</user>
+</applications>

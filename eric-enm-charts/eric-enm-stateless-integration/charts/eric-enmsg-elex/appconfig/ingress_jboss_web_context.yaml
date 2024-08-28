@@ -1,0 +1,21 @@
+- backend:
+    service:
+      name: elex
+      port:
+        number: 443
+  path: /elex
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elex
+      port:
+        number: 443
+  path: /alexserv
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: elex
+      port:
+        number: 443
+  path: /alexhint
+  pathType: ImplementationSpecific

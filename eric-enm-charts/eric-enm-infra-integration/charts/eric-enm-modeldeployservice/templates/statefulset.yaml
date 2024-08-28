@@ -1,0 +1,132 @@
+apiVersion: "apps/v1"
+kind: StatefulSet
+metadata:
+    name: {{ template "eric-enm-modeldeployservice.name" . }}
+    labels:
+      app.kubernetes.io/name: {{ template "eric-enm-modeldeployservice.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/version: {{ template "eric-enm-modeldeployservice.chart" . }}
+    annotations:
+{{- include "eric-enm-modeldeployservice.product-info" . | indent 6 }}
+spec:
+    serviceName: {{ template "eric-enm-modeldeployservice.name" . }}
+    selector:
+      matchLabels:
+        app: {{ template "eric-enm-modeldeployservice.name" . }}
+    updateStrategy:
+      type: {{ .Values.updateStrategy.type }}
+    {{- if .Values.updateStrategy.rollingUpdate }}
+      rollingUpdate:
+        partition: {{ .Values.updateStrategy.rollingUpdate.partition }}
+    {{- end }}
+    template:
+      metadata:
+        labels:
+          app: {{ template "eric-enm-modeldeployservice.name" . }}
+          app.kubernetes.io/name: {{ template "eric-enm-modeldeployservice.name" . }}
+          app.kubernetes.io/instance: {{ .Release.Name }}
+          app.kubernetes.io/version: {{ template "eric-enm-modeldeployservice.chart" . }}
+          adpbrlabelkey: eric-enm-mdt-bro-agent
+        annotations:
+        {{- if .Values.brAgent.backupTypeList }}
+          backupType: {{ template "eric-enm-modeldeployservice.backupTypes" . }}
+        {{- end }}
+        {{- include "eric-enm-modeldeployservice.product-info" . | indent 10 }}
+        {{- with .Values.podAnnotations }}
+        {{ toYaml . | indent 10 }}
+        {{- end }}
+      spec:
+        terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+        nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 10 }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+{{ toYaml .Values.global.nodeSelector | indent 10 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.tolerations .Values.global.tolerations }}
+        tolerations:
+{{- if .Values.tolerations }}
+{{ toYaml .Values.tolerations | indent 10 }}
+{{- end }}
+{{- if .Values.global.tolerations }}
+{{ toYaml .Values.global.tolerations | indent 10 }}
+{{- end }}
+{{- end }}
+{{- if .Values.images.waitInitContainer.enabled }}
+        initContainers:
+          - name: {{ .Values.images.waitInitContainer.name }}
+            image: {{ template "eric-enm-modeldeployservice.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "waitInitContainer" "name" }}:{{ index .Values "images" "waitInitContainer" "tag" }}
+            imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+            command: {{ index .Values "images" "waitInitContainer" "command" }}
+{{- end }}
+        containers:
+          - name: {{ template "eric-enm-modeldeployservice.name" . }}
+            image: {{ .Values.global.registry.url }}/{{ template "eric-enm-modeldeployservice.repo-path" . }}/{{ index .Values "images" "eric-enm-modeldeployservice" "name" }}:{{ template "eric-enm-modeldeployservice.image-tag" . }}
+            imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+            args:
+              - {{ .Values.brAgent.enabled | quote }}
+              {{- if .Values.brAgent.backupTypeList }}
+              - {{ template "eric-enm-modeldeployservice.backupTypes" . }}
+              {{- end }}
+            env:
+              - name: RUNNING_IN_CLOUD_NATIVE
+                value: "{{ .Values.env.runningInCloudNative }}"
+              - name: TZ
+                value: {{ .Values.global.timezone }}
+              - name: NAMESPACE
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
+{{- with index .Values "probes" "eric-enm-modeldeployservice" }}
+  {{- if .startupProbe.enabled }}
+            startupProbe:
+              exec:
+                command: {{ .startupProbe.command }}
+              initialDelaySeconds: {{ .startupProbe.initialDelaySeconds }}
+              periodSeconds: {{ .startupProbe.periodSeconds }}
+              timeoutSeconds: {{ .startupProbe.timeoutSeconds }}
+              failureThreshold: {{ .startupProbe.failureThreshold }}
+  {{- end }}
+  {{- if .readinessProbe.enabled }}
+            readinessProbe:
+              exec:
+                command: {{ .readinessProbe.command }}
+              initialDelaySeconds: {{ .readinessProbe.initialDelaySeconds }}
+              periodSeconds: {{ .readinessProbe.periodSeconds }}
+              timeoutSeconds: {{ .readinessProbe.timeoutSeconds }}
+              failureThreshold: {{ .readinessProbe.failureThreshold }}
+  {{- end }}
+  {{- if .livenessProbe.enabled }}
+            livenessProbe:
+              exec:
+                command: {{ .livenessProbe.command }}
+              initialDelaySeconds: {{ .livenessProbe.initialDelaySeconds }}
+              periodSeconds: {{ .livenessProbe.periodSeconds }}
+              timeoutSeconds: {{ .livenessProbe.timeoutSeconds }}
+              failureThreshold: {{ .livenessProbe.failureThreshold }}
+  {{- end }}
+{{- end }}
+{{- if or .Values.resources.modeldeployservice.requests.enabled .Values.resources.modeldeployservice.limits.enabled }}
+            resources:
+  {{- if  .Values.resources.modeldeployservice.requests.enabled }}
+              requests:
+                memory: {{ .Values.resources.modeldeployservice.requests.memory }}
+                cpu: {{ .Values.resources.modeldeployservice.requests.cpu }}
+  {{- end }}
+  {{- if  .Values.resources.modeldeployservice.limits.enabled }}
+              limits:
+                memory: {{ .Values.resources.modeldeployservice.limits.memory }}
+                cpu: {{ .Values.resources.modeldeployservice.limits.cpu }}
+  {{- end }}
+{{- end }}
+            volumeMounts:
+{{ .Files.Get "appconfig/volumeMounts.txt" | indent 14 }}
+        volumes:
+{{ .Files.Get "appconfig/volumes.txt" | indent 10 }}
+{{- if include "eric-enm-modeldeployservice.pullSecrets" . }}
+        imagePullSecrets:
+          - name: {{ template "eric-enm-modeldeployservice.pullSecrets" . }}
+{{- end }}

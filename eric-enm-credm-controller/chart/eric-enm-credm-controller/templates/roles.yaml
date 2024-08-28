@@ -1,0 +1,50 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: "{{ .Values.service.name }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-enm-credm-controller.chart" . }}
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "eric-enm-credm-controller.name" . }}-role
+  labels:
+{{ include "eric-enm-credm-controller.labels" . | indent 4 }}
+  annotations:
+{{- include "eric-enm-credm-controller.product-info" . | indent 4 }}
+rules:
+# rule for jobs
+- apiGroups: ["batch", "apps"]
+  resources: ["jobs"]
+  verbs: ["get", "list", "create", "delete"]
+# rule for cronjobs
+- apiGroups: ["batch"]
+  resources: ["cronjobs"]
+  verbs: ["get", "list"]
+# rule for get pods
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+# rule for cp file (requires pod is running) - to be use for cronjob
+#- apiGroups: [""]
+#  resources: ["pods/exec"]
+#  verbs: ["create"]
+# rule for delete pod
+#- apiGroups: [""]
+#  resources: ["pods"]
+#  resourceNames: ["myservice"]
+#  verbs: ["delete"]
+# rule to access secret
+- apiGroups: [""]
+  resources: ["secrets"]
+  #resourceNames: ["testsecret"]
+  verbs: ["get", "watch", "list", "create", "delete", "update", "patch"]
+# rule to modify deployment
+- apiGroups: ["extensions", "apps"]
+  resources: ["deployments"]
+#  resourceNames: ["myservice-simpleservice"]
+  verbs: ["get", "list", "watch", "create", "delete", "update", "patch", "replace"]
+# rule to modify statefulset
+- apiGroups: ["extensions", "apps"]
+  resources: ["statefulsets"]
+  verbs: ["get", "list", "watch", "create", "delete", "update", "patch", "replace"]
+

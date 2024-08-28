@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+	<application>
+		<certificates>
+			<certificate>
+			
+				<tbscertificate>
+					<subject>
+						<entityname>atclvm387</entityname>
+					</subject>
+					<certificateextension>
+						<subjectalternativename>
+							<ipaddress>1.1.1.1</ipaddress>
+						</subjectalternativename>
+					</certificateextension>
+				</tbscertificate>
+				
+				<endentityprofilename>TOREndEntityProfile</endentityprofilename>
+				
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+				
+				<keystore>
+					<jkskeystore>
+						<storealias>teste</storealias >
+						<storelocation>certs/Teste.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkskeystore>
+				</keystore>
+
+				<truststore>
+					<jkstruststore>
+						<storealias>TestCA1</storealias >
+						<storelocation>certs/TestTS.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkstruststore>
+				</truststore>								
+				<oncheckresult>
+                     <actionlist>
+                            <checkcause>certificateUpdate</checkcause>
+                            <checkcause>trustUpdate</checkcause>
+                            <action>RunScript</action>
+                                 <command>
+                                       <pathname>helloworld.sh</pathname>
+                                       <parameter>
+                                            <name>port</name>
+                                             <value>1024</value>
+                                       </parameter>
+                                 </command>
+                      </actionlist>      
+                </oncheckresult>			
+				<!-- <connectormanaged>httpsConnector</connectormanaged> -->
+
+			</certificate>
+			
+			<certificate>
+			
+				<tbscertificate>
+					<subject>
+						<entityname>atclvm389</entityname>
+					</subject>
+					<certificateextension>
+						<subjectalternativename>
+							<ipaddress>1.1.1.1</ipaddress>
+						</subjectalternativename>
+					</certificateextension>
+				</tbscertificate>
+				
+				<endentityprofilename>TOREndEntityProfile</endentityprofilename>
+				
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+				
+				<keystore>
+					<jkskeystore>
+						<storealias>teste</storealias >
+						<storelocation>certs/Teste.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkskeystore>
+				</keystore>
+
+				<truststore>
+					<jkstruststore>
+						<storealias>TestCA1</storealias >
+						<storelocation>certs/TestTS.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkstruststore>
+				</truststore>								
+				<oncheckresult>
+                     <actionlist>
+                            <checkcause>certificateUpdate</checkcause>
+                            <checkcause>trustUpdate</checkcause>
+                            <action>RunScript</action>
+                                 <command>
+                                       <pathname>helloworld.sh</pathname>
+                                       <parameter>
+                                            <name>port</name>
+                                             <value>1024</value>
+                                       </parameter>
+                                 </command>
+                      </actionlist>      
+                </oncheckresult>			
+				<!-- <connectormanaged>httpsConnector</connectormanaged> -->
+
+			</certificate>			
+			<certificate>
+			
+				<tbscertificate>
+					<subject>
+						<entityname>atclvm390</entityname>
+					</subject>
+					<certificateextension>
+						<subjectalternativename>
+							<ipaddress>1.1.1.1</ipaddress>
+						</subjectalternativename>
+					</certificateextension>
+				</tbscertificate>
+				
+				<endentityprofilename>TOREndEntityProfile</endentityprofilename>
+				
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+				
+				<keystore>
+					<jkskeystore>
+						<storealias>teste</storealias >
+						<storelocation>certs/Teste.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkskeystore>
+				</keystore>
+
+				<truststore>
+					<jkstruststore>
+						<storealias>TestCA1</storealias >
+						<storelocation>certs/TestTS.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkstruststore>
+				</truststore>								
+					               <oncheckresult>
+                     <actionlist>
+                            <checkcause>certificateUpdate</checkcause>
+                            <checkcause>trustUpdate</checkcause>
+                            <action>RunScript</action>
+                                 <command>
+                                       <pathname>helloworld.sh</pathname>
+                                       <parameter>
+                                            <name>port</name>
+                                             <value>1023</value>
+                                       </parameter>
+                                 </command>
+                      </actionlist>      
+                </oncheckresult>			
+				<!-- <connectormanaged>httpsConnector</connectormanaged> -->
+
+			</certificate>			
+			
+		</certificates>
+		
+			<crlupdatemode>CrlSelfManaged</crlupdatemode>
+			
+		<keyrequests>
+		
+			<secretkeyrequest>
+				<keysize>64</keysize>
+				<keyalgorithm>DES</keyalgorithm>
+				<keystore>
+					<jcekssecretstore>
+						<storealias>secretalias</storealias>
+						<storelocation>keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</jcekssecretstore>
+				</keystore>	
+			</secretkeyrequest>
+			
+			<keypairrequest>
+				<keysize>64</keysize>
+				<keyalgorithm>DES</keyalgorithm>
+				<keystore>
+					<jkskeypairstore>
+						<storealias>secretalias</storealias>
+						<storelocation>keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</jkskeypairstore>
+				</keystore>		
+			</keypairrequest>
+			
+		</keyrequests>
+			
+			
+	</application>
+	<user>
+		<!-- keep in the same line to allow grep researches -->
+		<username>myUser</username>
+		<usergroup>myGroup</usergroup>
+	</user>
+</applications>

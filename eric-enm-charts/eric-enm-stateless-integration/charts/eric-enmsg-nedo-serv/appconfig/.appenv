@@ -1,0 +1,9 @@
+DEP=true
+NAME=eric-enmsg-nedo-serv
+SVC=nedoserv
+WAIT=true
+WAIT_LIST=gossiprouter-cache,gossiprouter-remoting,jms01,postgres,sps
+REQUESTS=true
+REQUESTS_LIST=2200Mi
+LIMITS=true
+LIMITS_LIST=5120Mi

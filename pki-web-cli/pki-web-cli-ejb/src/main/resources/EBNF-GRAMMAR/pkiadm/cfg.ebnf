@@ -1,0 +1,84 @@
+"pkiadm" WS "cfg" (* hide = "true" *) WS ( CONFIGMGMT_ALGORITHM | CONFIGMGMT_CATEGORY )
+
+CONFIGMGMT_ALGORITHM ::= "algo" (* slogan = "Used to Manage and Retrieve the Algorithms" *) WS ( CONFIGMGMT_UPDATE | CONFIGMGMT_RETRIEVE )
+CONFIGMGMT_CATEGORY ::= "category" (* slogan = "Used to create,update,list and delete EntityCategory" *) WS ( CONFIGMGMT_CREATE | CONFIGMGMT_UPDATE_CATEGORY | CONFIGMGMT_LIST_CATEGORY | CONFIGMGMT_DELETE )
+CONFIGMGMT_CREATE ::= ( "--create" (* slogan = "Create Entity Category(s). Tip: -c for stort" *) | "-c" (* hide = "true" *) ) WS CONFIGMGMT_CATEGORY_NAME
+CONFIGMGMT_UPDATE_CATEGORY ::= ( "--update" (* slogan = "Update Entity Category(s). Tip: -u for stort" *) | "-u" (* hide = "true" *) ) WS CONFIGMGMT_OLD_NAME WS CONFIGMGMT_NEW_NAME
+CONFIGMGMT_LIST_CATEGORY ::= ( CONFIGMGMT_LIST | CONFIGMGMT_LIST WS CONFIGMGMT_CATEGORY_NAME )
+CONFIGMGMT_DELETE ::= ( "--delete" (* slogan = "Delete Entity Category(s). Tip: -d for stort" *) | "-d" (* hide = "true" *) ) WS CONFIGMGMT_CATEGORY_NAME
+CONFIGMGMT_CATEGORY_NAME ::= ( "--name" (* slogan = "Specify the category name. Tip: -n for stort" *) | "-n" (* hide = "true" *) ) WS <categoryName> (* slogan = "Specify a category name" *)
+CONFIGMGMT_OLD_NAME ::= ( "--oldname" (* slogan = "Specify the old category name. Tip: -on for stort" *) | "-on" (* hide = "true" *) ) WS <old_category_name> (* slogan = "Specify an old category name" *)
+CONFIGMGMT_NEW_NAME ::= ( "--newname" (* slogan = "Specify the new category name. Tip: -nn for stort" *) | "-nn" (* hide = "true" *) ) WS <new_category_name> (* slogan = "Specify a new category name" *)
+CONFIGMGMT_UPDATE ::= ( CONFIGMGMT_ENABLE | CONFIGMGMT_DISABLE ) WS CONFIGMGMT_NAME
+CONFIGMGMT_RETRIEVE ::= CONFIGMGMT_LIST_ALGOS CONFIGMGMT_TYPE CONFIGMGMT_STATUS
+CONFIGMGMT_ENABLE ::= ( "--enable" (* slogan = "Enable Algorithms. Tip: -e for stort" *) | "-e" (* hide = "true" *) )
+CONFIGMGMT_DISABLE ::= ( "--disable" (* slogan = "Disable Algorithms. Tip: -d for short" *) | "-d" (* hide = "true" *) )
+CONFIGMGMT_LIST ::= ( "--list" (* slogan = "List Entity Category(s) that are needed. Tip: -l for short" *) | "-l" (* hide = "true" *) )
+CONFIGMGMT_LIST_ALGOS ::= ( "--list" (* slogan = "List Algorithms that are needed. Tip: -l for short" *) | "-l" (* hide = "true" *) )
+CONFIGMGMT_TYPE ::= WS ( "--type" (* slogan = "Specify the Algorithm type. Tip: -t for stort" *) | "-t" (* hide = "true" *) ) WS CONFIGMGMT_ALGO_TYPE
+CONFIGMGMT_ALGO_TYPE ::= (  "all" (* slogan = "All Algorithms" *)
+                          | "signature" (* slogan = "Signature Algorithm" *)
+                          | "digest" (* slogan = "Digest Algorithm" *)
+                          | "asymmetric" (* slogan = "Asymmetric Algorithm" *)
+                          | "symmetric" (* slogan = "Symmetric Algorithm" *) )
+CONFIGMGMT_NAME ::= ( "--name" (* slogan = "Specify the Algorithm name. Tip: -n for short" *) | "-n" (* hide = "true" *) ) WS ALGORITHM_NAME
+ALGORITHM_NAME ::= ( ALGORITHM_SHA1WITHRSA | ALGORITHM_MD5WITHRSA | ALGORITHM_SHA256WITHRSA | ALGORITHM_SHA512WITHRSA | ALGORITHM_SHA1WITHDSA | ALGORITHM_SHA256WITHDSA | ALGORITHM_SHA512WITHDSA | ALGORITHM_SHA256WITHECDSA | ALGORITHM_SHA384WITHECDSA | ALGORITHM_SHA512WITHECDSA | ALGORITHM_SHA224 | ALGORITHM_SHA256 | ALGORITHM_SHA384 | ALGORITHM_SHA512 | ALGORITHM_SHA1 | ALGORITHM_SHA3_224 | ALGORITHM_SHA3_256 | ALGORITHM_SHA3_384 | ALGORITHM_SHA3_512 | ALGORITHM_MD5 | ALGORITHM_RSA | ALGORITHM_DSA | ALGORITHM_ECDSA | ALGORITHM_DES_ECB | ALGORITHM_DES_CBC | ALGORITHM_DES_OFB | ALGORITHM_DES_CFB | ALGORITHM_DES_EDE | ALGORITHM_3DES | ALGORITHM_DES_EDE3_CBC | ALGORITHM_HMAC_SHA1 | ALGORITHM_HMAC_SHA256 | ALGORITHM_160_BIT_SHA_1 | ALGORITHM_0100_60_BIT_SHA_1 | ALGORITHM_PASSWORDBASEDMAC )
+ALGORITHM_SHA1WITHRSA ::= ( "SHA1withRSA" (* slogan = "SHA1withRSA Algorithm" *)
+ALGORITHM_MD5WITHRSA ::= ( "MD5withRSA" (* slogan = "MD5withRSA Algorithm" *)
+ALGORITHM_SHA256WITHRSA ::= ( "SHA256withRSA" (* slogan = "SHA256withRSA Algorithm" *)
+ALGORITHM_SHA512WITHRSA ::= ( "SHA512withRSA" (* slogan = "SHA512withRSA Algorithm" *)
+ALGORITHM_SHA1WITHDSA ::= ( "SHA1withDSA" (* slogan = "SHA1withDSA Algorithm" *)
+ALGORITHM_SHA256WITHDSA ::= ( "SHA256withDSA" (* slogan = "SHA256withDSA Algorithm" *)
+ALGORITHM_SHA512WITHDSA ::= ( "SHA512withDSA" (* slogan = "SHA512withDSA Algorithm" *)
+ALGORITHM_SHA256WITHECDSA ::= ( "SHA256withECDSA" (* slogan = "SHA256withECDSA Algorithm" *)
+ALGORITHM_SHA384WITHECDSA ::= ( "SHA384withECDSA" (* slogan = "SHA384withECDSA Algorithm" *)
+ALGORITHM_SHA512WITHECDSA ::= ( "SHA512withECDSA" (* slogan = "SHA512withECDSA Algorithm" *)
+ALGORITHM_SHA224 ::= ( "SHA224" (* slogan = "SHA224 Algorithm" *)
+ALGORITHM_SHA256 ::= ( "SHA256" (* slogan = "SHA256 Algorithm" *)
+ALGORITHM_SHA384 ::= ( "SHA384" (* slogan = "SHA384 Algorithm" *)
+ALGORITHM_SHA512 ::= ( "SHA512" (* slogan = "SHA512 Algorithm" *)
+ALGORITHM_SHA1 ::= ( "SHA1" (* slogan = "SHA1 Algorithm" *)
+ALGORITHM_SHA3_224 ::= ( "SHA3-224" (* slogan = "SHA3-224 Algorithm" *)
+ALGORITHM_SHA3_256 ::= ( "SHA3-256" (* slogan = "SHA3-256 Algorithm" *)
+ALGORITHM_SHA3_384 ::= ( "SHA3-384" (* slogan = "SHA3-384 Algorithm" *)
+ALGORITHM_SHA3_512 ::= ( "SHA3-512" (* slogan = "SHA3-512 Algorithm" *)
+ALGORITHM_MD5 ::= ( "MD5" (* slogan = "MD5 Algorithm" *)
+ALGORITHM_RSA ::= ( "RSA" (* slogan = "RSA Algorithm" *) CONFIGMGMT_KEY_SIZE_RSA
+ALGORITHM_DSA ::= ( "DSA" (* slogan = "DSA Algorithm" *) CONFIGMGMT_KEY_SIZE_DSA
+ALGORITHM_ECDSA ::= ( "ECDSA" (* slogan = "ECDSA Algorithm" *) CONFIGMGMT_KEY_SIZE_ECDSA
+ALGORITHM_DES_ECB ::= ( "DES_ECB" (* slogan = "DES_ECB Algorithm" *) CONFIGMGMT_KEY_SIZE_DES
+ALGORITHM_DES_CBC ::= ( "DES_CBC" (* slogan = "DES_CBC Algorithm" *) CONFIGMGMT_KEY_SIZE_DES
+ALGORITHM_DES_OFB ::= ( "DES_OFB" (* slogan = "DES_OFB Algorithm" *) CONFIGMGMT_KEY_SIZE_DES
+ALGORITHM_DES_CFB ::= ( "DES_CFB" (* slogan = "DES_CFB Algorithm" *) CONFIGMGMT_KEY_SIZE_DES
+ALGORITHM_DES_EDE ::= ( "DES_EDE" (* slogan = "DES_EDE Algorithm" *) CONFIGMGMT_KEY_SIZE_DES
+ALGORITHM_3DES ::= ( "3DES" (* slogan = "3DES Algorithm" *) CONFIGMGMT_KEY_SIZE_DES
+ALGORITHM_DES_EDE3_CBC ::= ( "DES-EDE3-CBC" (* slogan = "DES-EDE3-CBC Algorithm" *) CONFIGMGMT_KEY_SIZE_DES
+ALGORITHM_HMAC_SHA1 ::= ( "HMAC_SHA1" (* slogan = "HMAC_SHA1 Algorithm" *)
+ALGORITHM_HMAC_SHA256 ::= ( "HMAC_SHA256" (* slogan = "HMAC_SHA256 Algorithm" *)
+ALGORITHM_160_BIT_SHA_1 ::= ( "160-BIT_SHA-1" (* slogan = "160-BIT_SHA-1 Algorithm" *)
+ALGORITHM_0100_60_BIT_SHA_1 ::= ( "0100-60-BIT_SHA-1" (* slogan = "0100-60-BIT_SHA-1 Algorithm" *)
+ALGORITHM_PASSWORDBASEDMAC ::= ( "PasswordBasedMAC" (* slogan = "PasswordBasedMAC Algorithm" *)
+
+CONFIGMGMT_KEY_SIZE_RSA ::= WS ( "--keysize" (* slogan = "Specify the keysize. Tip: -ks for short" *) | "-ks" (* hide = "true" *) ) WS CONFIGMGMT_KEY_SIZE_SELECTION_RSA
+CONFIGMGMT_KEY_SIZE_SELECTION_RSA ::= ( CONFIGMGMT_VALUES_RSA |CONFIGMGMT_START_RANGE_RSA )
+CONFIGMGMT_START_RANGE_RSA ::= <keysize_start_range> (* regex = "^[\d]+$" slogan = "Start the keysize range number" *) "-" ( CONFIGMGMT_VALUES_RSA | CONFIGMGMT_END_RANGE_RSA )
+CONFIGMGMT_END_RANGE_RSA ::= <keysize_end_range> (* regex = "^[\d]+$" slogan = "End the keysize range number" *)
+CONFIGMGMT_VALUES_RSA ::= ( "1024" (* slogan = "Set Keysize to 1024" *) | "2048" (* slogan = "Set Keysize to 2048" *) | "3072" (* slogan = "Set Keysize to 3072" *) | "4096" (* slogan = "Set Keysize to 4096" *) )
+
+CONFIGMGMT_KEY_SIZE_DSA ::= WS ( "--keysize" (* slogan = "Specify the keysize. Tip: -ks for short" *) | "-ks" (* hide = "true" *) ) WS CONFIGMGMT_KEY_SIZE_SELECTION_DSA
+CONFIGMGMT_KEY_SIZE_SELECTION_DSA ::= "1024" (* slogan = "Set Keysize to 1024" *)
+
+CONFIGMGMT_KEY_SIZE_ECDSA ::= WS ( "--keysize" (* slogan = "Specify the keysize. Tip: -ks for short" *) | "-ks" (* hide = "true" *) ) WS CONFIGMGMT_KEY_SIZE_SELECTION_ECDSA
+CONFIGMGMT_KEY_SIZE_SELECTION_ECDSA ::= ( CONFIGMGMT_VALUES_ECDSA | CONFIGMGMT_START_RANGE_ECDSA )
+CONFIGMGMT_START_RANGE_ECDSA ::= <keysize_start_range> (* regex = "^[\d]+$" slogan = "Start the keysize range number" *) "-" ( CONFIGMGMT_VALUES_ECDSA | CONFIGMGMT_END_RANGE_ECDSA )
+CONFIGMGMT_END_RANGE_ECDSA ::= <keysize_end_range> (* regex = "^[\d]+$" slogan = "End the keysize range number" *)
+CONFIGMGMT_VALUES_ECDSA ::= ( "160" (* slogan = "Set Keysize to 160" *) | "163" (* slogan = "Set Keysize to 163" *) | "224" (* slogan = "Set Keysize to 224" *) | "256" (* slogan = "Set Keysize to 256" *) | "283" (* slogan = "Set Keysize to 283" *) | "384" (* slogan = "Set Keysize to 384" *) | "409" (* slogan = "Set Keysize to 409" *) | "512" (* slogan = "Set Keysize to 512" *) | "521" (* slogan = "Set Keysize to 521" *) | "571" (* slogan = "Set Keysize to 571" *) )
+
+CONFIGMGMT_KEY_SIZE_DES ::= WS ( "--keysize" (* slogan = "Specify the keysize. Tip: -ks for short" *) | "-ks" (* hide = "true" *) ) WS CONFIGMGMT_KEY_SIZE_SELECTION_DES
+CONFIGMGMT_KEY_SIZE_SELECTION_DES ::= "64" (* slogan = "Set Keysize to 64" *)
+
+
+CONFIGMGMT_STATUS ::= WS ( "--status" (* slogan = "Specify the status to retrieve. Tip: -s for short" *) | "-s" (* hide = "true" *) ) WS CONFIGMGMT_ALGO_STATUS
+CONFIGMGMT_ALGO_STATUS ::= ( "enabled" (* slogan = "Retrieve enabled status" *)
+                           | "disabled" (* slogan = "Retrieve disabled status" *)
+                           | "all" (* slogan = "Retrieve all statuses" *) )

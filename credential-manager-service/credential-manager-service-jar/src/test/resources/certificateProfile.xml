@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+	<Certificate-Profiles>
+
+		<CertificateProfile Name="credMCLI_CP">
+
+		<SubjectCapabilities>
+               <SubjectDN>
+                      <SubjectEntry>
+						<Type>COMMON_NAME</Type>
+					  </SubjectEntry>
+				      <SubjectEntry>
+						<Type>SURNAME</Type>
+					  </SubjectEntry>
+				 	  <SubjectEntry>
+						<Type>COUNTRY_NAME</Type>
+					  </SubjectEntry>
+					  <SubjectEntry>
+						<Type>LOCALITY_NAME</Type>
+					  </SubjectEntry>
+				      <SubjectEntry>
+						<Type>STATE</Type>
+					  </SubjectEntry>
+					  <SubjectEntry>
+						<Type>STREET_ADDRESS</Type>
+					  </SubjectEntry>
+					  <SubjectEntry>
+						<Type>ORGANIZATION</Type>
+					  </SubjectEntry>
+					  <SubjectEntry>
+						<Type>ORGANIZATION_UNIT</Type>
+					  </SubjectEntry>
+					  <SubjectEntry>
+						<Type>DN_QUALIFIER</Type>
+					  </SubjectEntry>
+					  <SubjectEntry>
+						<Type>TITLE</Type>
+					  </SubjectEntry>
+					  <SubjectEntry>
+						<Type>GIVEN_NAME</Type>
+					  </SubjectEntry>
+					  <SubjectEntry>
+						<Type>SERIAL_NUMBER</Type>
+					  </SubjectEntry>              
+                 </SubjectDN>
+          </SubjectCapabilities>
+		
+
+			<IsCAEntity>false</IsCAEntity>
+			<Version>V3</Version>
+			<SignatureAlgorithm>
+				<Name>SHA256withRSA</Name>
+				<KeySize>2048</KeySize>
+			</SignatureAlgorithm>
+
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+
+			<Validity>P1095D</Validity>
+
+			<Issuer>ENM Management CA</Issuer>
+			<SubjectUniqueIdentifier>true</SubjectUniqueIdentifier>
+			<IssuerUniqueIdentifier>true</IssuerUniqueIdentifier>
+			<SkewCertificateTime>P30D</SkewCertificateTime>
+
+			<CertificateExtensions>
+
+				<CertificateExtension xsi:type="SubjectKeyIdentifier">			
+					<Critical>false</Critical>
+					<KeyIdentifierAlgorithm>160-BIT_SHA-1</KeyIdentifierAlgorithm>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="AuthorityInformationAccess">	
+					<Critical>false</Critical>
+					<AccessDescription>
+						<AccessMethod>CA_ISSUER</AccessMethod>
+						<AccessLocation>access location path</AccessLocation>
+					</AccessDescription>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="BasicConstraints">
+					<Critical>true</Critical>
+					<CA>true</CA>
+					<PathLenConstraint>3</PathLenConstraint>	
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="CRLDistributionPoints">
+					<Critical>true</Critical>
+					<CRLDistributionPoint xsi:type="CRLDistributionPoint">
+                        <DistributionPointName xsi:type="DistributionPointName">
+                            <NameRelativeToCRLIssuer>nameRelativeToCRLIssuer</NameRelativeToCRLIssuer>
+                        </DistributionPointName>
+                        <ReasonFlag>SUPERSEDED</ReasonFlag>
+                        <CRLIssuer>CRLIssuer</CRLIssuer>
+                    </CRLDistributionPoint>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="AuthorityKeyIdentifier">
+					<Critical>false</Critical>
+					<ByKeyIdentifier>true</ByKeyIdentifier>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="KeyUsage">
+					<Critical>true</Critical>
+					<KeyUsageType>NON_REPUDIATION</KeyUsageType>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="ExtendedKeyUsage">
+					<Critical>true</Critical>
+					<KeyPurposeId>ID_KP_CLIENT_AUTH</KeyPurposeId>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="SubjectAltName">	
+					<Critical>true</Critical>
+					<SupportedSubjectAltNameField>OTHER_NAME</SupportedSubjectAltNameField>
+					<SupportedSubjectAltNameField>IP_ADDRESS</SupportedSubjectAltNameField>
+					<SupportedSubjectAltNameField>EDI_PARTY_NAME</SupportedSubjectAltNameField>							
+				</CertificateExtension>
+
+			</CertificateExtensions>
+		</CertificateProfile>
+
+	</Certificate-Profiles>
+</Profiles>
+
+
+
+

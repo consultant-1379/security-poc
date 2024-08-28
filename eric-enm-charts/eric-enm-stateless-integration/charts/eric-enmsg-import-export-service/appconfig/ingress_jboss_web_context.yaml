@@ -1,0 +1,70 @@
+- backend:
+    service:
+      name: impexpserv
+      port:
+        number: 443
+  path: /bulk/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: impexpserv
+      port:
+        number: 443
+  path: /bulk-configuration/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: impexpserv
+      port:
+        number: 443
+  path: /pib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: impexpserv
+      port:
+        number: 443
+  path: /bulkconfiguration/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: impexpserv
+      port:
+        number: 443
+  path: /locales/en-us/bulkconfiguration/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: impexpserv
+      port:
+        number: 443
+  path: /help/en-us/bulkconfiguration/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: impexpserv
+      port:
+        number: 443
+  path: /bulkconfigurationjobdetail/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: impexpserv
+      port:
+        number: 443
+  path: /locales/en-us/bulkconfigurationjobdetail/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: impexpserv
+      port:
+        number: 443
+  path: /bulkimportlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: impexpserv
+      port:
+        number: 443
+  path: /locales/en-us/bulkimportlib/
+  pathType: ImplementationSpecific

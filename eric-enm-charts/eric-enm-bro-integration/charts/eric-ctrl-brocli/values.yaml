@@ -1,0 +1,69 @@
+global:
+  timezone:
+  security:
+    tls:
+      enabled: false
+
+imageCredentials:
+  repoPath: proj-enm
+  registry:
+    url:
+    imagePullPolicy:
+    pullSecret:
+  logshipper:
+    registry:
+      url:
+    repoPath: proj-adp-log-released
+
+broServiceName: "eric-ctrl-bro"
+
+resources:
+  brocli:
+    limits:
+      cpu: "400m"
+      memory: "64Mi"
+      ephemeral-storage: "200Mi"
+    requests:
+      cpu: "200m"
+      memory: "32Mi"
+      ephemeral-storage: "100Mi"
+  logshipper:
+    limits:
+      cpu: "100m"
+      memory: "100Mi"
+    requests:
+      cpu: "50m"
+      memory: "50Mi"
+
+updateStrategy:
+  type: "RollingUpdate"
+
+labels: {}
+
+log:
+  # Supported values "stdout" / "file"
+  # 'stdout' outputs agent logs to only stdout
+  # 'file' outputs agent logs to both stdout and file
+  output: "file"
+  logshipper:
+    level: "info"
+
+logshipper:
+  enabled: false
+  shutdownDelay: 0
+  storagePath: "/logs"
+  storageAllocation: "100Mi"
+  harvester:
+    logData:
+      - subPaths:
+          - "brocli.log"
+
+probes:
+  logshipper:
+    livenessProbe:
+      initialDelaySeconds:
+      failureThreshold:
+      periodSeconds:
+      timeoutSeconds:
+
+nodeSelector: {}

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+	<Certificate-Profiles>
+
+		<CertificateProfile Name="ENM PKI Root CA CP">
+
+			<IsCAEntity>true</IsCAEntity>
+			<Version>V3</Version>
+			<SignatureAlgorithm>
+				<Name>SHA256withRSA</Name>
+				<KeySize>2048</KeySize>
+			</SignatureAlgorithm>
+
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+
+			<Validity>P365D</Validity>
+
+<!--			<Issuer></Issuer>-->
+			<SubjectUniqueIdentifier>false</SubjectUniqueIdentifier>
+			<IssuerUniqueIdentifier>false</IssuerUniqueIdentifier>
+			<SkewCertificateTime>P30D</SkewCertificateTime>
+
+			<CertificateExtensions>
+
+				<CertificateExtension xsi:type="SubjectKeyIdentifier">			
+					<Critical>false</Critical>
+					<KeyIdentifierAlgorithm>160-BIT_SHA-1</KeyIdentifierAlgorithm>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="BasicConstraints">
+					<Critical>true</Critical>
+					<CA>true</CA>
+					<PathLenConstraint>2147483647</PathLenConstraint>	
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="AuthorityKeyIdentifier">
+					<Critical>false</Critical>
+					<ByKeyIdentifier>true</ByKeyIdentifier>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="KeyUsage">
+					<Critical>true</Critical>
+					<KeyUsageType>DIGITAL_SIGNATURE</KeyUsageType>
+					<KeyUsageType>KEY_CERT_SIGN</KeyUsageType>
+					<KeyUsageType>CRL_SIGN</KeyUsageType>
+				</CertificateExtension>
+
+			</CertificateExtensions>
+		</CertificateProfile>
+
+	</Certificate-Profiles>
+</Profiles>
+
+
+
+
+
+
+
+
+

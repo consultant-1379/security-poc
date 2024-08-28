@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EndEntityCategories xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="CategoriesSchema.xsd">
+	<undefinedCategoryName>WRONGUNDEF</undefinedCategoryName>
+	<serviceCategoryName>WRONGSERV</serviceCategoryName>
+	<categoryNameList>WRONGCAT1</categoryNameList>
+</EndEntityCategories>

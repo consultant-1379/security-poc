@@ -1,0 +1,7 @@
+<web-app>
+    <display-name>Script Engine WebApp</display-name>
+    <context-param>
+        <param-name>resteasy.providers</param-name>
+        <param-value>com.ericsson.oss.services.scriptengine.rest.resources.interceptors.RequestInterceptor</param-value>
+    </context-param>
+</web-app>

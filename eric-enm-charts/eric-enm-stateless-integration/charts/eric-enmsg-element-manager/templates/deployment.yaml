@@ -1,0 +1,12 @@
+{{- template "eric-enm-common-helmchart-library.deployment" (list . "eric-enmsg-elementmanager.deployment") -}}
+{{- define "eric-enmsg-elementmanager.deployment" -}}
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ .Values.updateStrategy.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+    type: {{ .Values.updateStrategy.type | quote }}
+  template:
+    spec:
+      terminationGracePeriodSeconds: 60
+{{- end -}}

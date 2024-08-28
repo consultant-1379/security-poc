@@ -1,0 +1,31 @@
+---
+apiVersion: v2
+appVersion: "1.0"
+dependencies:
+- condition: eric-enm-globalproperties.enabled
+  name: eric-enm-globalproperties
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.1.0-52
+- condition: eric-enm-rwxpvc.enabled
+  name: eric-enm-rwxpvc
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.4.0-46
+- condition: eric-enm-serviceroles.enabled
+  name: eric-enm-serviceroles
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.1.0-11
+- condition: eric-net-ingress-l4-crd.enabled
+  name: eric-net-ingress-l4-crd
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.1.0-33
+- condition: eric-enm-troubleshooting-utils.enabled
+  name: eric-enm-troubleshooting-utils
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.27.9-1
+- condition: eric-oss-ingress-controller-nx.enabled
+  name: eric-oss-ingress-controller-nx
+  repository: https://arm.epk.ericsson.se/artifactory/proj-eric-oss-ingress-ctr-nx-drop-helm
+  version: 1.1.0-15
+description: A Helm chart for pre-deploy-integration
+name: eric-enm-pre-deploy-integration
+version: 1.23.8-1

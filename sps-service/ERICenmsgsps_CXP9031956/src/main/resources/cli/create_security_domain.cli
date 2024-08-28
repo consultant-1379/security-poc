@@ -1,0 +1,82 @@
+#VaultPkimanager
+if (outcome == success) of /subsystem=security/security-domain=VaultPkimanager/:add
+end-if
+
+if (outcome == success) of /subsystem=security/security-domain=VaultPkimanager/authentication=classic:add(login-modules=[{"code"=>"com.ericsson.oss.itpf.security.vaultservice.VaultLoginModuleAuthorize", "flag"=>"required", "module"=>"com.ericsson.oss.itpf.security.vaultservice", "module-options"=>[("username"=>"pkimanager"),("dbname"=>"pkimanagerdb")]}])
+end-if
+
+#VaultPkicore
+if (outcome == success) of /subsystem=security/security-domain=VaultPkicore/:add
+end-if
+
+if (outcome == success) of /subsystem=security/security-domain=VaultPkicore/authentication=classic:add(login-modules=[{"code"=>"com.ericsson.oss.itpf.security.vaultservice.VaultLoginModuleAuthorize", "flag"=>"required", "module"=>"com.ericsson.oss.itpf.security.vaultservice", "module-options"=>[("username"=>"pkicore"),("dbname"=>"pkicoredb")]}])
+end-if
+
+#VaultKaps
+if (outcome == success) of /subsystem=security/security-domain=VaultKaps/:add
+end-if
+
+if (outcome == success) of /subsystem=security/security-domain=VaultKaps/authentication=classic:add(login-modules=[{"code"=>"com.ericsson.oss.itpf.security.vaultservice.VaultLoginModuleAuthorize", "flag"=>"required", "module"=>"com.ericsson.oss.itpf.security.vaultservice", "module-options"=>[("username"=>"kaps"),("dbname"=>"kapsdb")]}])
+end-if
+
+#VaultKapsinternaluser
+if (outcome == success) of /subsystem=security/security-domain=VaultKapsinternaluser/:add
+end-if
+
+if (outcome == success) of /subsystem=security/security-domain=VaultKapsinternaluser/authentication=classic:add(login-modules=[{"code"=>"com.ericsson.oss.itpf.security.vaultservice.VaultLoginModuleAuthorize", "flag"=>"required", "module"=>"com.ericsson.oss.itpf.security.vaultservice", "module-options"=>[("username"=>"kapsinternaluser"),("dbname"=>"kapsdb")]}])
+end-if
+
+######################
+
+#DATASOURCE
+if (outcome == success) of /subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,driver-module-name=org.postgres.jdbc.jboss.postgres-jboss-subsystem,driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)
+end-if
+#pkimanagerdb
+if (outcome != "success") of  /subsystem=datasources/xa-data-source=pkimanagerdb:read-resource
+  xa-data-source add --name = pkimanagerdb --jndi-name = java:jboss/datasources/pkimanagerdb --enabled = true --use-java-context = true --use-ccm = true \
+  --xa-datasource-properties = ServerName=${env.POSTGRES_SERVICE:postgresql01},PortNumber=5432,DatabaseName=pkimanagerdb \
+  --driver-name=postgresql \
+  --min-pool-size = 3 --max-pool-size = 11 --pool-prefill = false --flush-strategy = IdleConnections --same-rm-override = false --interleaving = false --pad-xid = false --wrap-xa-resource = false \
+  --security-domain = VaultPkimanager \
+  --valid-connection-checker-class-name = "org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker" \
+  --validate-on-match = true --background-validation = false --background-validation-millis = 1 \
+  --blocking-timeout-wait-millis = 30000 --idle-timeout-minutes = 1 --allocation-retry = 6 --allocation-retry-wait-millis = 10000 \
+  --prepared-statements-cache-size =0 --share-prepared-statements =false 
+end-if
+
+#pkicoredb
+if (outcome != "success") of  /subsystem=datasources/xa-data-source=pkicoredb:read-resource
+   xa-data-source add --name = pkicoredb --jndi-name = java:jboss/datasources/pkicoredb --enabled = true --use-java-context = true --use-ccm = true \
+   --xa-datasource-properties = ServerName=${env.POSTGRES_SERVICE:postgresql01},PortNumber=5432,DatabaseName=pkicoredb \
+   --driver-name = postgresql \
+   --min-pool-size = 1 --max-pool-size = 4 --pool-prefill = false --flush-strategy = IdleConnections --same-rm-override = false --interleaving = false  --pad-xid = false --wrap-xa-resource = false \
+   --security-domain = VaultPkicore \
+   --validate-on-match = false --background-validation = false --background-validation-millis = 1 \
+   --idle-timeout-minutes = 1 \
+   --prepared-statements-cache-size = 0 --share-prepared-statements = false 
+end-if
+
+#kapsexternalDS
+if (outcome != "success") of  /subsystem=datasources/xa-data-source=kapsexternalDS:read-resource
+   xa-data-source add --name = kapsexternalDS --jndi-name = java:jboss/datasources/kapsexternalDS --enabled = true --use-java-context = true --use-ccm = true \
+   --xa-datasource-properties = ServerName=${env.POSTGRES_SERVICE:postgresql01},PortNumber=5432,DatabaseName=kapsdb \
+   --driver-name=postgresql \
+   --min-pool-size = 1 --max-pool-size = 3 --pool-prefill = false --flush-strategy = IdleConnections --same-rm-override = false --interleaving = false --pad-xid = false --wrap-xa-resource = false \
+   --security-domain = VaultKaps \
+   --validate-on-match = false --background-validation = false --background-validation-millis = 1 \
+   --idle-timeout-minutes = 1 \ 
+   --prepared-statements-cache-size = 0 --share-prepared-statements = false
+end-if
+
+#kapsinternalDS
+if (outcome != "success") of  /subsystem=datasources/xa-data-source=kapsinternalDS:read-resource
+   xa-data-source add --name = kapsinternalDS --jndi-name = java:jboss/datasources/kapsinternalDS  --enabled = true --use-java-context = true --use-ccm = true  \
+   --xa-datasource-properties = ServerName=${env.POSTGRES_SERVICE:postgresql01},PortNumber=5432,DatabaseName=kapsdb \
+   --driver-name = postgresql \
+   --min-pool-size = 1 --max-pool-size = 2 --pool-prefill = false --flush-strategy = IdleConnections --same-rm-override = false --interleaving = false --pad-xid = false --wrap-xa-resource = false \
+   --security-domain = VaultKapsinternaluser \
+   --validate-on-match = false  --background-validation = false --background-validation-millis = 1 \
+   --idle-timeout-minutes = 1 \
+   --prepared-statements-cache-size = 0 --share-prepared-statements = false
+end-if
+

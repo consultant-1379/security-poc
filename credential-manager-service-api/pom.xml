@@ -1,0 +1,176 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--Please Use the latest version of integration pom.xml or the one you want to reference to -->
+    <parent>
+        <groupId>com.ericsson.nms</groupId>
+        <artifactId>integration</artifactId>
+        <version>15.2.0.35</version>
+    </parent>
+
+    <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+    <artifactId>credential-manager-service-api</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>[${project.artifactId}] JEE8 Project</name>
+
+    <properties>
+        <!-- FOSS -->
+        <version.log4j>2.17.1</version.log4j>
+        <version.jackson-databind>2.13.0</version.jackson-databind> <!-- was 2.8.5 -->
+        <version.jackson-module-jaxb-annotations>2.13.0</version.jackson-module-jaxb-annotations>
+        <version.httpclient>4.5.12</version.httpclient>
+        <version.bouncycastle>1.67</version.bouncycastle>
+        <!-- Generic Dependencies -->
+        <version.mockito>1.9.5</version.mockito> <!-- was 1.9.5 -->
+        <version.powermock>1.6.1</version.powermock><!-- was 1.6.1-->
+        <version.jacoco>0.8.4</version.jacoco>
+        <version.jbossclient>7.1.3.Final-redhat-4</version.jbossclient>
+        <version.serviceframework.api>4.1.7</version.serviceframework.api>
+
+        <version.key-management-jar>1.10.1</version.key-management-jar>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${version.log4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${version.log4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${version.log4j}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
+    <!-- Dependency for mocking in Unit tests -->
+    <dependencies>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${version.mockito}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>${version.jacoco}</version>
+            <classifier>runtime</classifier>
+        </dependency>
+    </dependencies>
+
+     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${version.jacoco}</version>
+                <executions>
+                    <execution>
+                        <id>default-instrument</id>
+                        <goals>
+                            <goal>instrument</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-restore-instrumented-classes</id>
+                        <goals>
+                            <goal>restore-instrumented-classes</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/coverage.exec</dataFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <!--Profiles for site documentation-->
+
+    <!--Profile to deploy latest site-->
+    <profiles>
+        <profile>
+            <id>site_latest</id>
+            <distributionManagement>
+                <site>
+                    <id>site</id>
+                    <name>Site</name>
+                    <url>${site.url}/credential-manager-service-api/latest</url>
+                </site>
+            </distributionManagement>
+        </profile>
+
+        <!--Profile to stage site for review-->
+
+        <profile>
+            <id>site_review</id>
+            <distributionManagement>
+                <site>
+                    <id>site</id>
+                    <name>Site</name>
+                    <url>${site.url}</url>
+                </site>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+    <!--Deployment of versioned documentation-->
+    <distributionManagement>
+        <site>
+            <id>site</id>
+            <name>Site</name>
+            <url>${site.url}/credential-manager-service-api/${project.version}</url>
+        </site>
+    </distributionManagement>
+
+    <modules>
+        <module>ERICcredentialmanagerserviceapi_CXP9031885</module>
+        <module>credential-manager-service-api-jar</module>
+        <module>credential-manager-service-api-client-standalone</module>
+        <module>credential-manager-service-api-client-impl</module>
+    </modules>
+
+  <scm>
+    <tag>credential-manager-service-api-1.2.100</tag>
+  </scm>
+</project>

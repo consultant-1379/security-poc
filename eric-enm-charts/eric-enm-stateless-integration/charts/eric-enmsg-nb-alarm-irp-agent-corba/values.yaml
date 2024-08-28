@@ -1,0 +1,158 @@
+## eric-enmsg-nb-alarm-irp-agent-corba image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  replicas-eric-enmsg-nb-alarm-irp-agent-corba: 2
+  ingress:
+    enmHost:
+  ericIngress:
+    enabled: false
+  vips:
+    fm_vip_address:
+  enmProperties:
+    COM_INF_LDAP_ADMIN_ACCESS:
+    COM_INF_LDAP_ROOT_SUFFIX:
+    COM_INF_LDAP_ADMIN_CN:
+    COM_INF_LDAP_PORT:
+    LDAP_ADMIN_CN:
+    LDAP_ADMIN_PASSWORD:
+    postgres_service: postgres
+    web_protocols_default:
+    web_ports_default:
+productNumber: CXC 174 2105
+productRevision: R28K
+labels: {}
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-nb-alarm-irp-agent-corba: 1
+images:
+  eric-enmsg-nb-alarm-irp-agent-corba:
+    name: eric-enmsg-nb-alarm-irp-agent-corba
+    tag: 1.27.9-1
+  eric-enmsg-nbalarmirp-1:
+    name: eric-enmsg-nb-alarm-irp-agent-corba
+    tag: 1.27.9-1
+  eric-enmsg-nbalarmirp-2:
+    name: eric-enmsg-nb-alarm-irp-agent-corba
+    tag: 1.27.9-1
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s gossiprouter-cache,gossiprouter-eap7,jms01,postgres,sps,visinamingnb'
+      ]"
+  eric-enm-httpd:
+    name: eric-enmsg-nb-alarm-irp-agent-corba-httpd
+    tag: 1.27.9-1
+  eric-enm-monitoring:
+    enabled: true
+    name: eric-enm-monitoring-eap7
+    tag: 1.27.9-1
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  pullSecret:
+  registry:
+    url:
+## Configure the service
+
+service:
+  name: nbalarmirp
+  sgname: nbalarmirpagentcorba
+  additionalServiceNames:
+  - corbanbiclients-service
+  annotations: {}
+  labels: {}
+  port:
+  commonService:
+    enabled: true
+configmap:
+  enabled: true
+eric-enm-common-helmchart-library:
+  enabled: true
+ingress:
+  enabled: false
+ingress_jboss_web_context:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+## Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 4096Mi
+  limits:
+    enabled: true
+    memory: 5120Mi
+  httpd:
+    enabled: false
+    requests:
+      memory:
+      cpu:
+    limits:
+      memory:
+      cpu:
+  monitoring:
+    enabled: false
+    requests:
+      memory:
+      cpu:
+    limits:
+      memory:
+      cpu:
+# StartupProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 20
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+# configure terminationGracePeriodSeconds
+terminationGracePeriodSeconds: 60
+# Termiation grace wait before force terminate pod
+terminationGracePeriod:
+  enabled: true
+  seconds: 60
+# Lifecycle hooks before terminating pod
+lifecycle:
+  handler:
+    enabled: true
+# Extra Annotations to be added to pod
+podAnnotations: {}
+## Tolerations for pod assignment
+tolerations: []
+## Affinity for pod assignment
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+# Constrain which nodes your pod is eligible to be scheduled on
+nodeAffinity: {}
+priorityClassName: ""
+## Node selector
+nodeSelector: {}
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1

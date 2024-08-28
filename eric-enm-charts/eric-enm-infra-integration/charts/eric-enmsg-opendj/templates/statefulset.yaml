@@ -1,0 +1,385 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.service.name }}
+  labels:
+    app: {{ .Values.service.name }}
+    app.kubernetes.io/name: "{{ .Values.service.name }}"
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ template "eric-enmsg-opendj.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    backup-restore-agent/agent: {{ .Values.service.name }}-bragent
+  annotations:
+{{- include "eric-enmsg-opendj.product-info" . | indent 4 }}
+spec:
+  serviceName: {{ .Values.service.name }}
+  podManagementPolicy: {{ .Values.config.podManagementPolicy }}
+  replicas: {{ template "eric-enmsg-opendj.replicas" . }}
+  selector:
+    matchLabels:
+      app: {{ .Values.service.name }}
+{{- if .Values.updateStrategy }}
+  updateStrategy:
+    type: {{ .Values.updateStrategy.type }}
+  {{- if .Values.updateStrategy.rollingUpdate }}
+    rollingUpdate:
+      partition: {{ .Values.updateStrategy.rollingUpdate.partition }}
+  {{- end }}
+{{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.service.name }}
+        app.kubernetes.io/name: "{{ .Values.service.name }}"
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        app.kubernetes.io/version: {{ template "eric-enmsg-opendj.chart" . }}
+{{- with .Values.podAnnotations }}
+      annotations:
+{{- include "eric-enmsg-opendj.product-info" . | indent 8 }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+    spec:
+{{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+{{- end }}
+{{- if .Values.affinity }}
+{{- if not .Values.localEnv.enabled }}
+      affinity:
+        podAntiAffinity:
+          {{ .Values.affinity }}:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - {{ .Values.service.name }}
+            topologyKey: "kubernetes.io/hostname"
+{{- end }}
+{{- end }}
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+      nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.tolerations .Values.global.tolerations }}
+      tolerations:
+{{- if .Values.tolerations }}
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.global.tolerations }}
+{{ toYaml .Values.global.tolerations | indent 8 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.extraInitContainers .Values.images.waitInitContainer.enabled .Values.images.enmInitContainer.enabled .Values.brAgent.enabled }}
+      initContainers:
+{{- if .Values.images.waitInitContainer.enabled }}
+      - name: {{ .Values.service.name }}-wait
+        image: {{ template "eric-enmsg-opendj.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "waitInitContainer" "name" }}:{{ index .Values "images" "waitInitContainer" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+        command: {{ index .Values "images" "waitInitContainer" "command" }}
+{{- if .Values.images.waitInitContainer.env }}
+        env:
+{{ toYaml .Values.images.waitInitContainer.env | indent 10 }}
+{{- end }}
+{{- end }}
+{{- if .Values.images.enmInitContainer.enabled }}
+      - name: {{ .Values.service.name }}-init
+        image: {{ template "eric-enmsg-opendj.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "enmInitContainer" "name" }}:{{ index .Values "images" "enmInitContainer" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+{{- if index .Values "images" "enmInitContainer" "command" }}
+        command: {{ index .Values "images" "enmInitContainer" "command" }}
+{{- end }}
+        env:
+          - name: TZ
+            value: {{ .Values.global.timezone }}
+          - name: DS_SVC
+            value: {{ .Values.service.name }}
+          - name: COM_INF_LDAP_ROOT_SUFFIX
+            value: {{ .Values.global.enmProperties.COM_INF_LDAP_ROOT_SUFFIX }}
+          - name: LDAP_ADMIN_PASSWORD
+            value: {{ .Values.global.enmProperties.LDAP_ADMIN_PASSWORD }}
+          - name: COM_INF_LDAP_PORT
+            value: {{ .Values.global.enmProperties.COM_INF_LDAP_PORT | quote }}
+          - name: LDAP_ADMIN_CN
+            value: {{ .Values.global.enmProperties.LDAP_ADMIN_CN }}
+          - name: COM_INF_LDAP_ADMIN_CN
+            value: {{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_CN }}
+          - name: COM_INF_LDAP_ADMIN_ACCESS
+            value: {{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_ACCESS }}
+          - name: UI_PRES_SERVER
+            value: {{ .Values.global.ingress.enmHost }}
+{{- if .Values.images.enmInitContainer.env }}
+{{ toYaml .Values.images.enmInitContainer.env | indent 10 }}
+{{- end }}
+{{- if or .Values.persistentVolumeClaim.enabled .Values.configMaps.enabled .Values.extraVolumeMounts.enabled }}
+        volumeMounts:
+{{- end }}
+{{- if .Values.persistentVolumeClaim.enabled }}
+        - name: {{ template "eric-enmsg-opendj.name" . }}
+          mountPath: {{ .Values.persistentVolumeClaim.mountPath }}
+        - name: {{ template "eric-enmsg-opendj.name" . }}-config
+          mountPath: /ericsson/opendj/opendj/config
+        - name: {{ template "eric-enmsg-opendj.name" . }}-changelog
+          mountPath: /ericsson/opendj/opendj/changelogDb
+        - name: {{ template "eric-enmsg-opendj.name" . }}-logs
+          mountPath: /ericsson/opendj/opendj/logs
+{{- end }}
+{{- if .Values.configMaps.enabled }}
+        - name: configurations
+          mountPath: {{ .Values.configMaps.mountPath }}
+{{- end }}
+{{- if .Values.extraVolumeMounts.enabled }}
+{{ .Files.Get "appconfig/volumeMounts.txt" | indent 8 }}
+{{- end }}
+{{- end }}
+{{- if .Values.extraInitContainers }}
+{{ toYaml .Values.extraInitContainers | indent 6 }}
+{{- end }}
+      # Definition of the BRAgent init container
+{{- if and .Values.brAgent.enabled (eq (include "{{.Chart.Name}}.restore.state" .) "ongoing") }}
+      - name: {{ .Values.service.name }}-restore-agent
+        image: {{ template "eric-enmsg-opendj.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "brAgent" "name" }}:{{ index .Values "images" "brAgent" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+        command:
+          - /opt/ericsson/backup-restore-agent/bragent
+          - subagent
+        env:
+        # Backup and Restore Agent and subAgent configuration
+          - name: TZ
+            value: {{ .Values.global.timezone }}
+          - name: RESTORE_STATE
+            valueFrom:
+              configMapKeyRef:
+                name: {{ .Values.brAgent.restore.configMap.name }}
+                key: {{ .Values.brAgent.restore.configMap.restoreStateKey }}
+{{- if .Values.brAgent.compression.zstdCLevel }}
+          - name: ZSTD-CLEVEL
+            value: {{ .Values.brAgent.compression.zstdCLevel | quote }}
+{{- end }}
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        volumeMounts:
+{{- if .Values.persistentVolumeClaim.enabled }}
+        - name: {{ template "eric-enmsg-opendj.name" . }}
+          mountPath: {{ .Values.persistentVolumeClaim.mountPath }}
+        - name: {{ template "eric-enmsg-opendj.name" . }}-config
+          mountPath: /ericsson/opendj/opendj/config
+        - name: {{ template "eric-enmsg-opendj.name" . }}-changelog
+          mountPath: /ericsson/opendj/opendj/changelogDb
+        - name: {{ template "eric-enmsg-opendj.name" . }}-logs
+          mountPath: /ericsson/opendj/opendj/logs
+{{- end }}
+        - name: restore
+          mountPath: /backup
+        - name: {{ .Values.service.name }}-subagent-config
+          mountPath: "/etc/bragent/agent"
+          readOnly: true
+{{- end }}
+{{- end }}
+      containers:
+      - name: {{ .Values.service.name }}
+        image: {{ template "eric-enmsg-opendj.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "eric-enmsg-opendj" "name" }}:{{ index .Values "images" "eric-enmsg-opendj" "tag" }}
+        imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+{{- if index .Values "images" "eric-enmsg-opendj" "command" }}
+        command: {{ index .Values "images" "eric-enmsg-opendj" "command" }}
+{{- end }}
+        lifecycle:
+          postStart:
+            exec:
+              command: {{ index .Values "images" "eric-enmsg-opendj" "postStartCommand" }}
+          preStop:
+            exec:
+              command: {{ index .Values "images" "eric-enmsg-opendj" "preStopCommand" }}
+{{- if or .Values.resources.requests.enabled .Values.resources.limits.enabled }}
+        resources:
+{{- if  .Values.resources.requests.enabled }}
+          requests:
+{{- if  .Values.resources.requests.memory }}
+            memory: {{ .Values.resources.requests.memory | quote }}
+{{- end }}
+{{- if  .Values.resources.requests.cpu }}
+            cpu: {{ .Values.resources.requests.cpu | quote }}
+{{- end }}
+{{- if index .Values.resources.requests "ephemeral-storage" }}
+            ephemeral-storage: {{ index .Values.resources.requests "ephemeral-storage" | quote }}
+{{- end }}
+{{- end }}
+{{- if  .Values.resources.limits.enabled }}
+          limits:
+{{- if  .Values.resources.limits.memory }}
+            memory: {{ .Values.resources.limits.memory | quote }}
+{{- end }}
+{{- if  .Values.resources.limits.cpu }}
+            cpu: {{ .Values.resources.limits.cpu | quote }}
+{{- end }}
+{{- if index .Values.resources.limits "ephemeral-storage" }}
+            ephemeral-storage: {{ index .Values.resources.limits "ephemeral-storage" | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+        env:
+          - name: TZ
+            value: {{ .Values.global.timezone }}
+          - name: DS_SVC
+            value: {{ .Values.service.name }}
+          - name: COM_INF_LDAP_ROOT_SUFFIX
+            value: {{ .Values.global.enmProperties.COM_INF_LDAP_ROOT_SUFFIX }}
+          - name: LDAP_ADMIN_PASSWORD
+            value: {{ .Values.global.enmProperties.LDAP_ADMIN_PASSWORD }}
+          - name: COM_INF_LDAP_PORT
+            value: {{ .Values.global.enmProperties.COM_INF_LDAP_PORT | quote }}
+          - name: LDAP_ADMIN_CN
+            value: {{ .Values.global.enmProperties.LDAP_ADMIN_CN }}
+          - name: COM_INF_LDAP_ADMIN_CN
+            value: {{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_CN }}
+          - name: COM_INF_LDAP_ADMIN_ACCESS
+            value: {{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_ACCESS }}
+          - name: OPENDJ_SERVICE_PORT_ADMIN
+            value: {{ .Values.servicePorts.admin | quote }}
+          - name: REPLICA_NUMBER
+            value: {{ (index .Values "global" "replicas-eric-enmsg-opendj")| quote }}
+{{- if .Values.extraEnv }}
+{{ toYaml .Values.extraEnv | indent 10 }}
+{{- end }}
+{{- if .Values.extraPorts.enabled }}
+        ports:
+{{ tpl (.Files.Get "appconfig/containerPorts.txt") . | indent 10 }}
+{{- end }}
+{{- if .Values.startupProbe.enabled }}
+        startupProbe:
+          exec:
+            command: {{ .Values.startupProbe.startupCommand }}
+          initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+{{- end }}
+{{- if .Values.livenessProbe.enabled }}
+        livenessProbe:
+          exec:
+            command: {{ .Values.livenessProbe.livenessCommand }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+{{- end }}
+{{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          exec:
+            command: {{ .Values.readinessProbe.readinessCommand }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+{{- end }}
+{{- if or .Values.persistentVolumeClaim.enabled .Values.configMaps.enabled .Values.extraVolumeMounts.enabled }}
+        volumeMounts:
+{{- end }}
+{{- if .Values.persistentVolumeClaim.enabled }}
+        - name: {{ template "eric-enmsg-opendj.name" . }}
+          mountPath: {{ .Values.persistentVolumeClaim.mountPath }}
+        - name: {{ template "eric-enmsg-opendj.name" . }}-config
+          mountPath: /ericsson/opendj/opendj/config
+        - name: {{ template "eric-enmsg-opendj.name" . }}-changelog
+          mountPath: /ericsson/opendj/opendj/changelogDb
+        - name: {{ template "eric-enmsg-opendj.name" . }}-logs
+          mountPath: /ericsson/opendj/opendj/logs
+{{- if .Values.brAgent.enabled }}
+        - name: backup
+          mountPath: /backup
+{{- end }}
+{{- end }}
+{{- if .Values.configMaps.enabled }}
+        - name: configurations
+          mountPath: {{ .Values.configMaps.mountPath }}
+{{- end }}
+{{- if .Values.extraVolumeMounts.enabled }}
+{{ .Files.Get "appconfig/volumeMounts.txt" | indent 8 }}
+{{- end }}
+{{- if .Values.sidecarContainers.enabled }}
+{{ $root := . }}
+{{ range $path, $bytes := .Files.Glob "appconfig/sidecars/*.yaml" }}
+{{ tpl ($root.Files.Get $path) $root | indent 6 }}
+{{ end }}
+{{- end }}
+      volumes:
+{{- if .Values.configMaps.enabled }}
+      - name: configurations
+        configMap:
+          name: {{ .Values.configMaps.name }}
+{{- end }}
+{{- if .Values.brAgent.enabled }}
+      - name: backup
+        persistentVolumeClaim:
+          claimName: eric-enmsg-opendj-backup
+{{- end }}
+{{- if .Values.extraVolumes.enabled }}
+{{ .Files.Get "appconfig/volumes.txt" | indent 6 }}
+{{- end }}
+{{- if and .Values.brAgent.enabled (eq (include "{{.Chart.Name}}.restore.state" .) "ongoing") }}
+      - name: {{ .Values.service.name }}-subagent-config
+        configMap:
+          name: {{ .Values.service.name }}-subagent-config
+      - name: restore
+        emptyDir: {}
+{{- end }}
+{{- if include "eric-enmsg-opendj.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-enmsg-opendj.pullSecrets" . }}
+{{- end }}
+{{- if .Values.persistentVolumeClaim.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ template "eric-enmsg-opendj.name" . }}
+        labels:
+          app.kubernetes.io/instance: {{ .Release.Name | quote }}
+      spec:
+        accessModes:
+          - {{ .Values.persistentVolumeClaim.accessMode | quote }}
+        storageClassName: {{ template "eric-enmsg-opendj.storageClassName" . }}
+        resources:
+          requests:
+            storage: "{{ .Values.persistentVolumeClaim.size }}"
+    - metadata:
+        name: {{ template "eric-enmsg-opendj.name" . }}-config
+        labels:
+          app.kubernetes.io/instance: {{ .Release.Name | quote }}
+      spec:
+        accessModes:
+          - {{ .Values.persistentVolumeClaim.accessMode | quote }}
+        storageClassName: {{ template "eric-enmsg-opendj.storageClassName" . }}
+        resources:
+          requests:
+            storage: "{{ .Values.persistentVolumeClaim.configSize }}"
+    - metadata:
+        name: {{ template "eric-enmsg-opendj.name" . }}-changelog
+        labels:
+          app.kubernetes.io/instance: {{ .Release.Name | quote }}
+      spec:
+        accessModes:
+          - {{ .Values.persistentVolumeClaim.accessMode | quote }}
+        storageClassName: {{ template "eric-enmsg-opendj.storageClassName" . }}
+        resources:
+          requests:
+            storage: "{{ .Values.persistentVolumeClaim.changeLogSize }}"
+    - metadata:
+        name: {{ template "eric-enmsg-opendj.name" . }}-logs
+        labels:
+          app.kubernetes.io/instance: {{ .Release.Name | quote }}
+      spec:
+        accessModes:
+          - {{ .Values.persistentVolumeClaim.accessMode | quote }}
+        storageClassName: {{ template "eric-enmsg-opendj.storageClassName" . }}
+        resources:
+          requests:
+            storage: "{{ .Values.persistentVolumeClaim.logSize }}"
+{{- end }}

@@ -1,0 +1,133 @@
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /parametermanagement
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /parameterexecutiondialog
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /locales/en-us/parameterexecutiondialog
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /parametermanagementlib
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /locales/en-us/parametermanagementlib
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /parameterslist
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /locales/en-us/parameterslist
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /parameterset
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /locales/en-us/parameterset
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /modelinfodialog
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /locales/en-us/modelinfodialog
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /locales/en-us/parametermanagement
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /help/en-us/parametermanagement
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /topology-relationship-service
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /configuration-templates
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /configurationtemplates
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /locales/en-us/configurationtemplates
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /help/en-us/configurationtemplates
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmutilities
+      port:
+        number: 443
+  path: /parametermanagement/v1
+  pathType: ImplementationSpecific

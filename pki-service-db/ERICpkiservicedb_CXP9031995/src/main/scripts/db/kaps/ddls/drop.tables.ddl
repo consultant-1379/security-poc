@@ -1,0 +1,39 @@
+ALTER TABLE IF EXISTS keypairinfo
+DROP CONSTRAINT IF EXISTS fk_keypairinfo_keypairstatus_id;
+
+ALTER TABLE IF EXISTS keypairinfo
+DROP CONSTRAINT IF EXISTS fk_keypairinfo_encryptedprivatekeyinfo_id;
+
+DROP TABLE IF EXISTS keypairinfo;
+
+DROP TABLE IF EXISTS encryptedprivatekeyinfo;
+
+DROP TABLE IF EXISTS keypairstatus;
+
+DROP SEQUENCE IF EXISTS SEQ_KEYPAIRINFO_ID;
+
+ALTER TABLE IF EXISTS keypair_info
+DROP CONSTRAINT IF EXISTS fk_keypair_info_keypair_status_id;
+
+ALTER TABLE IF EXISTS keypair_info
+DROP CONSTRAINT IF EXISTS fk_keypair_info_encrypted_privatekey_info_id;
+
+DROP TABLE IF EXISTS keypair_info;
+
+DROP TABLE IF EXISTS encrypted_privatekey_info;
+
+DROP TABLE IF EXISTS keypair_status;
+
+DROP TABLE IF EXISTS db_version;
+
+DROP TABLE IF EXISTS symmetric_key;
+
+DROP SEQUENCE IF EXISTS SEQ_KEY_IDENTIFIER_ID;
+
+DROP SEQUENCE IF EXISTS SEQ_KEYPAIR_INFO_ID;
+
+DROP SEQUENCE IF EXISTS SEQ_ENCRYPTED_PRIVATEKEY_INFO_ID;
+
+DROP SEQUENCE IF EXISTS SEQ_SYMMETRIC_KEY_ID;
+
+DROP SEQUENCE IF EXISTS DB_VERSION_ID;

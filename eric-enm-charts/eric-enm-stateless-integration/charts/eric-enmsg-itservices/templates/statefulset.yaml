@@ -1,0 +1,6 @@
+{{- if .Values.statefulset.enabled }}
+{{- template "eric-enm-common-helmchart-library.statefulset" (list . "eric-enmsg.statefulset") -}}
+{{- end -}}
+{{- define "eric-enmsg.statefulset" -}}
+{{- end -}}
+

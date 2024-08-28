@@ -1,0 +1,39 @@
+{{- if .Values.clusterRole -}}
+apiVersion: v1
+kind: List
+metadata:
+  name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-cluster-role-list"
+  annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" .| nindent 4 }}
+  labels:
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 4 }}
+items:
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    metadata:
+      name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-cluster-role-binding"
+      annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" .| nindent 8 }}
+      labels:
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 8 }}
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-cluster-role"
+    subjects:
+      - kind: ServiceAccount
+        name: "{{ .Values.service.name }}-serviceaccount"
+        namespace: {{ .Release.Namespace }}
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    metadata:
+      name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-cluster-role"
+      annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" .| nindent 8 }}
+      labels:
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 8 }}
+    rules:
+      - apiGroups: ["", "metrics.k8s.io", "coordination.k8s.io"]
+        resources: ["nodes", "leases"]
+        verbs: ["get", "watch", "list"]
+{{- end -}}

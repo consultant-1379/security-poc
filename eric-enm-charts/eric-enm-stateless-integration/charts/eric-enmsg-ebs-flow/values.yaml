@@ -1,0 +1,101 @@
+global:
+  registry:
+    url: armdocker.rnd.ericsson.se
+    pullSecret:
+  ingress:
+    enmHost:
+  timezone:
+productInfo:
+  number: CXC Placeholder
+  rstate: R13K
+# Default maximum number of pods that could be unavailable
+max-unavailable-eric-enmsg-ebs-flow: &ebsFlowMaxUnavailable 6
+# Number of replicas to deploy for ebsflow based on Value packs enabled in the system
+replicas-eric-enmsg-ebs-flow:
+  ebs_ln: 48
+  ebs_m: 24
+# To distribute ebsflow pods among worker nodes based on Value packs enabled in the system
+# This value is the minimum number of worker nodes in the deployment
+ebs-flow-instances-spread-factor: 8
+images:
+  eric-enmsg-ebs-flow:
+    name: eric-enmsg-ebs-flow
+    tag: 1.12.9-1
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s jms01,ebscontroller']"
+  eric-enm-monitoring:
+    enabled: true
+    name: eric-enm-monitoring-jre
+    tag: 1.24.9-1
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  registry:
+    url:
+    pullSecret:
+# Configure the service
+service:
+  name: ebsflow
+  sgname: ebsflow
+  annotations: {}
+  labels: {}
+# Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 3247Mi
+    cpu: 400m
+  limits:
+    enabled: true
+    memory: 3414Mi
+    cpu: 1334m
+  monitoring:
+    enabled: true
+    requests:
+      memory: 200Mi
+      cpu: 50m
+    limits:
+      memory: 300Mi
+      cpu: 200m
+# StartupProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 20
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+# ReadinessProbe Health Check configuration.
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: *ebsFlowMaxUnavailable
+    maxSurge: 0
+# Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: *ebsFlowMaxUnavailable
+monitoring:
+  enabled: true
+  jmx_service_url: "service:jmx:rmi:///jndi/rmi://:21111/jmxrmi"
+  e2e_jvm_id: ebs-eps1

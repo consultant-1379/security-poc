@@ -1,0 +1,19 @@
+global.properties: |
+  DDC_ON_CLOUD=TRUE
+  COM_INF_LDAP_ROOT_SUFFIX={{ .Values.global.enmProperties.COM_INF_LDAP_ROOT_SUFFIX }}
+  COM_INF_LDAP_ADMIN_ACCESS={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_ACCESS }}
+  COM_INF_LDAP_ADMIN_CN={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_CN }}
+  COM_INF_LDAP_PORT={{ .Values.global.enmProperties.COM_INF_LDAP_PORT }}
+  LDAP_ADMIN_PASSWORD={{ .Values.global.enmProperties.LDAP_ADMIN_PASSWORD }}
+  LDAP_ADMIN_CN={{ .Values.global.enmProperties.LDAP_ADMIN_CN }}
+  postgresql01_admin_password={{ .Values.global.enmProperties.postgresql01_admin_password }}
+  dps_persistence_provider={{ .Values.global.enmProperties.dps_persistence_provider }}
+  smrs_sftp_securePort={{ .Values.global.enmProperties.smrs_sftp_securePort }}
+  smrs_sftp_port_partition_enable={{ .Values.global.enmProperties.smrs_sftp_port_partition_enable}}
+  web_host_default={{ .Values.global.ingress.enmHost }}
+  PKI_EntityProfile_DN_COUNTRY_NAME={{ .Values.global.enmProperties.PKI_EntityProfile_DN_COUNTRY_NAME }}
+  PKI_EntityProfile_DN_ORGANIZATION={{ .Values.global.enmProperties.PKI_EntityProfile_DN_ORGANIZATION }}
+  haproxysb={{ .Values.global.vips.cm_vip_address }}
+  haproxysb_ipv6={{ .Values.global.vips.cm_vip_address_ipv6 }}
+  autoProvisioning_bind_nodeName={{ .Values.global.enmProperties.autoProvisioning_bind_nodeName }}
+  apserv=apserv

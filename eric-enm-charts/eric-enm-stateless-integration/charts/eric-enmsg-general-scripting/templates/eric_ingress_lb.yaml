@@ -1,0 +1,26 @@
+{{- if .Values.global.ericIngress.enabled }}
+  {{- $top := . -}}
+  {{- $replicas := index .Values.global "replicas-eric-enmsg-general-scripting" -}}
+  {{- $geVip := .Values.global.vips.general_scripting_vip_address -}}
+  {{- range untilStep 0 (int $replicas) 1 }}
+  {{- $externalPort := add 5020 . -}}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  annotations:
+  {{- include "product-info" $top | indent 4 }}
+  name: general-scripting-{{ . }}
+spec:
+  virtualServiceIP: {{ $geVip }}
+  backends:
+    name: general-scripting-{{ . }}
+    config:
+      - ports:
+          vipPort: {{ $externalPort }}
+          svcPort: 22
+        protocol: tcp
+        algo: lc
+        mode: nat
+---
+  {{- end }}
+{{- end }}

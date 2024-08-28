@@ -1,0 +1,168 @@
+## eric-enmsg-pki-ra-service image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  ingress:
+    enmHost:
+  ericIngress:
+    enabled: false
+  vips:
+    fm_vip_address:
+    cm_vip_address:
+    pm_vip_address:
+    cm_vip_ipv6address:
+    fm_vip_ipv6address:
+  enmProperties:
+    COM_INF_LDAP_ROOT_SUFFIX:
+    COM_INF_LDAP_ADMIN_ACCESS:
+    COM_INF_LDAP_ADMIN_CN:
+    COM_INF_LDAP_PORT:
+    LDAP_ADMIN_CN:
+    LDAP_ADMIN_PASSWORD:
+    postgresql01_admin_password:
+    postgres_service:
+  timezone:
+  # and below value replaced with the correct R-State
+productNumber: CXC 174 1982
+productRevision: R28K
+labels: {}
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-pki-ra-service: 1
+images:
+  eric-enmsg-pki-ra-service:
+    name: eric-enmsg-pki-ra-service
+    tag: POC.1.0.1
+  waitInitContainer:
+    enabled: false
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s gossiprouter-cache,gossiprouter-eap7,jms01,postgres,sps'
+      ]"
+  eric-enm-httpd:
+    name: eric-enmsg-pki-ra-service-httpd
+    tag: 1.27.9-1
+  eric-enm-monitoring:
+    enabled: false
+    name: eric-enm-monitoring-eap7
+    tag: 1.27.9-1
+  waitForCertificatesContainer:
+    enabled: true
+    name: enm-wait-for-certificates-container
+    tag: POC.1.0.1
+imageCredentials:
+  repoPath: proj_oss_releases/security-poc
+  pullPolicy: Always
+  pullSecret:
+  registry:
+    url:
+# - name: MY_ROOT_PASSWORD
+#   valueFrom:
+#     secretKeyRef:
+#       name: my-secret
+#       key: my-root-password
+
+eric-enm-common-helmchart-library:
+  enabled: true
+## Configure the service
+service:
+  name: pkiraserv
+  sgname: pkiraservice
+  annotations: {}
+  labels:
+  xmlMountPath: "/ericsson/credm/certReqMount"
+  tlsMountPath: "/ericsson/credm/tlsMount"
+ingress:
+  enabled: true
+ingress_jboss_web_context:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+## Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 4096Mi
+  limits:
+    enabled: true
+    memory: 8192Mi
+  httpd:
+    enabled: false
+    requests:
+      memory:
+      cpu:
+    limits:
+      memory:
+      cpu:
+  monitoring:
+    enabled: false
+    requests:
+      memory:
+      cpu:
+    limits:
+      memory:
+      cpu:
+# StartupProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 20
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+# Extra Annotations to be added to pod
+podAnnotations: {}
+## Tolerations for pod assignment
+tolerations: []
+## Affinity for pod assignment
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+# Constrain which nodes your pod is eligible to be scheduled on
+nodeAffinity: {}
+priorityClassName: ""
+## Node selector
+nodeSelector: {}
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1
+credmController:
+  name: eric-enm-credm-controller
+  port: 5001
+jobs:
+  jobAction: certrequest
+  certRequest:
+    imageName: enm-certrequestjob-container
+    pullPolicy: Always
+    tag: latest
+    resources:
+      requests:
+        enabled: true
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        enabled: true
+        cpu: 1000m
+        memory: 512Mi

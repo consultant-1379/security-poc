@@ -1,0 +1,37 @@
+{{- if .Values.brAgent.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.service.name.main }}-bragent-config
+  labels:
+    app: {{ .Values.service.name.main }}
+    app.kubernetes.io/name: "{{ .Values.service.name.main }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-enm-kvstore-hc.chart" . }}
+data:
+  config.yaml: |
+    agent:
+      registration:
+        name: {{ .Values.service.name.main }}-bragent
+        {{- if .Values.brAgent.backupTypeList }}
+        scopes: {{- template "eric-enm-kvstore-hc.backupTypes" . }}
+        {{- end }}
+
+    backup:
+      streamCmd: "consul kv export -http-addr={{ .Values.service.name.main }}:8500"
+    restore:
+      streamCmd: "consul kv delete -http-addr={{ .Values.service.name.main }}:8500 -recurse && consul kv import -http-addr={{ .Values.service.name.main }}:8500 -"
+
+    softwareVersion:
+      description: "Key Value Store for ENM"
+      productName: {{ template "eric-enm-kvstore-hc.name" . }}
+      productNumber: "CXC 174 1993"
+      productionDate: {{ .Values.productInfo.productionDate | quote }}
+      revision: {{ .Values.productInfo.revision | quote }}
+      type: "KV_store"
+
+    # Mandatory configuration variables for connection to BRO
+    # Information taken from values.yaml file
+    bro:
+      host: {{ .Values.brAgent.broServiceName | quote }}
+{{- end }}

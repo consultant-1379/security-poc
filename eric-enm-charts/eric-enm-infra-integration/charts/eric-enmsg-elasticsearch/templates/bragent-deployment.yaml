@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eric-enmsg-elasticsearch.fullname" . }}
+  labels:
+    {{- include "eric-enmsg-elasticsearch.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ .Values.updateStrategy.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+    type: {{ .Values.updateStrategy.type | quote }}
+  selector:
+    matchLabels:
+      {{- include "eric-enmsg-elasticsearch.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+{{- if .Values.brAgent.backupTypeList }}
+      annotations:
+        backupType: {{- template "eric-enmsg-elasticsearch.backupTypes" . }}
+{{- end}}
+      labels:
+        {{- include "eric-enmsg-elasticsearch.selectorLabels" . | nindent 8 }}
+        adpbrlabelkey: "{{ .Values.seName }}" # Must match agent name
+        app.kubernetes.io/version: {{ template "eric-enmsg-elasticsearch.chart" . }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.global.registry.url }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "eric-enmsg-elasticsearch" "name" }}:{{ index .Values "images" "eric-enmsg-elasticsearch" "tag" }}"
+          imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: bragent-config
+              mountPath: /etc/bragent/agent
+              readOnly: true
+            - name: repository
+              mountPath: /opt/opensearch/repository
+          env:
+            - name: TZ
+              value: {{ .Values.global.timezone }}
+            {{- if .Values.brAgent.compressionLevel }}
+            - name: ZSTD_CLEVEL
+              value: {{ .Values.brAgent.compressionLevel | quote }}
+            {{- end }}
+            - name: HOST
+              value: "{{ .Values.seName }}"
+            - name: PORT
+              value: "{{ .Values.elasticsearchPort }}"
+            - name: SNAP_MAX_THROUGHPUT
+              value: "{{ .Values.brAgent.snapshotMaxThroughput }}"
+            - name: SNAP_PRESERVE
+              value: "{{ .Values.brAgent.snapshotPreserve }}"
+            - name: RECOVERY_MAX_THROUGHPUT
+              value: "{{ .Values.brAgent.recoveryMaxThroughput }}"
+            - name: RECOVERY_MAX_CHUNKS
+              value: "{{ .Values.brAgent.recoveryMaxChunks }}"
+            - name: CLOSE_INDEX
+              value: "{{ .Values.brAgent.restoreCloseIndices }}"
+            - name: DISABLE_AUTO_CREATE_INDEX
+              value: "{{ .Values.brAgent.restoreDisableAutoCreateIndex }}"
+            - name: CLEAN_INDEX
+              value: "{{ .Values.brAgent.cleanRestore }}"
+      {{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+      nodeSelector:
+      {{- if .Values.nodeSelector }}
+        {{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.global.nodeSelector }}
+        {{ toYaml .Values.global.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: bragent-config
+          configMap:
+            name: {{ .Values.seName }}-bragent-cm
+        - name: repository
+          persistentVolumeClaim:
+            claimName: "{{ .Values.seName }}-repository"
+{{- if include "eric-enmsg-elasticsearch.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-enmsg-elasticsearch.pullSecrets" . }}
+{{- end }}

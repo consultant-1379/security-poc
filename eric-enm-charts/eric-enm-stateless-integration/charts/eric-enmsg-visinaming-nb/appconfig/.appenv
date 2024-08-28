@@ -1,0 +1,9 @@
+NAME=eric-enmsg-visinaming-nb
+DEP=true
+WAIT=true
+WAIT_LIST=gossiprouter-cache,gossiprouter-remoting,jms01,postgres,sps
+SVC=visinaming-nb
+REQUESTS=true
+REQUESTS_LIST=4096Mi
+LIMITS=true
+LIMITS_LIST=4096Mi

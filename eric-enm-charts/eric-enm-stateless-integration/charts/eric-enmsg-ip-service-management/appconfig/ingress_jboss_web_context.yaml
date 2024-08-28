@@ -1,0 +1,175 @@
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /activity-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /linkmanagerservice/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /eps-acs/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /ip-ne-discovery-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /discovery/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /locales/en-us/discovery/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+       number: 443
+  path: /help/en-us/discovery/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /connectionprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /locales/en-us/connectionprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /help/en-us/connectionprofile/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /linkmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /discoverylib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /locales/en-us/discoverylib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /help/en-us/discoverylib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /locales/en-us/linkmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /help/en-us/linkmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /snmpconnectiontypes/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /locales/en-us/snmpconnectiontypes/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /help/en-us/snmpconnectiontypes/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /activityscheduler/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /locales/en-us/activityscheduler/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /help/en-us/activityscheduler/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /commonlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /locales/en-us/commonlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: ipsmserv
+      port:
+        number: 443
+  path: /help/en-us/commonlib/
+  pathType: ImplementationSpecific

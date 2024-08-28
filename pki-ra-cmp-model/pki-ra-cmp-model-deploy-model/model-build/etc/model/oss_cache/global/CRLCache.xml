@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+*******************************************************************************
+* COPYRIGHT Ericsson LMI 2022. All rights reserved.
+*
+* No part of this document may be reproduced in any form without the
+* written permission of the copyright owner.The contents of this document
+* are subject to revision without notice due to continued progress in
+* methodology, design and manufacturing. Ericsson shall have no liability
+* for any error or damage of any kind resulting from the use of this document.
+*
+*******************************************************************************
+
+
+--><ns2:CacheDefinition xmlns:ns1="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:ns2="urn:com:ericsson:schema:xml:oss:oss_cache" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" cacheMode="REPLICATED_SYNC" evictionStrategy="LRU" maxEntries="1000" ns1:lifeCycle="CURRENT" ns1:name="CRLCache" ns1:ns="global" numOfDistributedOwners="3" preLoad="false" storeValuesAsBinary="true" timeToLive="-1" transactional="true" visibility="INSTANCE">
+  <ns1:modelCreationInfo author="egiator" creationDate="Tue Jun 07 16:00:44 CEST 2022">
+    <ns1:designedModel className="com.ericsson.oss.itpf.security.pki.ra.cmp.model.cache.CRLCache" componentId="pki-ra-cmp-model-jar"/>
+  </ns1:modelCreationInfo>
+  <ns1:desc>Replicated cache configured for Mediation Service</ns1:desc>
+  <ns2:cacheKeysType xsi:type="ns1:stringType"/>
+  <ns2:cacheValuesType modelUrn="//pki-ra-cmp/CRL/1.0.0" xsi:type="ns1:complexRefType"/>
+</ns2:CacheDefinition>

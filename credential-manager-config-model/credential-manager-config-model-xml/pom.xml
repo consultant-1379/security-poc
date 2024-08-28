@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+   <parent>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<artifactId>credential-manager-config-model</artifactId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+   
+    <packaging>jar</packaging>
+    <name>[${project.parent.artifactId}] XML module</name>
+    <artifactId>credential-manager-config-model-xml</artifactId>
+
+    <build> 
+        <plugins>
+            <plugin>
+                <groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+                <artifactId>model-processing-jar</artifactId>
+                <executions>
+                    <execution>
+                        <id>process-models</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>modelproc</goal>
+                        </goals>
+                        <configuration>
+                            <modelBuildDir>model-build</modelBuildDir>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+                       
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>add-model-processing-dir-as-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>model-build</directory>
+                                    <excludes>
+                                        <exclude>**/*.gitignore</exclude>
+                                    </excludes>
+                                    <targetPath>modeling</targetPath>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+        	<plugins>
+        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        		<plugin>
+        			<groupId>org.eclipse.m2e</groupId>
+        			<artifactId>lifecycle-mapping</artifactId>
+        			<version>1.0.0</version>
+        			<configuration>
+        				<lifecycleMappingMetadata>
+        					<pluginExecutions>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>
+        									com.ericsson.oss.itpf.modeling.tools
+        								</groupId>
+        								<artifactId>
+        									model-processing-jar
+        								</artifactId>
+        								<versionRange>
+        									[1.0.4,)
+        								</versionRange>
+        								<goals>
+        									<goal>modelproc</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore />
+        							</action>
+        						</pluginExecution>
+        						<pluginExecution>
+        							<pluginExecutionFilter>
+        								<groupId>
+        									com.ericsson.maven.plugins
+        								</groupId>
+        								<artifactId>
+        									rstate-maven-plugin
+        								</artifactId>
+        								<versionRange>
+        									[1.0,)
+        								</versionRange>
+        								<goals>
+        									<goal>rstate</goal>
+        								</goals>
+        							</pluginExecutionFilter>
+        							<action>
+        								<ignore />
+        							</action>
+        						</pluginExecution>
+        					</pluginExecutions>
+        				</lifecycleMappingMetadata>
+        			</configuration>
+        		</plugin>
+        	</plugins>
+        </pluginManagement>
+    </build>
+</project>

@@ -1,0 +1,128 @@
+## eric-enm-sso-core-token-service image version
+#
+# Local ENvironment (MINIKUBE) mode
+localEnv:
+  enabled: false
+global:
+  registry:
+    url: armdocker.rnd.ericsson.se
+    pullSecret:
+  ingress:
+    enmhost:
+    ##i
+  persistentVolumeClaim:
+    storageClass:
+    ##e
+  enmProperties:
+    COM_INF_LDAP_ADMIN_ACCESS:
+    COM_INF_LDAP_ROOT_SUFFIX:
+    COM_INF_LDAP_PORT:
+    COM_INF_LDAP_ADMIN_CN:
+    LDAP_ADMIN_CN:
+    LDAP_ADMIN_PASSWORD:
+  timezone:
+#technical debt: temporary hardcoded CXC placeholder
+productInfo:
+  number: CXC Placeholder
+  rstate: R18K
+# Number of replicas(pods) to deploy
+replicas-eric-enm-sso-core-token-service: 2
+images:
+  eric-enm-sso-core-token-service:
+    name: eric-enm-sso-core-token-service
+    tag: 1.17.9-1
+    preStopCommand: "[ '/bin/sh', '-c', '/opt/ericsson/sso/bootstrap/preStopCommand.sh'
+      ]"
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'sysctl -w net.ipv4.tcp_retries2=4' ]"
+    privileged:
+      enabled: true
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  registry:
+    url:
+    pullSecret:
+eric-enm-common-helmchart-library:
+  enabled: true
+## Configure the service
+service:
+  name: cts
+  annotations: {}
+  labels: {}
+ingress:
+  enabled: false
+# Service Ports to Expose, read from appconfig/servicePorts.yaml
+servicePorts:
+  enabled: true
+## Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 4096Mi
+    cpu: 600m
+  limits:
+    enabled: true
+    memory: 4096Mi
+    cpu: 2000m
+monitoring:
+  enabled: true
+# Persist data to a persistent volume
+# database data Persistent Volume Storage Class
+persistentVolumeClaim:
+  enabled: true
+  storageClass:
+  accessMode: ReadWriteOnce
+  size: 3Gi
+  mountPath: /opt/ericsson/sso/opends/db
+  annotations: {}
+  configSize: 100Mi
+  changeLogSize: 2Gi
+###e
+
+# Lifecycle hooks before terminating pod
+lifecycle:
+  handler:
+    enabled: true
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /opt/ericsson/sso/bootstrap/liveness.sh
+  initialDelaySeconds: 90
+  timeoutSeconds: 30
+  periodSeconds: 60
+#  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /opt/ericsson/sso/bootstrap/readiness.sh
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 15
+#  failureThreshold: 2
+
+# Extra Annotations to be added to pod
+podAnnotations: {}
+## Tolerations for pod assignment
+tolerations: []
+# Affinity for pod assignment
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+#affinity: {}
+# Constrain which nodes your pod is eligible to be scheduled on
+nodeAffinity: {}
+priorityClassName: ""
+# Node selector
+nodeSelector: {}
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    partition: 0
+# Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1
+# Termiation grace wait before force terminate pod
+terminationGracePeriod:
+  enabled: true
+  seconds: 90

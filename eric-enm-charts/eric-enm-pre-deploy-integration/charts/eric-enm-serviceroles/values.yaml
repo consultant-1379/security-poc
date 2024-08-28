@@ -1,0 +1,6 @@
+## eric-enm-serviceroles image version
+
+service:
+  name: eric-enm-serviceroles
+
+labels: {}

@@ -1,0 +1,14 @@
+{{/*
+ Create Product Labels
+*/}}
+{{- define "eric-net-ingress-l4.labels" -}}
+app.kubernetes.io/name: {{ template "eric-net-ingress-l4.fullname" . }}
+app.kubernetes.io/version: {{ template "eric-net-ingress-l4.version" . }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
+app: {{ template "eric-net-ingress-l4.fullname" . }}
+chart: {{ template "eric-net-ingress-l4.chart" . }}
+release: {{ .Release.Name | quote }}
+heritage: {{ .Release.Service | quote }}
+control-plane: {{ template "eric-net-ingress-l4.fullname" . }}
+lvs-controller-tools.k8s.io: "{{ .Chart.AppVersion }}"
+{{- end -}}

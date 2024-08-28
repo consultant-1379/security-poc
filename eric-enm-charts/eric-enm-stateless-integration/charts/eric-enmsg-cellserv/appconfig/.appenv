@@ -1,0 +1,9 @@
+DEP=true
+NAME=eric-enmsg-cellserv
+SVC=cellserv
+WAIT=true
+WAIT_LIST=gossiprouter-cache,gossiprouter-eap7,jms01,postgres,sps
+REQUESTS=true
+REQUESTS_LIST=4120Mi
+LIMITS=true
+LIMITS_LIST=4596Mi

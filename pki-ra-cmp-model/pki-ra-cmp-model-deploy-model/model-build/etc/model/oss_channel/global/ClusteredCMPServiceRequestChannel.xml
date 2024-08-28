@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+*******************************************************************************
+* COPYRIGHT Ericsson LMI 2022. All rights reserved.
+*
+* No part of this document may be reproduced in any form without the
+* written permission of the copyright owner.The contents of this document
+* are subject to revision without notice due to continued progress in
+* methodology, design and manufacturing. Ericsson shall have no liability
+* for any error or damage of any kind resulting from the use of this document.
+*
+*******************************************************************************
+
+
+--><ns2:ChannelDefinition xmlns:ns1="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:ns2="urn:com:ericsson:schema:xml:oss:oss_channel" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" channelType="POINT_TO_POINT" channelUri="jms:/queue/ClusteredCMPServiceRequestChannel" ns1:lifeCycle="CURRENT" ns1:name="ClusteredCMPServiceRequestChannel" ns1:ns="global">
+  <ns1:modelCreationInfo author="egiator" creationDate="Tue Jun 07 16:00:44 CEST 2022">
+    <ns1:designedModel className="com.ericsson.oss.itpf.security.pki.ra.cmp.model.channel.ClusteredCMPServiceRequestChannel" componentId="pki-ra-cmp-model-jar"/>
+  </ns1:modelCreationInfo>
+  <ns1:desc>This channel will be used for sending CMPRequestMessage to PKIMessage</ns1:desc>
+  <ns2:channelDetails durable="false" xsi:type="ns2:jmsChannelDetails"/>
+</ns2:ChannelDefinition>

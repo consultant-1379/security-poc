@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="Entities" type="Entities">
+		<xs:unique name="UniqueEndEntitynames">
+			<xs:selector xpath="Entity/EntityInfo"></xs:selector>
+			<xs:field xpath="Name"></xs:field>
+		</xs:unique>
+		<xs:unique name="UniqueCAEntitynames">
+			<xs:selector xpath="CAEntity/CertificateAuthority"></xs:selector>
+			<xs:field xpath="Name"></xs:field>
+		</xs:unique>
+	</xs:element>
+
+	<xs:complexType name="Entities">
+		<xs:sequence>
+			<xs:element name="Entity" type="Entity" minOccurs="0"
+				maxOccurs="unbounded" />
+			<xs:element name="CAEntity" type="CAEntity" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="AbstractEntity" abstract="true">
+		<xs:sequence>
+			<xs:element name="PublishCertificatetoTDPS" type="xs:boolean"
+				minOccurs="0" />
+			<xs:element name="EntityProfile" type="EntityProfile"
+				minOccurs="0" />
+                       <xs:element name="SubjectUniqueIdentifierValue" type="nonEmptyString" minOccurs="0" />
+			<xs:element name="CertificateExpiryNotificationDetails" type="CertificateExpiryNotificationDetails" minOccurs="0" maxOccurs="4" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="EntityProfile">
+		<xs:sequence>
+			<xs:element name="Active" type="xs:boolean" minOccurs="0" />
+			<xs:element name="Modifiable" type="xs:boolean" minOccurs="0" />
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:positiveInteger" use="optional" />
+		<xs:attribute name="Name" type="nonEmptyString" use="optional" />
+	</xs:complexType>
+
+	<xs:complexType name="CertificateExpiryNotificationDetails">
+		<xs:sequence>
+			<xs:element name="NotificationSeverity" type="NotificationSeverity"
+				minOccurs="0" />
+			<xs:element name="PeriodBeforeExpiry" type="xs:duration"
+				minOccurs="0" />
+			<xs:element name="FrequencyOfNotification" type="xs:duration"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="CAEntity">
+		<xs:complexContent>
+			<xs:extension base="AbstractEntity">
+				<xs:sequence>
+					<xs:element name="KeyGenerationAlgorithm" type="Algorithm"
+						minOccurs="0" />
+					<xs:element name="CertificateAuthority" type="CertificateAuthority"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="CertificateAuthority">
+		<xs:sequence>
+			<xs:element name="Id" type="xs:positiveInteger" minOccurs="0" />
+			<xs:element name="Name" type="nonEmptyString" minOccurs="0" />
+			<xs:element name="IsRootCA" type="xs:boolean" minOccurs="0" />
+			<xs:element name="Subject" type="Subject" minOccurs="0" />
+			<xs:element name="SubjectAltName" type="SubjectAltName"
+				minOccurs="0" />
+			<xs:element name="Issuer" type="CertificateAuthority"
+				minOccurs="0" />
+			<xs:element name="CAStatus" type="nonEmptyString"
+				minOccurs="0" />
+			<xs:element name="CrlGenerationInfo" type="CrlGenerationInfo"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="PublishToCDPS" type="xs:boolean"
+				minOccurs="0" />
+			<xs:element name="IsIssuerExternalCA" type="xs:boolean"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="CrlGenerationInfo">
+		<xs:sequence>
+			<xs:element name="Id" type="xs:positiveInteger" minOccurs="0" />
+			<xs:element name="SignatureAlgorithm" type="Algorithm"
+				minOccurs="0" />
+			<xs:element name="ValidityPeriod" type="xs:duration"
+				minOccurs="0" />
+			<xs:element name="SkewCrlTime" type="xs:duration"
+				minOccurs="0" />
+			<xs:element name="OverlapPeriod" type="xs:duration"
+				minOccurs="0" />
+			<xs:element name="Version" type="nonEmptyString"
+				minOccurs="0" />
+			<xs:element name="CrlExtensions" type="CrlExtensions"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<!-- TODO:Spike to import certificate extensions will be analyzed in TORF-84678 -->
+	<xs:complexType name="CrlExtensions">
+		<xs:sequence>
+			<xs:element name="CRLNumber" type="CRLNumber" minOccurs="0" />
+			<xs:element name="AuthorityInformationAccess" type="AuthorityInformationAccess"
+				minOccurs="0" />
+			<xs:element name="AuthorityKeyIdentifier" type="AuthorityKeyIdentifier"
+				minOccurs="0" />
+			<xs:element name="IssuingDistributionPoint" type="IssuingDistributionPoint"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="CertificateExtension" abstract="true">
+		<xs:sequence>
+			<xs:element name="Critical" type="xs:boolean" minOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="AuthorityInformationAccess">
+		<xs:complexContent>
+			<xs:extension base="CertificateExtension">
+				<xs:sequence>
+					<xs:element name="AccessDescription" type="AccessDescription"
+						minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+
+	<xs:complexType name="AccessDescription">
+		<xs:sequence>
+			<xs:element name="AccessMethod" type="AccessMethod"
+				minOccurs="0" />
+			<xs:element name="AccessLocation" type="nonEmptyString"
+				nillable="true" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="AccessMethod">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CA_ISSUER" />
+			<xs:enumeration value="OCSP" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="AuthorityKeyIdentifier">
+		<xs:complexContent>
+			<xs:extension base="CertificateExtension">
+				<xs:sequence>
+					<xs:element name="AuthorityKeyIdentifierType" type="AuthorityKeyIdentifierType"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:simpleType name="AuthorityKeyIdentifierType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SUBJECT_KEY_IDENTIFIER" />
+			<xs:enumeration value="ISSUER_DN_SERIAL_NUMBER" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="IssuingDistributionPoint">
+		<xs:sequence>
+			<xs:element name="Critical" type="xs:boolean" minOccurs="0" />
+
+			<xs:element name="OnlyContainsUserCerts" type="xs:boolean"
+				minOccurs="0" />
+			<xs:element name="onlyContainsUserCerts" type="xs:boolean"
+				minOccurs="0" />
+
+			<xs:element name="OnlyContainsCACerts" type="xs:boolean"
+				minOccurs="0" />
+			<xs:element name="onlyContainsCACerts" type="xs:boolean"
+				minOccurs="0" />
+
+			<xs:element name="OnlyContainsAttributeCerts" type="xs:boolean"
+				minOccurs="0" />
+			<xs:element name="DistributionPoint" type="DistributionPointName"
+				minOccurs="0" />
+			<xs:element name="OnlySomeReasons" type="ReasonFlag"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:simpleType name="ReasonFlag">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="UNUSED" />
+			<xs:enumeration value="KEY_COMPROMISE" />
+			<xs:enumeration value="CA_COMPROMISE" />
+			<xs:enumeration value="AFFILIATION_CHANGED" />
+			<xs:enumeration value="SUPERSEDED" />
+			<xs:enumeration value="CESSATION_OF_OPERATION" />
+			<xs:enumeration value="CERTIFICATE_HOLD" />
+			<xs:enumeration value="PRIVILEGE_WITHDRAWN" />
+			<xs:enumeration value="AA_COMPROMISE" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:complexType name="DistributionPointName">
+		<xs:choice>
+			<xs:element name="FullName" type="nonEmptyString"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="NameRelativeToCRLIssuer" type="nonEmptyString"
+				minOccurs="0" />
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="CRLNumber">
+		<xs:sequence>
+			<xs:element name="Critical" type="xs:boolean" minOccurs="0" />
+			<xs:element name="critical" type="xs:boolean" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Entity">
+		<xs:complexContent>
+			<xs:extension base="AbstractEntity">
+				<xs:sequence>
+					<xs:element name="KeyGenerationAlgorithm" type="Algorithm"
+						minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="Category" type="EntityCategory"
+						minOccurs="0" />
+					<xs:element name="EntityInfo" type="EntityInfo"
+						minOccurs="0" />
+					<xs:element name="OTPValidityPeriod" type="xs:integer"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="EntityInfo">
+		<xs:sequence>
+			<xs:element name="Id" type="xs:positiveInteger" minOccurs="0" />
+			<xs:element name="Name" type="nonEmptyString" minOccurs="0" />
+			<xs:element name="Subject" type="Subject" minOccurs="0" />
+			<xs:element name="SubjectAltName" type="SubjectAltName"
+				minOccurs="0" />
+			<xs:element name="OTP" type="nonEmptyString" minOccurs="0" />
+			<xs:element name="OTPCount" type="xs:integer"
+				minOccurs="0" />
+			<xs:element name="Issuer" type="CertificateAuthority"
+				minOccurs="0" />
+			<xs:element name="Status" type="Status" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Algorithm">
+		<xs:sequence>
+			<xs:element name="Name" type="nonEmptyString" minOccurs="0" />
+			<xs:element name="KeySize" type="xs:nonNegativeInteger"
+				minOccurs="0" />
+			<xs:element name="Supported" type="xs:boolean" minOccurs="0" />
+			<xs:element name="AlgorithmCategory" type="AlgorithmCategory"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="Id" type="xs:positiveInteger" use="optional" />
+	</xs:complexType>
+
+	<xs:simpleType name="AlgorithmCategory">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OTHER" />
+			<xs:enumeration value="KEY_IDENTIFIER" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="EntityCategory">
+		<xs:all>
+			<xs:element name="Name" type="nonEmptyString" minOccurs="0" />
+			<xs:element name="Modifiable" type="xs:boolean" minOccurs="0" />
+		</xs:all>
+		<xs:attribute name="Id" type="xs:integer" use="optional" />
+	</xs:complexType>
+
+	<xs:complexType name="Subject">
+		<xs:sequence>
+			<xs:element name="SubjectField" type="SubjectField"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SubjectField">
+		<xs:sequence>
+			<xs:element name="Type" type="SubjectFieldType" minOccurs="0" />
+			<xs:element name="Value" type="nonEmptyString" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="SubjectFieldType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="COMMON_NAME" />
+			<xs:enumeration value="SURNAME" />
+			<xs:enumeration value="COUNTRY_NAME" />
+			<xs:enumeration value="LOCALITY_NAME" />
+			<xs:enumeration value="STATE" />
+			<xs:enumeration value="STREET_ADDRESS" />
+			<xs:enumeration value="ORGANIZATION" />
+			<xs:enumeration value="ORGANIZATION_UNIT" />
+			<xs:enumeration value="DN_QUALIFIER" />
+			<xs:enumeration value="TITLE" />
+			<xs:enumeration value="GIVEN_NAME" />
+			<xs:enumeration value="SERIAL_NUMBER" />
+			<xs:enumeration value="DC" />
+			<xs:enumeration value="INITIALS" />
+			<xs:enumeration value="GENERATION" />
+			<xs:enumeration value="EMAIL_ADDRESS" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="Status">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NEW" />
+			<xs:enumeration value="ACTIVE" />
+			<xs:enumeration value="INACTIVE" />
+			<xs:enumeration value="REISSUE" />
+			<xs:enumeration value="DELETED" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="SubjectAltName">
+		<xs:sequence>
+			<xs:element name="Critical" type="xs:boolean" minOccurs="0" />
+			<xs:element name="SubjectAltNameField" type="SubjectAltNameField"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SubjectAltNameField">
+		<xs:sequence>
+			<xs:element name="Type" type="SubjectAltNameFieldType"
+				minOccurs="0" />
+			<xs:element name="Value" type="AbstractSubjectAltNameFieldValue"
+				minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="AbstractSubjectAltNameFieldValue"
+		abstract="true">
+		<xs:sequence />
+	</xs:complexType>
+
+	<xs:complexType name="OtherName">
+		<xs:complexContent>
+			<xs:extension base="AbstractSubjectAltNameFieldValue">
+				<xs:sequence>
+					<xs:element name="TypeId" type="nonEmptyString"
+						minOccurs="0" />
+					<xs:element name="Value" type="nonEmptyString"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="EdiPartyName">
+		<xs:complexContent>
+			<xs:extension base="AbstractSubjectAltNameFieldValue">
+				<xs:sequence>
+					<xs:element name="NameAssigner" type="nonEmptyString"
+						minOccurs="0" />
+					<xs:element name="PartyName" type="nonEmptyString"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="SubjectAltNameString">
+		<xs:complexContent>
+			<xs:extension base="AbstractSubjectAltNameFieldValue">
+				<xs:sequence>
+					<xs:element name="StringValue" type="nonEmptyString"
+						minOccurs="0" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:simpleType name="SubjectAltNameFieldType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="RFC822_NAME" />
+			<xs:enumeration value="OTHER_NAME" />
+			<xs:enumeration value="EDI_PARTY_NAME" />
+			<xs:enumeration value="DNS_NAME" />
+			<xs:enumeration value="DIRECTORY_NAME" />
+			<xs:enumeration value="UNIFORM_RESOURCE_IDENTIFIER" />
+			<xs:enumeration value="IP_ADDRESS" />
+			<xs:enumeration value="REGESTERED_ID" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="nonEmptyString">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="NotificationSeverity">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CRITICAL" />
+			<xs:enumeration value="MAJOR" />
+			<xs:enumeration value="WARNING" />
+			<xs:enumeration value="MINOR" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

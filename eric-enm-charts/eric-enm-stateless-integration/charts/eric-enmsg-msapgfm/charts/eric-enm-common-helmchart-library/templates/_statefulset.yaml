@@ -1,0 +1,84 @@
+{{- define "eric-enm-common-helmchart-library.statefulset.tpl" -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+{{ include "eric-enm-common-helmchart-library.metadata-stateful" . | indent 2 }}
+spec:
+  serviceName: {{ .Values.service.name }}
+  replicas: {{ template "eric-enm-common-helmchart-library.replicas" . }}
+  selector:
+    matchLabels:
+      app: {{ .Values.service.name }}
+{{- if .Values.updateStrategy }}
+  updateStrategy:
+    type: {{ .Values.updateStrategy.type }}
+  {{- if .Values.updateStrategy.rollingUpdate }}
+    rollingUpdate:
+      partition: {{ .Values.updateStrategy.rollingUpdate.partition }}
+  {{- end }}
+{{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.service.name }}
+        app.kubernetes.io/name: {{ .Values.service.name | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        app.kubernetes.io/version: {{ template "eric-enm-common-helmchart-library.chart" . }}
+      annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" . | indent 8 }}
+{{- with .Values.podAnnotations }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+    spec:
+{{- if .Values.priorityClassName }}
+      priorityClassName: "{{ .Values.priorityClassName }}"
+{{- end }}
+{{ include "eric-enm-common-helmchart-library.affinity.tpl" . | indent 6 }}
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+      nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.global.nodeSelector }}
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
+{{- end }}
+{{- if or .Values.tolerations .Values.global.tolerations }}
+      tolerations:
+{{- if .Values.tolerations }}
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.global.tolerations }}
+{{ toYaml .Values.global.tolerations | indent 8 }}
+{{- end }}
+{{- end }}
+{{ include "eric-enm-common-helmchart-library.container.tpl" . | indent 6 }}
+{{- if include "eric-enm-common-helmchart-library.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-enm-common-helmchart-library.pullSecrets" . }}
+{{- end }}
+{{- if .Files.Glob "appconfig/volumes.yaml" }}
+      volumes:
+{{ include "eric-enm-common-helmchart-library.renamePVNames.tpl" . | indent 6 }}
+{{- if .Files.Glob "appconfig/optionalVolumes.yaml" }}
+{{ tpl (.Files.Get "appconfig/optionalVolumes.yaml") . | indent 8 }}
+{{- end }}
+{{- end }}
+{{- if .Values.persistentVolumeClaim.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ template "eric-enm-common-helmchart-library.name" . }}
+        labels:
+          app.kubernetes.io/instance: {{ .Release.Name | quote }}
+      spec:
+        accessModes:
+          - {{ .Values.persistentVolumeClaim.accessMode | quote }}
+        storageClassName: {{ template "eric-enm-common-helmchart-library.storageClass" . }}
+        resources:
+          requests:
+            storage: {{ template "eric-enm-common-helmchart-library.PVSize" . }}
+{{- end }}
+{{- end -}}
+{{- define "eric-enm-common-helmchart-library.statefulset" -}}
+{{- template "eric-enm-common-helmchart-library.util.merge" (append . "eric-enm-common-helmchart-library.statefulset.tpl") -}}
+{{- end -}}

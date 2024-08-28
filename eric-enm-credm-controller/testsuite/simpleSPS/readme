@@ -1,0 +1,7 @@
+
+cd image
+docker rmi armdocker.rnd.ericsson.se/proj-enm/mysimplesps 
+docker build -t armdocker.rnd.ericsson.se/proj-enm/mysimplesps .
+cd ..
+
+

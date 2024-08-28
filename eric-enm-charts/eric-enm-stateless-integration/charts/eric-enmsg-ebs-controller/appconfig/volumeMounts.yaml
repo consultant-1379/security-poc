@@ -1,0 +1,12 @@
+- name: gp
+  mountPath: /gp
+- name: pmic1
+  mountPath: /ericsson/pmic1
+- name: pmic2
+  mountPath: /ericsson/pmic2
+- name: data
+  mountPath: /ericsson/tor/data
+- name: hcdumps
+  mountPath: /ericsson/enm/dumps
+- name: mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment

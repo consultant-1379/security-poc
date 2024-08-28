@@ -1,0 +1,208 @@
+
+global:
+  registry:
+    pullSecret: csar-secret
+
+  enmProperties:
+    CREDM_REST_PORT: 5001
+
+## simple service local env data
+simpleservice:
+
+# reduced number of replicas
+  replicaCount: 2
+
+# Local Environment (MINIKUBE) mode
+  localEnv:
+    enabled: true
+
+  credmController:
+    name: eric-enm-credm-controller
+    port: 5001
+
+  image:
+    moresecrets: false
+
+  imageCredentials:
+    tag: latest
+    repoPath: proj-enm
+    pullPolicy: Never
+
+  images:
+    waitForCertificatesContainer:
+      enabled: true
+      name: enm-wait-for-certificates-container
+      tag: latest
+
+  jobs:
+    certRequest:
+      pullPolicy: Never
+      tag: latest
+
+## other service local env data
+otherservice:
+
+# reduced number of replicas
+  replicaCount: 1
+
+# Local Environment (MINIKUBE) mode
+  localEnv:
+    enabled: true
+
+  credmController:
+    name: eric-enm-credm-controller
+    port: 5001
+
+  image:
+    moresecrets: false
+
+  imageCredentials:
+    tag: latest
+    repoPath: proj-enm
+    pullPolicy: Never
+
+  images:
+    waitForCertificatesContainer:
+      enabled: true
+      name: enm-wait-for-certificates-container
+      tag: latest
+
+  jobs:
+    certRequest:
+      pullPolicy: Never
+      tag: latest
+
+## eric-enm-credm-controller local env data
+eric-enm-credm-controller:
+
+# Local Environment (MINIKUBE) mode
+  localEnv:
+    enabled: true
+
+  credmController:
+    logdebugflag: false
+    logfiledebugflag: false
+    javamockflag: true
+    debug: true
+    cronSleepMinutes: 15
+
+  global:
+    ingress:
+      enmHost: enmapache.athtem.eei.ericsson.se
+    replicas-eric-enm-credm-controller: 2
+# dummy values for global.properties map
+    vips:
+      cm_vip_address: 10.5.1.178
+      cm_vip_ipv6address: 2001:1b70:6207:23:0:3905:5244:40
+      fm_vip_address: 131.160.152.64
+      fm_vip_ipv6address: 2001:1b70:6207:23:0:3905:5244:40
+      itservices_0_vip_address: null
+      itservices_1_vip_address: null
+
+  livenessProbe:
+    enabled: true
+
+  readinessProbe:
+    enabled: true
+#    initialDelaySeconds: 10
+#    periodSeconds: 30
+#    timeoutSeconds: 120
+#    failureThreshold: 4
+
+  images:
+    eric-enm-credm-controller:
+      tag: latest
+    ericCredmControllerInitContainer:
+      tag: latest
+    ericCredmControllerCronjob:
+      tag: latest
+    ericCredmControllerPostinstalljob:
+      tag: latest
+    ericCredmControllerListenerjob:
+      tag: latest
+
+  imageCredentials:
+    repoPath: proj-enm
+    pullPolicy: Never
+
+## Affinity for pod assignment
+  affinity:
+    podAntiAffinity: "soft"
+
+#  resources:
+#    requests:
+#      enabled: true
+#      cpu: 500m
+#      memory: 1Gi
+#    limits:
+#      enabled: true
+#      cpu: 1000m
+#      memory: 2Gi
+
+## other service local env data
+moreservice1:
+
+# reduced number of replicas
+  replicaCount: 1
+
+# Local Environment (MINIKUBE) mode
+  localEnv:
+    enabled: true
+
+  credmController:
+    name: eric-enm-credm-controller
+    port: 5001
+
+  image:
+    moresecrets: false
+
+  imageCredentials:
+    tag: latest
+    repoPath: proj-enm
+    pullPolicy: Never
+
+  images:
+    waitForCertificatesContainer:
+      enabled: true
+      name: enm-wait-for-certificates-container
+      tag: latest
+
+  jobs:
+    certRequest:
+      pullPolicy: Never
+      tag: latest
+
+## test for statefulset local env data
+mystatefulset:
+
+# reduced number of replicas
+  replicaCount: 2
+
+# Local Environment (MINIKUBE) mode
+  localEnv:
+    enabled: true
+
+  credmController:
+    name: eric-enm-credm-controller
+    port: 5001
+
+  image:
+    moresecrets: false
+
+  imageCredentials:
+    tag: latest
+    repoPath: proj-enm
+    pullPolicy: Never
+
+  images:
+    waitForCertificatesContainer:
+      enabled: true
+      name: enm-wait-for-certificates-container
+      tag: latest
+
+  jobs:
+    certRequest:
+      pullPolicy: Never
+      tag: latest
+
+

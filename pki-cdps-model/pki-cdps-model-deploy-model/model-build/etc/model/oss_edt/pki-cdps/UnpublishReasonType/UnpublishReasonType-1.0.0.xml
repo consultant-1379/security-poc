@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+*******************************************************************************
+* COPYRIGHT Ericsson LMI 2022. All rights reserved.
+*
+* No part of this document may be reproduced in any form without the
+* written permission of the copyright owner.The contents of this document
+* are subject to revision without notice due to continued progress in
+* methodology, design and manufacturing. Ericsson shall have no liability
+* for any error or damage of any kind resulting from the use of this document.
+*
+*******************************************************************************
+
+
+--><ns2:EnumDataTypeDefinition xmlns:ns1="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:ns2="urn:com:ericsson:schema:xml:oss:oss_edt" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ns1:lifeCycle="CURRENT" ns1:name="UnpublishReasonType" ns1:ns="pki-cdps" ns1:version="1.0.0">
+  <ns1:modelCreationInfo author="egiator" creationDate="Tue Jun 07 16:21:58 CEST 2022">
+    <ns1:designedModel className="com.ericsson.oss.itpf.security.pki.cdps.edt.UnpublishReasonType" componentId="pki-cdps-model-api"/>
+  </ns1:modelCreationInfo>
+  <ns1:desc>This Model defines enum for type of CDPS that is for revoked_ca_certificate or expired_ca_certificate</ns1:desc>
+  <ns2:member name="REVOKED_CA_CERTIFICATE" ns1:lifeCycle="CURRENT" value="0">
+    <ns2:desc>Revoked CRL is to be unpublished to CDPS</ns2:desc>
+  </ns2:member>
+  <ns2:member name="EXPIRED_CA_CERTIFICATE" ns1:lifeCycle="CURRENT" value="1">
+    <ns2:desc>Expired CRL is to be unpublished to CDPS</ns2:desc>
+  </ns2:member>
+</ns2:EnumDataTypeDefinition>

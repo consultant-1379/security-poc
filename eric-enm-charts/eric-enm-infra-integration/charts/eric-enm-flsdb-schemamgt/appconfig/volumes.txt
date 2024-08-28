@@ -1,0 +1,6 @@
+- name: gp
+  configMap:
+    name: gpflsdb-schemamgt
+- name: data
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-data

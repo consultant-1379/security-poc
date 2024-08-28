@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: kpi-calc-serv
+      port:
+        number: 443
+  path: /eps-kpi-calcluation-service/
+  pathType: ImplementationSpecific

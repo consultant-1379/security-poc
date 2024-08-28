@@ -1,0 +1,37 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-pv-cluster-role"
+  annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" .| nindent 4 }}
+    "helm.sh/hook": "pre-install, pre-upgrade"
+    "helm.sh/hook-weight": "-4"
+    "helm.sh/hook-delete-policy": "before-hook-creation, hook-succeeded, hook-failed"
+  labels:
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources:
+      - persistentvolumes
+      - nodes
+    verbs: ["list", "watch", "patch", "update", "get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-pv-cluster-role-binding"
+  annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" .| nindent 4 }}
+    "helm.sh/hook": "pre-install, pre-upgrade"
+    "helm.sh/hook-weight": "-4"
+    "helm.sh/hook-delete-policy": "before-hook-creation, hook-succeeded, hook-failed"
+  labels:
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" .| nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: "{{ .Values.service.name }}-{{ .Release.Namespace }}-pv-cluster-role"
+subjects:
+  - kind: ServiceAccount
+    name: {{ .Values.service.name }}-{{ .Release.Namespace }}-{{ index .Values "general-scripting-helper" "service_account_user" }}
+    namespace: {{ .Release.Namespace }}

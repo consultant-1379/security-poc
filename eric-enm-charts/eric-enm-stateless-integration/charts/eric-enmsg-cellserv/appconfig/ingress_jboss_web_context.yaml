@@ -1,0 +1,87 @@
+# Backend paths
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /cell-management-internal/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /cm-audit/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /configuration-tasks/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /reparent/
+  pathType: ImplementationSpecific
+# UI paths
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /cellmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /cmexport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /createrelation/
+  pathType: ImplementationSpecific
+# UI paths - Help and Locales
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /help/en-us/cellmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /help/en-us/cmexport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /locales/en-us/cellmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /locales/en-us/cmexport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cellserv
+      port:
+        number: 443
+  path: /locales/en-us/createrelation/
+  pathType: ImplementationSpecific

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+    <application>
+        <certificates>
+            <certificate>
+                <tbscertificate>
+                    <subject>
+                        <entityname>AIWS_2##hostname##</entityname>
+                        <distinguishname>CN=AIWS_2_##hostname##</distinguishname>
+                    </subject>
+                </tbscertificate>
+                <endentityprofilename>ENM_System_SBI_AIWS_2_EP</endentityprofilename>
+                <keystore>
+                    <jkskeystore>
+                        <storealias>server-cert</storealias>
+                        <storelocation>/ericsson/aiws/data/certs/aiwskey.jks</storelocation>
+                        <storepassword>aiwscert</storepassword>
+                    </jkskeystore>
+                </keystore>
+                <truststore>
+                    <jkstruststore>
+                        <storealias>enm_management_ca</storealias>
+                        <storelocation>/ericsson/aiws/data/certs/aiwstrust.jks</storelocation>
+                        <storepassword>aiwscert</storepassword>
+                    </jkstruststore>
+                </truststore>
+                <oncheckresult>
+                    <actionlist>
+                        <checkcause>certificateUpdate</checkcause>
+                        <checkcause>trustUpdate</checkcause>
+                        <action>VMRestart</action>
+                    </actionlist>
+                </oncheckresult>
+            </certificate>
+        </certificates>
+        <crlupdatemode>CrlRequired</crlupdatemode>
+    </application>
+    <user>
+        <!-- keep in the same line to allow grep researches -->
+        <username>jboss_user</username>
+        <usergroup>jboss</usergroup>
+    </user>
+</applications>

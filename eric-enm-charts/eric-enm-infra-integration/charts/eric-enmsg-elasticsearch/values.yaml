@@ -1,0 +1,103 @@
+# Default values for elastic-bragent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  timezone: UTC
+
+images:
+  eric-enmsg-elasticsearch:
+    name: eric-enmsg-elasticsearch
+    tag: 1.2.0-43
+
+labels: {}
+
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: IfNotPresent
+  pullSecret:
+  registry:
+    url:
+
+nameOverride: ""
+fullnameOverride: ""
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+
+# Elasticsearch name. Must match name that was used to deploy ES.
+elasticsearchName: eric-data-search-engine
+elasticsearchPort: 9200
+
+brAgent:
+  broServiceName: eric-ctrl-bro
+  backupTypeList:
+
+  # Define the compression level of the backup data. Higher levels are more
+  # compressed at the cost of speed and higher CPU usage. Valid ranges are
+  # from -10 for fast low compression to 20 for slow high compression.
+  compressionLevel: 1
+
+  # An Elasticsearch snapshot is created as part of the backup process. A
+  # higher snapshot throughput could make backup faster with a potentially
+  # greater impact on the Elasticsearch cluster.
+  snapshotMaxThroughput: 200mb
+
+  # Preserve snapshots between backups. Snapshots are incremental so this could
+  # reduce duration to create the snapshot if the change rate of data is not
+  # too high. Some additional space might be temporarily used in the snapshot
+  # repository during a backup.
+  # --- Not yet implemented ---
+  snapshotPreserve: false
+
+  # Maximum snapshot recovery throughput allowed during restore.
+  recoveryMaxThroughput: 400mb
+
+  # Maximum concurrent file chunks to be recovered in parallel during restore.
+  recoveryMaxChunks: 4
+
+  # Close all indices during restore. Open indicies cannot be restored, if any
+  # exist in the backup being restored the restore will fail. A closed index
+  # will temporarily be offline during restore.
+  restoreCloseIndices: true
+
+  # Prevent automatically creating new indicies during restore. If an index is
+  # created during restore that matches one being restored, there is a risk
+  # restore will fail.
+  restoreDisableAutoCreateIndex: true
+
+  # Delete all indicies before restoring data. Clean Restore is disabled by default. 
+  cleanRestore: false
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  runAsNonRoot: true
+  runAsUser: 143743
+  # readOnlyRootFilesystem: true # TODO: Add emptydir for /tmp
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 128Mi
+  requests:
+    cpu: 500m
+    memory: 32Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

@@ -1,0 +1,45 @@
+- name: gp
+  configMap:
+    name: gpsps
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: hcdumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: home
+  persistentVolumeClaim:
+    claimName: home
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dlms
+  persistentVolumeClaim:
+    claimName: dlms
+- name: sps-certs
+  emptyDir:
+    medium: Memory
+- name: credm-certs
+  emptyDir:
+    medium: Memory
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: pm1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pm2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks
+- name: upgind
+  persistentVolumeClaim:
+    claimName: upgind
+- name: batch
+  persistentVolumeClaim:
+    claimName: batch

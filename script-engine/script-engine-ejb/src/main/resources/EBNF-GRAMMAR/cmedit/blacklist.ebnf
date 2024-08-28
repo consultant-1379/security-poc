@@ -1,0 +1,3 @@
+"cmedit" (* slogan = "Command set to read, manipulate, and export Configuration Management data" *) WS "blacklist" (* slogan = "Return dynamic blacklists" *) WS BLACKLIST_OPTION
+
+BLACKLIST_OPTION ::= "--show"

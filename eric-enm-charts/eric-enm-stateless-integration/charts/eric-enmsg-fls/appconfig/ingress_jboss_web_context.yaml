@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: flsserv
+      port:
+        number: 443
+  path: /file
+  pathType: ImplementationSpecific

@@ -1,0 +1,11 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg-web-push-service.service") -}}
+{{- define "eric-enmsg-web-push-service.service" -}}
+metadata:
+  labels:
+    service: {{ .Values.service.name }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9600"
+spec:
+  clusterIP: None
+{{- end -}}

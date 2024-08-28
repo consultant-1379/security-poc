@@ -1,0 +1,6 @@
+- name: certreq-secret-1
+  mountPath: {{ .Values.service.xmlMountPath }}/xml1
+  readOnly: true
+- name: httpd-certreq-secret-1
+  mountPath: {{ .Values.service.xmlMountPath }}/xmlhttpd1
+  readOnly: true

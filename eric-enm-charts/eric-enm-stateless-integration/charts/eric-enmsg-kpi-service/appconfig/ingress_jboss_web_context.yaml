@@ -1,0 +1,266 @@
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /network-status-rest-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /oss/nhm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /kpi-specification-rest-api-war/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /kpimanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/kpimanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /help/en-us/kpimanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /kpi/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/kpi/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /help/en-us/kpi/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /kpimanagementlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/kpimanagementlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /3pp/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /network-health-monitor-dashboard-app-server-war/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /networkhealthmonitor/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/networkhealthmonitor/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /help/en-us/networkhealthmonitor/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /networkstatuswidget/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/networkstatuswidget/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /help/en-us/networkstatuswidget/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /networkscopewidget/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/networkscopewidget/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /help/en-us/networkscopewidget/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /nodemonitor/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/nodemonitor/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /help/en-us/nodemonitor/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /nhmwidgetlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/nhmwidgetlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /networkhealthanalysis/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/networkhealthanalysis/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /help/en-us/networkhealthanalysis/
+  pathType: ImplementationSpecific
+-  backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+   path: /nhalibrary/
+   pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/nhalibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /export-nha/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: kpiserv
+      port:
+        number: 443
+  path: /locales/en-us/export-nha/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/alarmtypesummary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/alarmseveritysummary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/alarmtyperanking/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmserv
+      port:
+        number: 443
+  path: /help/en-us/noderankingbyalarmcount/
+  pathType: ImplementationSpecific

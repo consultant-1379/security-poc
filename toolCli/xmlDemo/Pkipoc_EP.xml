@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ProfilesSchema.xsd">
+    <EntityProfile Name="Pkipoc_EP">
+        <Modifiable>true</Modifiable>
+        <Category>
+            <Modifiable>true</Modifiable>
+            <Name>UNDEFINED</Name>
+        </Category>
+        <Subject>
+            <SubjectField>
+                <Type>COMMON_NAME</Type>
+                <Value>?</Value>
+            </SubjectField>
+        </Subject>
+        <SubjectAltName>
+            <Critical>false</Critical>
+            <SubjectAltNameField>
+                <Type>DIRECTORY_NAME</Type>
+                <Value xsi:type="SubjectAltNameString">
+                    <StringValue>CN=COMUser</StringValue>
+                </Value>
+            </SubjectAltNameField>
+        </SubjectAltName>
+        <KeyGenerationAlgorithm>
+            <Name>RSA</Name>
+            <KeySize>2048</KeySize>
+        </KeyGenerationAlgorithm>
+        <CertificateProfile Name="Pkipoc_CP" />
+        <KeyUsage>
+            <Critical>true</Critical>
+            <SupportedKeyUsageType>DIGITAL_SIGNATURE</SupportedKeyUsageType>
+            <SupportedKeyUsageType>KEY_ENCIPHERMENT</SupportedKeyUsageType>
+            <SupportedKeyUsageType>KEY_AGREEMENT</SupportedKeyUsageType>
+        </KeyUsage>
+	<SubjectUniqueIdentifierValue>?</SubjectUniqueIdentifierValue>
+    </EntityProfile>
+    </Profiles>
+

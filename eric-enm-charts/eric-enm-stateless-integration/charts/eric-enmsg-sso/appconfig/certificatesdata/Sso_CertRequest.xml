@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+    <application>
+        <certificates>
+            <certificate>
+                <tbscertificate>
+                    <subject>
+                        <entityname>SSO##hostname##</entityname>
+                        <distinguishname>O=SSO,CN=sso</distinguishname>
+                    </subject>
+                </tbscertificate>
+                <endentityprofilename>ENM_System_Man_EP</endentityprofilename>
+                <keystore>
+                    <jkskeystore>
+                        <storealias>sso-server</storealias>
+                        <storelocation>/opt/ericsson/sso/ssoKeystore.jks</storelocation>
+                        <storepassword>passw0rd</storepassword>
+                    </jkskeystore>
+                </keystore>
+            </certificate>
+        </certificates>
+        <truststores>
+            <truststoreonly>
+                <trustprofilename>IdP_NBI_TP</trustprofilename>
+                <truststore>
+                    <jkstruststore>
+                        <storealias>ssoTS</storealias>
+                        <storelocation>/usr/java/default/jre/lib/security/cacerts</storelocation>
+                        <storepassword>changeit</storepassword>
+                    </jkstruststore>
+                </truststore>
+                <oncheckresult>
+                    <actionlist>
+                        <checkcause>trustUpdate</checkcause>
+                        <action>VMRestart</action>
+                    </actionlist>
+                </oncheckresult>
+            </truststoreonly>
+        </truststores>
+        <crlupdatemode>CrlSelfManaged</crlupdatemode>
+    </application>
+    <user>
+        <!-- keep in the same line to allow grep researches -->
+        <username>jboss_user</username>
+        <usergroup>jboss</usergroup>
+    </user>
+</applications>

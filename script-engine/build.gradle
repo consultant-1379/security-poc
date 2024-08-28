@@ -1,0 +1,118 @@
+
+project(':script-engine-junit-util') {
+  dependencies {
+    compile 'com.google.guava:guava-testlib'
+    compile 'com.ericsson.oss.itpf.sdk:sdk-eventbus-api'
+    compile 'org.mockito:mockito-all'
+  }
+}
+
+project(':script-engine-api') {
+  dependencies {
+    compile project(':script-engine-editor-spi')
+  }
+}
+
+project(':script-engine-ejb') {
+  dependencies {
+    compile 'com.ericsson.oss.itpf.sdk:sdk-cache-api'
+    compile 'com.ericsson.oss.itpf.sdk:sdk-context-api'
+    compile 'com.ericsson.oss.itpf.sdk:sdk-recording-api'
+    compile 'com.ericsson.oss.itpf.sdk:sdk-eventbus-api'
+    compile 'com.ericsson.oss.itpf.sdk:sdk-instrumentation-api'
+    compile 'com.ericsson.oss.itpf.sdk:sdk-resources'
+    compile 'com.ericsson.oss.services.cli.alias.model:clialias-jar'
+    compile 'com.ericsson.oss.itpf.sdk:sdk-instrumentation-api'
+    compile 'com.google.guava:guava'
+    compile 'org.jboss.spec:jboss-javaee-6.0'
+    compile project(':script-engine-api')
+    compile project(':script-engine-alias-ejb')
+    compile project(':script-engine-error-jar')
+    compile project(':script-engine-junit-util')
+    testCompile 'org.springframework.boot:spring-boot-starter-hornetq'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'cglib:cglib-nodep'
+    testCompile 'org.objenesis:objenesis'
+    testRuntime 'com.ericsson.oss.itpf.sdk:sdk-cluster-core'
+    testRuntime 'org.hibernate:hibernate-validator'
+    testRuntime 'org.hornetq:hornetq-jms-server'
+    testRuntime 'org.infinispan:infinispan-jcache'
+  }
+}
+
+project(':script-engine-admin-ejb') {
+    dependencies {
+      compile 'com.ericsson.oss.itpf.sdk:sdk-cache-api'
+      compile 'com.ericsson.oss.itpf.sdk:sdk-context-api'
+      compile 'com.ericsson.oss.itpf.sdk:sdk-recording-api'
+      compile 'org.jboss.spec:jboss-javaee-6.0'
+      compile project(':script-engine-error-jar')
+      testCompile 'cglib:cglib-nodep'
+      testRuntime 'com.ericsson.oss.itpf.sdk:sdk-cluster-core'
+    }
+  }
+
+project(':script-engine-war') {
+  apply plugin: 'war'
+  war.baseName = 'script-engine'
+  dependencies {
+    providedCompile project(':script-engine-ejb') // TODO (emulleo) should depend on the API
+    providedCompile project(':script-engine-error-jar')
+    providedCompile 'org.jboss.spec:jboss-javaee-6.0'
+    providedCompile 'com.ericsson.oss.itpf.sdk:sdk-recording-api'
+    providedCompile 'com.ericsson.oss.itpf.sdk:sdk-resources-api'
+    providedCompile 'com.ericsson.oss.itpf.sdk:sdk-config-api'
+    providedCompile 'com.google.guava:guava'
+    providedCompile 'org.jboss.resteasy:resteasy-jaxrs'
+    providedCompile 'org.jboss.resteasy:resteasy-multipart-provider:2.3.7.Final'
+    testCompile 'org.springframework:spring-web'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.springframework.boot:spring-boot-starter-hornetq'
+    testCompile 'org.springframework.boot:spring-boot-starter-jetty', {
+        exclude group: 'org.eclipse.jetty.websocket'
+    }
+    testCompile 'com.jayway.restassured:rest-assured'
+    testCompile 'org.codehaus.groovy:groovy-all'
+    testCompile 'org.spockframework:spock-core'
+    testCompile 'com.ericsson.cds:cdi-test-support'
+    testCompile 'com.ericsson.oss.itpf.datalayer.dps:dps-test-support'
+    testCompile 'cglib:cglib-nodep'
+    testCompile 'org.objenesis:objenesis'
+    testRuntime 'com.ericsson.oss.itpf.sdk:sdk-resources'
+    testRuntime 'com.ericsson.oss.itpf.sdk:sdk-cluster-core'
+    testRuntime 'org.hibernate:hibernate-validator'
+    testRuntime 'org.hornetq:hornetq-jms-server'
+    compile 'org.infinispan:infinispan-jcache'
+    testRuntime 'org.jboss.resteasy:resteasy-jackson-provider:2.3.7.Final'
+  }
+}
+
+project(':script-engine-alias-ejb') {
+  dependencies {
+    compile 'com.ericsson.oss.itpf.datalayer.dps:dps-api'
+    compile 'com.ericsson.oss.services.cli.alias.model:clialias-jar'
+    compile 'com.ericsson.oss.itpf.sdk:sdk-cache-api'
+    compile 'com.ericsson.oss.itpf.sdk:sdk-eventbus-api'
+    testCompile 'com.ericsson.oss.itpf.datalayer.dps:dps-test-support'
+    testCompile 'cglib:cglib-nodep'
+    testCompile 'org.objenesis:objenesis'
+    compile project(':script-engine-api')
+    compile project(':script-engine-editor-spi')
+    compile project(':script-engine-error-jar')
+  }
+}
+
+project(':script-engine-error-jar') {
+  dependencies {
+    compile 'com.ericsson.oss.itpf.sdk:sdk-recording-api'
+    compile 'com.ericsson.oss.itpf.sdk:sdk-context-api'
+    compile project(':script-engine-editor-spi')
+  }
+}
+
+project(':script-engine-testsuite') {
+  dependencies {
+    compile project(':script-engine-war')
+    compile 'commons-httpclient:commons-httpclient'
+  }
+}

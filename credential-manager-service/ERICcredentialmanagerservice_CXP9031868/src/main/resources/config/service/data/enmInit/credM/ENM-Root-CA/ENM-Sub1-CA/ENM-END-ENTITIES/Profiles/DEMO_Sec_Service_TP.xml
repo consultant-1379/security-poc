@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+<Trust-Profiles>
+	
+	<TrustProfile Name="DEMO_SBI_FCTP_TP" >
+		<InternalCA>DEMO_NE_OAM_CA</InternalCA>
+		<InternalCA>DEMO_Root_CA</InternalCA>
+		<ExternalCA>ENM_ExtCA3</ExternalCA>
+	</TrustProfile>	
+	
+	<TrustProfile Name="EPPKI_TP" >
+		<InternalCA>DEMO_Management_CA</InternalCA>
+		<ExternalCA>VC_Root_CA_A1</ExternalCA>
+	</TrustProfile>		
+	
+	<TrustProfile Name="EPPKI_A1B1_TP" >
+		<InternalCA>DEMO_Management_CA</InternalCA>
+		<ExternalCA>VC_Root_CA_A1</ExternalCA>
+		<ExternalCA>VC_Root_CA_B1</ExternalCA>
+	</TrustProfile>		
+	
+</Trust-Profiles>	
+</Profiles>

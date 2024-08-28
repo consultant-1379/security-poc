@@ -1,0 +1,19 @@
+to build in local
+=================
+
+cd image
+docker rmi armdocker.rnd.ericsson.se/proj-enm/mysimpleservice  
+docker build -t armdocker.rnd.ericsson.se/proj-enm/mysimpleservice  .
+cd ..
+
+
+useful commands
+===============
+
+kubectl logs -f $(kubectl get pod -o name | grep myservice | tail -n 1)
+
+kubectl exec -it $(kubectl get pod -o name | grep myservice | tail -n 1) bash
+
+while sleep 1; do curl $(kubectl describe service myservice-simpleservice | grep "IP:" | awk '{print $2}')/counter; echo "---"; done
+
+

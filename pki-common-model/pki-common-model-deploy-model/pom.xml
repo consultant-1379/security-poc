@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<artifactId>pki-common-ext-model</artifactId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>pki-common-model-deploy-model</artifactId>
+	<packaging>jar</packaging>
+	<name>[${project.parent.artifactId}] model module</name>
+	<dependencies>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-common-model-jar</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>add-model-processing-dir-as-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+						<configuration>
+							<resources>
+								<resource>
+									<directory>../pki-common-model-jar/target/model-build/etc/model</directory>
+									<excludes>
+										<exclude>**/*.gitignore</exclude>
+									</excludes>
+									<targetPath>modeling/etc/model</targetPath>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.ericsson.oss.itpf.modeling</groupId>
+				<artifactId>model-deployment-jar</artifactId>
+				<version>${version.model-deployment-tool}</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.ericsson.oss.itpf.modeling</groupId>
+						<artifactId>default-mdt-plugins-jar</artifactId>
+						<version>${version.model-deployment-tool}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<jarFiles>
+						<jarFile>${project.build.directory}/pki-common-model-deploy-model-${project.version}.jar</jarFile>
+
+					</jarFiles>
+					<modelRoot>${project.build.directory}/deployed-model</modelRoot>
+					<xmlRepo>${project.build.directory}/deployed-model/modelRepo.xml</xmlRepo>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>model-deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

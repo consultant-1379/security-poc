@@ -1,0 +1,24 @@
+- name: gp
+  configMap:
+    name: gpshmcoreserv
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: norollback
+  persistentVolumeClaim:
+    claimName: norollback
+- name: smrs
+  persistentVolumeClaim:
+    claimName: smrs

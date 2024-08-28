@@ -1,0 +1,14 @@
+- backend:
+    service:
+      name: cmevents
+      port:
+        number: 443
+  path: /config-mgmt/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmevents
+      port:
+        number: 443
+  path: /pib/
+  pathType: ImplementationSpecific

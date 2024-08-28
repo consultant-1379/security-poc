@@ -1,0 +1,17 @@
+{{- if .Values.global.ericIngress.enabled }}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: nbi-bnsi-fm
+spec:
+  virtualServiceIP: {{ .Values.global.vips.fm_vip_address }}
+  backends:
+    name: nbi-bnsi-fm
+    config:
+      - ports:
+          vipPort: 8345
+          svcPort: 8345
+        protocol: tcp
+        algo: lc
+        mode: nat
+{{- end }}

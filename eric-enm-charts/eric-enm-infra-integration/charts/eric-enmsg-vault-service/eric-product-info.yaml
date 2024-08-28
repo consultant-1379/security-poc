@@ -1,0 +1,19 @@
+images:
+
+   eric-enmsg-vault-service:
+     name: "eric-enmsg-vault-service"
+     registry: "armdocker.rnd.ericsson.se"
+     repoPath: "proj-enm"
+     tag: "1.27.9-1"
+
+   vault3pp:
+     name: "eric-enm-vault-3pp"
+     registry: "armdocker.rnd.ericsson.se"
+     repoPath: "proj-enm"
+     tag: "1.27.9-1"
+
+   consulagent:
+     name: "eric-enm-kvstore-hc"
+     registry: "armdocker.rnd.ericsson.se"
+     repoPath: "proj-enm"
+     tag: 2.26.0-19

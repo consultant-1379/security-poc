@@ -1,0 +1,9 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg-amos.service") -}}
+  {{- define "eric-enmsg-amos.service" -}}
+metadata:
+  name: amos-sts
+  labels:
+    service: {{ .Values.service.name }}
+spec:
+  clusterIP: None
+  {{- end -}}

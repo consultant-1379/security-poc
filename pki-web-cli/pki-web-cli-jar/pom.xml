@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>pki-web-cli</artifactId>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+    	<version>1.0.2-SNAPSHOT</version>
+    </parent>
+	<artifactId>pki-web-cli-jar</artifactId>
+	<packaging>jar</packaging>
+
+	<name>[${project.parent.artifactId}] JAR module</name>
+	<properties>
+		<apache.httpcomponents-client.version>4.4.1</apache.httpcomponents-client.version>
+		<consolidated.jacoco.path>${project.basedir}/../target/jacoco.exec</consolidated.jacoco.path>
+		<sonar.exclusions>src/test/java/**/CertificateManagementImportExtCAHandlerTest.java</sonar.exclusions>
+	</properties>
+
+	<build>
+		<finalName>${project.parent.artifactId}-${project.version}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>${version.jboss-as-maven-plugin}</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.antlr</groupId>				
+				<artifactId>antlr4-maven-plugin</artifactId>
+				<version>${version.antlr4-maven-plugin}</version>
+				<configuration>
+					<sourceDirectory>src/main/g4</sourceDirectory>
+					<outputDirectory>target/generated/main/java/</outputDirectory>
+					<libDirectory>src/main/g4/com/ericsson/itpf/security/pki/parser</libDirectory>
+					<listener>false</listener>
+				</configuration>
+				<executions>
+					<execution>
+						<id>antlr-default</id>
+						<!-- phase>post-clean</phase -->
+						<goals>
+							<goal>antlr4</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>antlr-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>antlr4</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>${version.build-helper-maven-plugin}</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/generated/main/java/*</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- -->
+		</plugins>
+
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<inherited>true</inherited>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+					</configuration>
+				</plugin>
+
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											build-helper-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.7,)
+										</versionRange>
+										<goals>
+											<goal>regex-property</goal>
+											<goal>add-source</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.antlr</groupId>
+										<artifactId>
+											antlr4-maven-plugin
+										</artifactId>
+										<versionRange>
+											[4.1,)
+										</versionRange>
+										<goals>
+											<goal>antlr4</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<useSystemClassLoader>true</useSystemClassLoader>
+					<useManifestOnlyJar>false</useManifestOnlyJar>
+					<useFile>false</useFile>
+					<includes>
+						<include>**/*Spec.java</include>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			</plugins>
+		</pluginManagement>
+
+
+
+
+
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4-runtime</artifactId>
+			<version>${version.antlrruntime}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-resources-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-recording-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+        
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-common-model</artifactId>
+			<version>${version.pki-manager-api}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.ericsson.oss.itpf.sdk</groupId>
+					<artifactId>sdk-core-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-profilemanagement-api</artifactId>
+			<version>${version.pki-manager-api}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.ericsson.oss.itpf.sdk</groupId>
+					<artifactId>sdk-core-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-configurationmanagement-api</artifactId>
+			<version>${version.pki-manager-api}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.ericsson.oss.itpf.sdk</groupId>
+					<artifactId>sdk-core-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-certificatemanagement-api</artifactId>
+			<version>${version.pki-manager-api}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.ericsson.oss.itpf.sdk</groupId>
+					<artifactId>sdk-core-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-crlmanagement-api</artifactId>
+			<version>${version.pki-manager-api}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.ericsson.oss.itpf.sdk</groupId>
+					<artifactId>sdk-core-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-crlmanagement-api</artifactId>
+			<version>${version.pki-manager-api}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${version.mockito-all}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.6.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.6.1</version>
+			<scope>test</scope>
+		</dependency> 
+
+
+		<dependency>
+			<groupId>com.ericsson.oss.services.cm</groupId>
+			<artifactId>script-engine-editor-spi</artifactId>
+			<version>${version.scriptengine-spi}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+			<artifactId>pki-manager-config-model-api</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.ericsson.oss.itpf.sdk</groupId>
+					<artifactId>sdk-core-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+					<artifactId>modeling-annotation-processor-jar</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+					<artifactId>core-emodel-schemata-xsd-jar</artifactId>
+				</exclusion>
+			<exclusion>
+			<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+			<artifactId>modeling-annotation-processor-jar</artifactId>
+			</exclusion>
+			<exclusion>
+			<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+			<artifactId>core-emodel-schemata-xsd-jar</artifactId>
+			</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-local-service-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${apache.httpcomponents-client.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>${version.bcprov}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15on</artifactId>
+			<version>${version.bcpkix}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-security-accesscontrol-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+</project>

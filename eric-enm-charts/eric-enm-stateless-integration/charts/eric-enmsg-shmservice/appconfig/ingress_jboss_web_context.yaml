@@ -1,0 +1,378 @@
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /oss/shm/rest/license/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /oss/shm/rest/inventory/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /oss/shm/rest/licensekeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /oss/shm/rest/softwarePackage/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /help/en-us/shm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmhardwareinventory/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmhardwareinventory/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmsoftwareinventory/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmsoftwareinventory/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmlicenseinventory/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmlicenseinventory/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmbackupinventory/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmbackupinventory/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmcreateupgradejob/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmcreateupgradejob/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmcreatebackupjob/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmcreatebackupjob/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmimportedkeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmimportedkeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shminstalllicensekeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shminstalllicensekeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmnoderestartjob/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmnoderestartjob/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmrestorebackupjob/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmrestorebackupjob/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /importsoftwarepackages/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/importsoftwarepackages/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmsoftwarepackages/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmsoftwarepackages/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmbackuphousekeeping/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmbackuphousekeeping/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmimportlicensekeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmimportlicensekeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmexport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmexport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /licensekeyvalidationresults/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/licensekeyvalidationresults/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmintegrationlicensekeys/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmintegrationlicensekeys/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmjobdetails/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmjobdetails/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmjoblogs/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmjoblogs/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmrefreshlicensekeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmrefreshlicensekeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmrequestLKF/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmrequestLKF/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /shmupgradelicensekeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /locales/en-us/shmupgradelicensekeyfiles/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: shmserv
+      port:
+        number: 443
+  path: /nhcprofileservice/
+  pathType: ImplementationSpecific

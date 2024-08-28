@@ -1,0 +1,12 @@
+- name: mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment
+- name: configmgt
+  mountPath: /ericsson/config_mgt
+- name: custom
+  mountPath: /ericsson/custom
+- name: data
+  mountPath: /ericsson/tor/data
+- name: hcdumps
+  mountPath: /ericsson/enm/dumps
+- name: gp
+  mountPath: /gp

@@ -1,0 +1,350 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configEntity xmlns="http://www.ericsson.com/oss/itpf/deployment/dst/descriptor">
+  <description>pkiraserv</description>
+  <singleton>true</singleton>
+  <scaleUnit>
+    <loadDrivers>
+      <loadDriver name="numberOfNodes" description="Number of Network Nodes in ENM System" />
+      <loadDriver name="numberEnodebRadioNode" description="Number of DU Radio Node LTE EnodeB (CPP) Network Elements" />
+      <loadDriver name="numberManagedCAs" description="Number of Certificate Authorities (CAs) managed by PKI: PKI-MGTRCCA01-02 PKI system is able to manage at least 100 CAs." />
+      <loadDriver name="certificateEnrollmentNodeBatchSize" description="PKI-MGT-IRCSC01 Issue and Re-issue of Certificates to Network Elements using SCEP and CMPv2 online enrollment protocols. The entire enrollment process is performed during maintenance window. It can be performed in batches of up to 6250 nodes." />
+    </loadDrivers>
+    <minimumUnit>
+      <profile>
+        <cpuCores>0</cpuCores>
+        <cpuMinutes>19<!-- Total Number of CPU minutes per day taken for minimal load taken from DDP--></cpuMinutes>
+        <peakCpuMinutes>1</peakCpuMinutes>
+        <memory>4141<!-- Maximum memory observed in the day when pkiraserv is operating with minimal load --></memory>
+      </profile>
+      <profileConversionFormulae>
+        <cpuCores>0</cpuCores>
+        <cpuMinutes>19</cpuMinutes>
+        <peakCpuMinutes>1</peakCpuMinutes>
+        <memory>(pkiraservHeapMemMB + pkiraservThreadsMB + pkiraservNonHeap + pkiraservProcessRss + pkiraservOSMemory + pkiraservMinKbytesFree)</memory>
+      </profileConversionFormulae>
+    </minimumUnit>
+    <optimalUnit>
+      <!--    The Optimal load considered here is not expected every day. It is seen only when Enrollment/re-issue/SL2 Activation/IPSec Activation is done for numberOfNodes. On all other days OptimalUnit would be same as MinimalUnit-->
+      <profile>
+        <cpuCores>0</cpuCores>
+        <cpuMinutes>57</cpuMinutes>
+        <!--Considering 20000 nodes are enrolled with both OAM and IPSec certificates. So total Enrollment requests would be 40000 -->
+        <peakCpuMinutes>15</peakCpuMinutes>
+        <!-- It is observed that around 2000 nodes are getting enrolled in 11 minutes. So considered 10000 nodes are enrolled in 1 hour (busy hour)-->
+        <memory>4141</memory>
+        <!--Memory Required to support optimal operation -->
+      </profile>
+      <profileConversionFormulae>
+        <cpuCores>0<!-- 0 unless a service requires dedicated cores to achieve performance.--></cpuCores>
+        <cpuMinutes>(0.25 + (numberOfNodes * 0.0014))</cpuMinutes>
+        <!-- (cpuMinutes for minimumUnit) + (numberOfNodes * cpuMinutesPerNode)-->
+        <peakCpuMinutes>(0.03 + (numberOfNodes * 0.0014))</peakCpuMinutes>
+        <!-- This should be applied only if numberOfNodes < 10000. If numberOfNodes > 10000, a fixed value of 15 (defined in profile) should be used. (peakCpuMinutes for minimumUnit) + (numberOfNodes * cpuMinutesPerNode)-->
+        <memory>(pkiraservHeapMemMB + pkiraservThreadsMB + pkiraservNonHeap + pkiraservProcessRss + pkiraservOSMemory + pkiraservMinKbytesFree)</memory>
+        <!-- Heap memory is reaching a max level of around 1950 MB after multiple tests. This max value is not changing much even if the numberOfNodes being enrolled is increased. Could not see any fixed pattern of this with the number of nodes-->
+      </profileConversionFormulae>
+    </optimalUnit>
+  </scaleUnit>
+  <parameters>
+    <property name="pkiraservHeapMemMB" defaultValue="2824" description="Maximum JVM Heap size" />
+    <property name="pkiraservThreadsMB" defaultValue="321" description="Max JVM Thread Stacks (by default thread size is 1MB)" />
+    <property name="pkiraservNonHeap" defaultValue="195" description="Estimated Maximum JVM Non Heap memory in MB" />
+    <property name="pkiraservProcessRss" defaultValue="121" description="Estimated maximum processes running on VM" />
+    <property name="pkiraservOSMemory" defaultValue="459" description="OS Headroom" />
+    <property name="pkiraservMinKbytesFree" defaultValue="221" description="Minimum Free memory" />
+    <property name="wfCongestionThreshold" defaultValue="500" description="Value to limit the number of running workflows" usage="OPTIONAL" />
+    <property name="managedCaRows" defaultValue="300" description="Number of times a CA keypair is generated in PKI System. Each keypair would add one row in DB" usage="OPTIONAL" />
+    <property name="msgSCEPRAtoPKIManagerBytes" defaultValue="5390" description="Size of the message that contains the Certificate request message sent from SCEP RA to PKI Manager. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="numberMsgSCEPRAtoPKIManager" defaultValue="30" description="Number of messages that contains the Certificate request message sent from SCEP RA to PKI Manager. This number is observed while testing and cannot be changed directly externally" usage="OPTIONAL" />
+    <property name="msgPKIManagertoSCEPRAResponseBytes" defaultValue="5120" description="Size of the message that contains the Certificate response message sent from PKI Manager to SCEP RA. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="numberMsgPKIManagertoSCEPRAResponse" defaultValue="5" description="Number of messages that contains the Certificate response message sent from PKI Manager to SCEP RA. This number is observed while testing and cannot be changed directly externally" usage="OPTIONAL" />
+    <property name="msgCMPRAtoPKIManagerBytes" defaultValue="5690" description="Size of the message that contains the Certificate request message sent from CMP RA to PKI Manager. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="numberMsgCMPRAtoPKIManager" defaultValue="25" description="Number of messages that contains the Certificate request message sent from CMP RA to PKI Manager. This number is observed while testing and cannot be changed directly externally" usage="OPTIONAL" />
+    <property name="msgPKIManagertoCMPRAResponseBytes" defaultValue="12800" description="Size of the message that contains the Certificate response message sent from PKI Manager to CMP RA. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="numberMsgPKIManagertoCMPRAResponse" defaultValue="5" description="Number of messages that contains the Certificate response message sent from PKI Manager to CMP RA. This number is observed while testing and cannot be changed directly externally" usage="OPTIONAL" />
+    <property name="msgCRLNotificationBytes" defaultValue="10240" description="Size of the message that contains the Certificate response message sent from PKI Manager to CMP RA. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="msgCRLRequestBytes" defaultValue="10240" description="Size of the message that contains the Certificate response message sent from PKI Manager to CMP RA. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="msgCRLResponseAckBytes" defaultValue="20480" description="Size of the message that contains the CRL Acknowledgement messages, sent from CDPS to PKI Manager. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="msgTDPSCertificateEventBytes" defaultValue="204800" description="Size of the message that contains the certificates that has to be published/unpublished to TDPS, sent from PKI Manager to TDPS. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="msgTDPSAcknowledgementBytes" defaultValue="204800" description="Size of the message that contains the Acknowledgement messages from TDPS for any previous publish/unpublish event are sent, sent from TPDS to PKI Manager. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="msgTDPServiceRequestBytes" defaultValue="2048" description="Size of the request message that contains the requests for all certificates that needs to be published in TDPS, sent from TDPS to PKI Manager. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="msgTDPServiceResponseBytes" defaultValue="512000" description="Size of the response message that contains the Trusted Certificates to be published in TPDS, sent from PKI Manager to TDPS. This message is constructed by the system and it not expected to change" usage="OPTIONAL" />
+    <property name="numberOfVMsAndENMServicesWithCerts" defaultValue="200" description="Number of VMs in a given ENM deployment and ENM Services which requested certificates from PKI. The defaultValue provided is rough value for a 60K deployment" usage="OPTIONAL" />
+    <property name="numberOfTimesCACertRevoked" defaultValue="10" description="Number of times CAs would be revoked. The value for this depends on the events at customer end." usage="OPTIONAL" />
+    <property name="numberOfTimesNodeCertRevoked" defaultValue="20" description="Number of times a node certificate would be revoked. The value for this depends on the events at customer end." usage="OPTIONAL" />
+    <property name="msgEntityRevokeDetailsSizeBytes" defaultValue="90" description="Size of Entity revocation details in the CRLResponseMessage. Entity can be a CA or a Node" usage="OPTIONAL" />
+    <property name="numberOfStatusEventsSentForCertificateEnrollment" defaultValue="3" description="Number of status events sent for Certificate Enrollment" usage="OPTIONAL" />
+    <property name="statusEventSizeForCertificateEnrollment" defaultValue="1024" description="Size of the each status event for Certificate Enrollment in bytes" usage="OPTIONAL" />
+    <property name="certificateTypesForCertificateEnrollment" defaultValue="2" description="Certificate Enrollment is sent for both IPSEC and OAM certificate types" usage="OPTIONAL" />
+  </parameters>
+  <deploymentDependencies>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.itpf.datalayer.3pp</groupId>
+      <artifactId>postgressql</artifactId>
+      <version></version>
+      <alias>pkirascepdb</alias>
+      <qualifier>GLOBAL</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="postgresDatabaseName">pkirascepdb</loadConversionFormula>
+        <!-- This DB holds the data about the SCEP requests that have come to RA. It is a volatile DB and the data is maintained only for a given number of days, after which the data is deleted -->
+        <loadConversionFormula dependencyLoadDriver="maxPostgresConnections">5</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="countPostgresTables">1</loadConversionFormula>
+        <!-- Only one major table. Other table is db_version table, which is updated only when there is a schema change -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresTableSizeMB">(6589 + (2 * numberEnodebRadioNode))/1024</loadConversionFormula>
+        <!--((Initial-DBSize-in-KB) + (Increase-Per-Node-in-KB) * numberEnodebRadioNode))/1024. Here numberEnodebRadioNode -->
+        <loadConversionFormula dependencyLoadDriver="maxPostgresRowsInserted">numberEnodebRadioNode</loadConversionFormula>
+        <!-- Data taken after running enrollment for bulk nodes -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsFetched">25 * numberEnodebRadioNode</loadConversionFormula>
+        <!-- Data taken after running enrollment for bulk nodes. So this data is seen only during enrollment. On other days roughly "numberEnodebRadioNode" are fetched by housekeeping job -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsUpdated">numberEnodebRadioNode</loadConversionFormula>
+        <!-- Data taken after running enrollment for bulk nodes. On other days no updates are expected -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsDeleted">numberEnodebRadioNode</loadConversionFormula>
+        <!-- Delete happens only after the given number of days are elapsed, when the old records are purged -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.itpf.datalayer.3pp</groupId>
+      <artifactId>postgressql</artifactId>
+      <version></version>
+      <alias>pkiracmpdb</alias>
+      <qualifier>GLOBAL</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="postgresDatabaseName">pkiracmpdb</loadConversionFormula>
+        <!-- This DB holds the data about the CMP requests that have come to RA. It is a volatile DB and the data is maintained only for a given number of days, after which the data is deleted -->
+        <loadConversionFormula dependencyLoadDriver="maxPostgresConnections">5</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="countPostgresTables">1</loadConversionFormula>
+        <!-- Only one major table. Other table is db_version table, which is updated only when there is a schema change -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresTableSizeMB">(6597 + (33 * numberOfNodes))/1024</loadConversionFormula>
+        <!--((Initial-DBSize-in-KB) + (Increase-Per-Node-in-KB) * numberOfNodes))/1024-->
+        <loadConversionFormula dependencyLoadDriver="maxPostgresRowsInserted">40 * numberOfNodes</loadConversionFormula>
+        <!-- Data taken after running enrollment for bulk nodes -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsFetched">170 * numberOfNodes</loadConversionFormula>
+        <!-- Data taken after running enrollment for bulk nodes. So this data is seen only during enrollment. On other days roughly "6*numberOfNodes" are fetched by housekeeping job -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsUpdated">7 * numberOfNodes</loadConversionFormula>
+        <!-- Data taken after running enrollment for bulk nodes. On other days no updates are expected -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsDeleted">33 * numberOfNodes</loadConversionFormula>
+        <!-- This number is arrived by monitoring the number of rows deleted during enrollment. However, if housekeeping also deletes the certificates on same day, this  -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.itpf.datalayer.3pp</groupId>
+      <artifactId>postgressql</artifactId>
+      <version></version>
+      <alias>pkiratdpsdb</alias>
+      <qualifier>GLOBAL</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="postgresDatabaseName">pkiratdpsdb</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="maxPostgresConnections">5</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="countPostgresTables">1</loadConversionFormula>
+        <!-- Only one major table. Other table is db_version table, which is updated only when there is a schema change -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresTableSizeMB">(6637 + (1.1 * 500))/1024</loadConversionFormula>
+        <!-- ((Initial-DBSize-in-KB) + (Increase-Per-Certificate-in-KB) * 500))/1024 - Considering 500 certificates are published in TDPS -->
+        <loadConversionFormula dependencyLoadDriver="maxPostgresRowsInserted">500</loadConversionFormula>
+        <!-- Considering 500 certificates are exported to TDPS (including CAs and Entities) -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsFetched">(3500 + (12 *(numberOfNodes - numberEnodebRadioNode)))</loadConversionFormula>
+        <!-- Gen2 nodes request Trust Certificate for 3 trusted CAs. Assuming each CA has 4 Active/Inactive Certificates, we get 12 (trusted certificates) requests per one enrollment for every CRL every day. (Average-Fetch-Observed-Per-Day + (NoOf-TrustedCerts * NumberOf-Gen2-Nodes)) -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsUpdated">500</loadConversionFormula>
+        <!-- No records are Updated during regular operations on a regular day. Data is updated only when a CA/Entity Reissue happens which are exported in TDPS -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsDeleted">500</loadConversionFormula>
+        <!-- No records are Deleted during regular operations on a regular day. This number is reached if all the certificates published in TDPS are expired/revoked -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.itpf.datalayer.3pp</groupId>
+      <artifactId>postgressql</artifactId>
+      <version></version>
+      <alias>pkicdpsdb</alias>
+      <qualifier>GLOBAL</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="postgresDatabaseName">pkicdpsdb</loadConversionFormula>
+        <!-- Only one major table. Other table is db_version table, which is updated only when there is a schema change -->
+        <loadConversionFormula dependencyLoadDriver="maxPostgresConnections">5</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="countPostgresTables">1</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="avgPostgresTableSizeMB">(6621 + 450 + (2 * 0.03*numberOfNodes))/1024</loadConversionFormula>
+        <!-- (Initial-DBSize-in-KB + SizeOf-98CAs-CRLs + (NE-IPSec-CA, NE-OAM-CAs(2) * Average-CRL-Size-Growth-Per-Node * numberOfNodes))/1024. Considered 100CAs in total, [98 CAs = 96 CAs CRLs with zero data + Infrastructure-CA, ENM-OAM-CA (issues CRL for ENM-Services)], NE-IPSec-CA, NE-OAM-CA issues CRL that contains node certificates. -->
+        <loadConversionFormula dependencyLoadDriver="maxPostgresRowsInserted">1000</loadConversionFormula>
+        <!-- Rough number considering 100 CAs in system and each CA having 10 Active/Inactive certificates -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsFetched">3500 + 1000</loadConversionFormula>
+        <!-- Considering nodes request for every CRL every day. (Average-Fetch-Observed-Per-Day + CRL-Requests-For-All-CAs) -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsUpdated">1000</loadConversionFormula>
+        <!-- No records are Updated during regular operations on a regular day. Data is updated only when a CRL expires -->
+        <loadConversionFormula dependencyLoadDriver="avgPostgresRowsDeleted">1000</loadConversionFormula>
+        <!-- No records are deleted during regular operations on a regular day. Delete occurs only when the CA certificates are expired/revoked -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredScepRequestChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredScepRequestChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">(msgSCEPRAtoPKIManagerBytes * numberMsgSCEPRAtoPKIManager)</loadConversionFormula>
+        <!-- (EventSize-InBytes * numberEnodebRadioNode). Considering Enrollment/re-issue/SL2 Activation/IPSec Activation performed on a given day for numberOfNodes -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredScepResponseChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredScepResponseChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">(msgPKIManagertoSCEPRAResponseBytes * numberMsgPKIManagertoSCEPRAResponse)</loadConversionFormula>
+        <!-- (EventSize-InBytes * numberEnodebRadioNode). Considering Enrollment/re-issue/SL2 Activation/IPSec Activation performed on a given day for numberOfNodes -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredCMPServiceRequestChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredCMPServiceRequestChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">(msgCMPRAtoPKIManagerBytes * numberMsgCMPRAtoPKIManager)</loadConversionFormula>
+        <!-- (EventSize-InBytes * numberOfNodes). Considering Enrollment/re-issue/SL2 Activation/IPSec Activation performed on a given day for numberOfNodes -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredCMPServiceResponseChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredCMPServiceResponseChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">(msgPKIManagertoCMPRAResponseBytes * numberMsgPKIManagertoCMPRAResponse)</loadConversionFormula>
+        <!-- (EventSize-InBytes * numberOfNodes). Considering Enrollment/re-issue/SL2 Activation/IPSec Activation performed on a given day for numberOfNodes -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredCRLNotificationChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredCRLNotificationChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">msgCRLNotificationBytes</loadConversionFormula>
+        <!-- This channel is used to send CRL Notification Messages between PKI Manager and CDPS and the content will only depend on number of CAs in system and not on the numberOfNodes. It is expected to have one set of Notification messages every day. Considering 100 CAs can be present in the system we arrived at a rough calculation of ~10 KB. Hence It is put as a constant value, which can be considered as the maximum value seen in a single day -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredCRLRequestChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredCRLRequestChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">msgCRLRequestBytes</loadConversionFormula>
+        <!-- This channel is used to send CRLRequestMessage from CDPS to PKI Manager and the content will only depend on number of CAs in system and not on the numberOfNodes. It is expected to have two Request messages (one for publish, other for unpublish) every day. Considering 100 CAs can be present in the system we arrived at a rough calculation of ~10 KB. Hence It is put as a constant value, which can be considered as the maximum value seen in a single day -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredCRLResponseChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredCRLResponseChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">(((numberOfVMsAndENMServicesWithCerts + numberManagedCAs) * numberOfTimesCACertRevoked * msgEntityRevokeDetailsSizeBytes) +  (2 * numberOfTimesNodeCertRevoked * msgEntityRevokeDetailsSizeBytes * numberOfNodes))</loadConversionFormula>
+        <!-- ((CRLEventSize-For-Services&CAs + (NumberOfTimes-Entity-Revoked * IpSec-CA&OAM-CA * BytesPer-Node * numberOfNodes)) -->
+        <!-- CRLEventSize-For-Services&CAs - Average CRLEvent size for CRLs that contain certificate details of ENMServices and CAs. IpSec-CA&OAM-CA - Currently IPSec-CA and OAM-CA issue certificates for all the nodes, so IPSec-CA, OAM-CA count = 2. -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredCRLResponseAckChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredCRLResponseAckChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">msgCRLResponseAckBytes</loadConversionFormula>
+        <!-- This channel is used to send CRL Acknowledgement messages from CDPS to PKI Manager and the content will only depend on number of CAs in system and not on the numberOfNodes. It is expected to have two acknowledgement messages (one for publish, other for unpublish) every day. Considering 100 CAs can be present in the system we arrived at a rough calculation of ~20 KB. Hence It is put as a constant value, which can be considered as the maximum value seen in a single day -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredTDPSCertificateEventChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredTDPSCertificateEventChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">msgTDPSCertificateEventBytes</loadConversionFormula>
+        <!-- Assuming 500 certificates are exported to TDPS. Any certificate that has to be published/unpublished to TDPS will be sent as an event in this channel. Upon testing it is found that each event is taking roughly ~4KB. So considering 50 events (publish/unpublish) sent on average on a given day, we have put the value as 200KB. If we have consider all 500 on a single day, this value would be roughly ~2000KB -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredTDPSAcknowledgementChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredTDPSAcknowledgementChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">msgTDPSAcknowledgementBytes</loadConversionFormula>
+        <!-- Assuming 500 certificates are exported to TDPS. Acknowledgement messages from TDPS for any previous publish/unpublish event are sent in this channel. Upon testing it is found that each event is taking roughly ~4KB. So considering 50 events sent on average on a given day, we have put the value as 200KB. If we have consider all 500 on a single day, this value would be roughly ~2000KB -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredTDPServiceRequestChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredTDPServiceRequestChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">msgTDPServiceRequestBytes</loadConversionFormula>
+        <!-- This event is sent by TDPS to PKI Manager during start up of TDPS service. This requests for all certificates that needs to be published in TDPS. Upon testing, it is observed that this event is roughly ~2KB. Hence the fixed value 2KB is provided here -->
+      </loadDriverConverters>
+    </deploymentDependency>
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredTDPServiceResponseChannel</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredTDPServiceResponseChannel</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Queue</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">msgTDPServiceResponseBytes</loadConversionFormula>
+        <!-- Assuming 500 certificates are exported to TDPS. Upon testing it is observed that each certificate's contribution towards the TDPSServiceResponse message (sent in this channel) is roughly ~1KB. So considering 500 certificates, a fixed value of 500KB is put here -->
+      </loadDriverConverters>
+    </deploymentDependency>    
+    <deploymentDependency>
+      <groupId>com.ericsson.oss.servicegroupcontainers</groupId>
+      <artifactId>jmsserver</artifactId>
+      <version />
+      <alias>ClusteredCertificateEnrollmentStatusTopic</alias>
+      <qualifier>Not Required</qualifier>
+      <loadDriverConverters>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationName">ClusteredCertificateEnrollmentStatusTopic</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationType">Topic</loadConversionFormula>
+        <loadConversionFormula dependencyLoadDriver="jmsDestinationSizeBytes">(certificateEnrollmentNodeBatchSize * certificateTypesForCertificateEnrollment * numberOfStatusEventsSentForCertificateEnrollment * statusEventSizeForCertificateEnrollment)</loadConversionFormula>
+        <!-- PKI Manager will be handling certificate enrollment in batches, Assuming 6250 nodes in a batch sent Certificate Enrollment requests and when the durable subscriber for Topic is down then the total size of the Topic would be (6250 * 2 * 3 * 1024) 38400000 bytes(37500KB). 
+        	6250 - Batch size,
+        	2 - Certificate Enrollment is sent for both IPSEC and OAM certificate types.
+        	3 - numberOfStatusEventsSentForCertificateEnrollment
+        	1024 - statusEventSizeForCertificateEnrollment in bytes -->
+      </loadDriverConverters>
+    </deploymentDependency>
+  </deploymentDependencies>
+</configEntity>

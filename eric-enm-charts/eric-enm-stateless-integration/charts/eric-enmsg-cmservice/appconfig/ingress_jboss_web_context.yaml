@@ -1,0 +1,133 @@
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /enm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /enm-nbi/cm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /script-engine/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /server-scripting/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /oss/hc-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /configuration/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /upgrade-independence-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /cliapp/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /locales/en-us/cliapp/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /help/en-us/cliapp/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /nodeversionsupport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /locales/en-us/nodeversionsupport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /help/en-us/nodeversionsupport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /nodeversionsupportresults/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /locales/en-us/nodeversionsupportresults/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /releaseindependencesupported/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /locales/en-us/releaseindependencesupported/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /commonwidgets/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: cmserv
+      port:
+        number: 443
+  path: /locales/en-us/commonwidgets/
+  pathType: ImplementationSpecific

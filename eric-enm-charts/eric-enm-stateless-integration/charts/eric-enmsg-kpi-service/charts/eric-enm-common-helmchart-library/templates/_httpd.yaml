@@ -1,0 +1,78 @@
+{{- define "eric-enm-common-helmchart-library.httpd.tpl" -}}
+name: {{ .Values.service.name }}-httpd
+image: {{ template "eric-enm-common-helmchart-library.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "eric-enm-httpd" "name" }}:{{ index .Values "images" "eric-enm-httpd" "tag" }}
+imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+env:
+{{ tpl (.Files.Get "appconfig/sidecars/httpd/env.yaml") . }}
+volumeMounts:
+{{ tpl (.Files.Get "appconfig/sidecars/httpd/volumeMounts.yaml") . }}
+{{- if index .Values "startupProbe" }}
+{{- if .Values.startupProbe.enabled }}
+startupProbe:
+  exec:
+    command:
+      - /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+      - --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 6
+{{- end }}
+{{- end }}
+livenessProbe:
+  exec:
+    command:
+      - /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+      - --exec_agents
+{{- if index .Values "startupProbe" }}
+{{- if .Values.startupProbe.enabled }}
+  initialDelaySeconds: 30
+{{- end }}
+{{- else }}
+  initialDelaySeconds: 120
+{{- end }}
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  exec:
+    command:
+      - /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+      - --exec_agents
+{{- if index .Values "startupProbe" }}
+{{- if .Values.startupProbe.enabled }}
+  initialDelaySeconds: 10
+{{- end }}
+{{- else }}
+  initialDelaySeconds: 60
+{{- end }}
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+{{- if index .Values "securityContext" }}
+{{- if index .Values "securityContext" "httpd" }}
+securityContext:
+{{ toYaml .Values.securityContext.httpd | indent 2 }}
+{{- end }}
+{{- end }}
+{{- if index .Values "resources" "httpd" }}
+{{- if  .Values.resources.httpd.enabled }}
+resources:
+  requests:
+    memory: {{ .Values.resources.httpd.requests.memory }}
+    cpu: {{ .Values.resources.httpd.requests.cpu }}
+{{- if index .Values "resources" "httpd" "requests" "ephemeral-storage" }}
+    ephemeral-storage: {{ index .Values "resources" "httpd" "requests" "ephemeral-storage" | quote }}
+{{- end }}
+  limits:
+    memory: {{ .Values.resources.httpd.limits.memory }}
+    cpu: {{ .Values.resources.httpd.limits.cpu }}
+{{- if index .Values "resources" "httpd" "limits" "ephemeral-storage" }}
+    ephemeral-storage: {{ index .Values "resources" "httpd" "limits" "ephemeral-storage" | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end -}}
+{{- define "eric-enm-common-helmchart-library.httpd" -}}
+{{- include "eric-enm-common-helmchart-library.util.merge" (append . "eric-enm-common-helmchart-library.httpd.tpl") -}}
+{{- end -}}

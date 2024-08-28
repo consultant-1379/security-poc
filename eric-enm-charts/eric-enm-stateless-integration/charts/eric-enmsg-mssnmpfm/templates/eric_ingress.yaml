@@ -1,0 +1,17 @@
+{{- if .Values.global.ericIngress.enabled }}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: mssnmpfm
+spec:
+  virtualServiceIP: {{ .Values.global.vips.fm_vip_address }}
+  backends:
+    name: mssnmpfm
+    config:
+      - ports:
+          vipPort: 162
+          svcPort: 162
+        protocol: udp
+        algo: rr
+        mode: nat
+{{- end }}

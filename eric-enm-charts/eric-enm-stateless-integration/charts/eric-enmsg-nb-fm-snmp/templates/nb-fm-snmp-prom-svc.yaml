@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nb-fm-snmp-prometheus-svc
+  labels:
+    app: {{ .Values.service.name }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9600"
+spec:
+  selector:
+    app: {{ .Values.service.name }}
+  ports:
+    - protocol: TCP
+      port: 8080
+      name: jboss
+    - protocol: TCP
+      port: 4447
+      name: ejb
+    - protocol: TCP
+      port: 9600
+      name: metrics
+    - protocol: UDP
+      port: 35161
+      name: snmp-agent

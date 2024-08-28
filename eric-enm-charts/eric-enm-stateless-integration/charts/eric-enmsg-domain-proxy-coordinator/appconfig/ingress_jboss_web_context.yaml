@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: domainproxy
+      port:
+        number: 443
+  path: /domain-coordinator-manager-app/services
+  pathType: ImplementationSpecific

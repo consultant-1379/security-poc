@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: nodecli
+      port:
+        number: 8080
+  path: /nodecli-websocket/
+  pathType: ImplementationSpecific

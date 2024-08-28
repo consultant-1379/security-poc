@@ -1,0 +1,6 @@
+dependencies:
+- name: eric-log-transformer
+  repository: https://arm.sero.gic.ericsson.se/artifactory/proj-adp-gs-all-helm/
+  version: 8.3.0+21
+digest: sha256:f9353fef37302c3e8d166be90b45e69ea48dbf7f3fcc0dcd99d9fbf61fee1d24
+generated: "2022-06-06T20:56:19.21822729Z"

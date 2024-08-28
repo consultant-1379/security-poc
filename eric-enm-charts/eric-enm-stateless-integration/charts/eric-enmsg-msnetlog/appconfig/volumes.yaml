@@ -1,0 +1,27 @@
+- name: gp
+  configMap:
+    name: gpmsnetlog
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: smrs
+  persistentVolumeClaim:
+    claimName: smrs
+- name: netlog
+  persistentVolumeClaim:
+    claimName: netlog
+- name: dlms
+  persistentVolumeClaim:
+    claimName: dlms

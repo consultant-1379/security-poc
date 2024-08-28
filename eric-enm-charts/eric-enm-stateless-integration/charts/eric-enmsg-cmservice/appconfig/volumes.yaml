@@ -1,0 +1,48 @@
+- name: gp
+  configMap:
+    name: gpcmserv
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: pm1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pm2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks
+- name: upgind
+  persistentVolumeClaim:
+    claimName: upgind
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: netlog
+  persistentVolumeClaim:
+    claimName: netlog
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dlms
+  persistentVolumeClaim:
+    claimName: dlms
+- name: batch
+  persistentVolumeClaim:
+    claimName: batch
+- name: norollback
+  persistentVolumeClaim:
+    claimName: norollback
+- name: cron
+  persistentVolumeClaim:
+    claimName: cron
+- name: autoprovisioning
+  persistentVolumeClaim:
+    claimName: autoprovisioning

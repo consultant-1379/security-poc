@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?><Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ProfilesSchema.xsd">
+ 
+    <CertificateProfile Name="Pkipoc_CP">
+        <Modifiable>true</Modifiable>
+        <ForCAEntity>false</ForCAEntity>
+        <Version>V3</Version>
+        <SignatureAlgorithm>
+            <Name>SHA256withRSA</Name>
+        </SignatureAlgorithm>
+        <KeyGenerationAlgorithm>
+            <Name>RSA</Name>
+            <KeySize>2048</KeySize>
+        </KeyGenerationAlgorithm>
+        <CertificateValidity>P2Y</CertificateValidity>
+        <Issuer>
+            <CertificateAuthority>
+                <Name>DEMO_OAM_CA</Name>
+            </CertificateAuthority>
+        </Issuer>
+        <SubjectUniqueIdentifier>true</SubjectUniqueIdentifier>
+        <IssuerUniqueIdentifier>false</IssuerUniqueIdentifier>
+        <SkewCertificateTime>PT30M</SkewCertificateTime>
+        <CertificateExtensions>
+            <CertificateExtension xsi:type="AuthorityKeyIdentifier">
+                <Critical>false</Critical>
+                <AuthorityKeyIdentifierType>ISSUER_DN_SERIAL_NUMBER</AuthorityKeyIdentifierType>
+            </CertificateExtension>
+            <CertificateExtension xsi:type="BasicConstraints">
+                <Critical>true</Critical>
+                <IsCA>false</IsCA>
+            </CertificateExtension>
+            <CertificateExtension xsi:type="SubjectKeyIdentifier">
+                <Critical>false</Critical>
+                <KeyIdentifier>
+                    <Algorithm>
+                        <Name>160-BIT_SHA-1</Name>
+                    </Algorithm>
+                </KeyIdentifier>
+            </CertificateExtension>
+            <CertificateExtension xsi:type="KeyUsage">
+                <Critical>true</Critical>
+                <SupportedKeyUsageType>DIGITAL_SIGNATURE</SupportedKeyUsageType>
+                <SupportedKeyUsageType>KEY_ENCIPHERMENT</SupportedKeyUsageType>
+                <SupportedKeyUsageType>KEY_AGREEMENT</SupportedKeyUsageType>
+            </CertificateExtension>
+            <CertificateExtension xsi:type="SubjectAltName">
+                <Critical>false</Critical>
+                <SubjectAltNameField>
+                    <Type>DIRECTORY_NAME</Type>
+                </SubjectAltNameField>
+            </CertificateExtension>
+        </CertificateExtensions>
+        <SubjectCapabilities>
+            <SubjectField>
+                <Type>COMMON_NAME</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>SURNAME</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>COUNTRY_NAME</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>LOCALITY_NAME</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>STATE</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>STREET_ADDRESS</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>ORGANIZATION</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>ORGANIZATION_UNIT</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>DN_QUALIFIER</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>TITLE</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>GIVEN_NAME</Type>
+            </SubjectField>
+            <SubjectField>
+                <Type>SERIAL_NUMBER</Type>
+            </SubjectField>
+        </SubjectCapabilities>
+    </CertificateProfile>
+</Profiles>
+

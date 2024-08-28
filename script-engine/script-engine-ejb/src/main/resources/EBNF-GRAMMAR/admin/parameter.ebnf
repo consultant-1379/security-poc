@@ -1,0 +1,9 @@
+"admin" (* slogan = "Admin command" *) WS "parameter" (* slogan = "Application parameters" *) WS ADMIN_OPTIONS
+
+ADMIN_OPTIONS ::= ( VIEW_PARM | MODIFY_PARM )
+
+VIEW_PARM ::= "view" (* slogan = "View application parameter(s)" *) [ WS PARM_NAME_OPTION ]
+MODIFY_PARM ::= "modify" (* slogan = "Modify application parameter" *) WS PARM_NAME_OPTION WS PARM_VALUE_OPTION
+
+PARM_NAME_OPTION ::= "--name" (* slogan = "Option to specify the parameter name" *) WS <parm_name> (* slogan = "Parameter name" *)
+PARM_VALUE_OPTION ::= "--value" (* slogan = "Option to specify the parameter value" *) WS <parm_value> (* slogan = "Parameter value" regex = "^[\u4E00-\u9FA5A-Za-z0-9_]+$" *)

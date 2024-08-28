@@ -1,0 +1,4 @@
+- name: pv-smrs
+  mountPath: /ericsson/tor/smrs
+- name: tz-config
+  mountPath: /etc/localtime

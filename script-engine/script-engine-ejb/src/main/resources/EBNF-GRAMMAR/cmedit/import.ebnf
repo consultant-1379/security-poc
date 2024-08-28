@@ -1,0 +1,21 @@
+"cmedit" (* slogan = "Read, manipulate, and export Configuration Management data" *) WS "import" (* slogan = "Bulk import CM data through the CLI" *) ( IMPORT_RUN_IMPORT | IMPORT_RETRY_JOB | IMPORT_GET_JOB_STATUS | IMPORT_STATUS_WITH_TIME_SPECIFICATION | IMPORT_CANCEL_JOB )
+
+IMPORT_RUN_IMPORT ::= IMPORT_FILE_NAME IMPORT_FILE_TYPE { IMPORT_OPTIONS } (* unique = "true" *)
+IMPORT_RETRY_JOB ::= IMPORT_RETRY IMPORT_JOB [ IMPORT_CONTINUE_ON_ERROR ]
+IMPORT_CANCEL_JOB ::= IMPORT_CANCEL IMPORT_JOB
+IMPORT_GET_JOB_STATUS ::= IMPORT_STATUS [ IMPORT_JOB [ IMPORT_DETAIL ] ]
+IMPORT_STATUS_WITH_TIME_SPECIFICATION ::= IMPORT_STATUS IMPORT_TIME_SPECIFICATION
+IMPORT_OPTIONS ::= ( IMPORT_CONTINUE_ON_ERROR | IMPORT_VALIDATE_INSTANCES )
+
+IMPORT_FILE_NAME ::= WS "-f file:" (* slogan = "Specify the import file" *) , <file_name> (* inputType = "fileNameNoQuotes" slogan = "Please enter import file name, which cannot contain spaces" *)
+IMPORT_FILE_TYPE ::= WS ( "-ft" (* hide = "true" *) | "--filetype" (* slogan = "Option to specify the file type. TIP : -ft is the shorthand option for --filetype" *) ) WS ( "3GPP" (* slogan = "Bulk Configuration 3GPP file format" *) | "dynamic" (* slogan = "Ericsson Dynamic file format" *) )
+IMPORT_RETRY ::= WS ( "-rt" (* hide = "true" *) | "--retry" (* slogan = "Option to specify the retry of a job. TIP : -rt is the shorthand option for --retry" *) )
+IMPORT_CONTINUE_ON_ERROR ::= WS ( "-e" (* hide = "true" *) | "--error" (* slogan = "Option to specify import behavior when a non fatal error is encountered. TIP : -e is the shorthand option for --error" *) ) WS ( "stop" (* slogan = "Option enables import to stop execution on encountering error" *) | "node" (* slogan = "Option enables import to continue execution at node level on encountering error" *) | "operation" (* slogan = "Option enables import to continue execution at operation level on encountering error" *) )
+IMPORT_STATUS ::= WS ( "-st" (* hide = "true" *) | "--status" (* slogan = "Option to return the status. TIP : -st is the shorthand option for --status" *) )
+IMPORT_JOB ::= WS ( "-j" (* hide = "true" *) | "--job" (* slogan = "Option to specify job ID number to execute the command on. TIP : -j is the shorthand option for --job" *) ) WS <job_ID> (* slogan = "Enter job identification number" *)
+IMPORT_DETAIL ::= WS ( "-v" (* hide = "true" *) | "--verbose" (* slogan = "Option to produce verbose output from command. TIP : -v is the shorthand option for --verbose" *) )
+IMPORT_TIME_SPECIFICATION ::= ( [ IMPORT_BEGIN [ IMPORT_END ] ] | [ IMPORT_END ] )
+IMPORT_BEGIN ::= WS "--begin" (* slogan = "Option to specify a begin filter time for retrieve jobs" *) WS <beginTime> (* slogan = "Enter: date only, time only or date and time" *)
+IMPORT_END ::= WS "--end" (* slogan = "Option to specify an end filter time for retrieve jobs" *) WS <endTime> (* slogan = "Enter: date only, time only or date and time" *)
+IMPORT_VALIDATE_INSTANCES ::= WS ( "-val" (* hide = "true" *) | "--validate" (* slogan = "Option to instruct import, to skip selected validation phase. TIP : -val is the shorthand option for --validate" *) ) WS "noinstance" (* slogan = "Option enables import to skip Instance Validation" *)
+IMPORT_CANCEL ::= WS "--cancel" (* slogan = "Option to cancel an on-going import job" *)

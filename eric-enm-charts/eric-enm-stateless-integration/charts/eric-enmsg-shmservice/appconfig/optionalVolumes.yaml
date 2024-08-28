@@ -1,0 +1,10 @@
+
+- name: httpd-certreq-secret-1
+  secret:
+    secretName: "{{ .Values.service.name }}-httpd-certreq-secret-1"
+- name: httpd-tls-secret-1
+  secret:
+    secretName: "{{ .Values.service.name }}-httpd-tls-secret-1"
+- name: httpd-tls-secret-2
+  secret:
+    secretName: "{{ .Values.service.name }}-httpd-tls-secret-2"

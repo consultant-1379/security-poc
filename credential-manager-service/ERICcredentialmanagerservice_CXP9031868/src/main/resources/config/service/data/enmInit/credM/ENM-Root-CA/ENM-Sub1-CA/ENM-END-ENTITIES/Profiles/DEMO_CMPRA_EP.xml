@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+  <Entity-Profiles>
+   
+    <EntityProfile Name="CMPRA_FCTP_2_EP">
+      <Subject>
+        <SubjectDN>
+          <SubjectEntry>
+            <Type>COMMON_NAME</Type>
+            <Value>?</Value>
+          </SubjectEntry>
+          <SubjectEntry>
+            <Type>ORGANIZATION_UNIT</Type>
+            <Value>BUCI_DUAC_NAM</Value>
+          </SubjectEntry>
+          <SubjectEntry>
+            <Type>ORGANIZATION</Type>
+            <Value>ERICSSON</Value>
+          </SubjectEntry>
+          <SubjectEntry>
+            <Type>COUNTRY_NAME</Type>
+            <Value>SE</Value>
+          </SubjectEntry>
+        </SubjectDN>
+      </Subject>
+      <KeyGenerationAlgorithm>
+        <Name>RSA</Name>
+        <KeySize>2048</KeySize>
+      </KeyGenerationAlgorithm>
+      <CertificateProfileName>CMPRA_CP</CertificateProfileName>
+      <TrustProfileName>DEMO_SBI_FCTP_TP</TrustProfileName>
+      <TrustProfileName>EPPKI_A1B1_TP</TrustProfileName>
+      <TrustProfileName>DEMO_SecGw_TP</TrustProfileName>
+      <CertificateExtensions>
+          <CertificateExtension xsi:type="KeyUsage">
+              <Critical>true</Critical>
+              <KeyUsageType>DIGITAL_SIGNATURE</KeyUsageType>
+              <KeyUsageType>KEY_ENCIPHERMENT</KeyUsageType>
+              <KeyUsageType>KEY_AGREEMENT</KeyUsageType>
+          </CertificateExtension>
+      </CertificateExtensions>
+    </EntityProfile>
+
+    <EntityProfile Name="CMPRA_OAM_EP">
+      <Subject>
+        <SubjectDN>
+          <SubjectEntry>
+            <Type>COMMON_NAME</Type>
+            <Value>?</Value>
+          </SubjectEntry>
+          <SubjectEntry>
+            <Type>ORGANIZATION_UNIT</Type>
+            <Value>BUCI_DUAC_NAM</Value>
+          </SubjectEntry>
+          <SubjectEntry>
+            <Type>ORGANIZATION</Type>
+            <Value>ERICSSON</Value>
+          </SubjectEntry>
+          <SubjectEntry>
+            <Type>COUNTRY_NAME</Type>
+            <Value>SE</Value>
+          </SubjectEntry>
+        </SubjectDN>
+      </Subject>
+      <KeyGenerationAlgorithm>
+        <Name>RSA</Name>
+        <KeySize>2048</KeySize>
+      </KeyGenerationAlgorithm>
+      <CertificateProfileName>CMPRA_OAM_CP</CertificateProfileName>
+      <TrustProfileName>DEMO_SBI_FCTP_TP</TrustProfileName>
+      <TrustProfileName>EPPKI_TP</TrustProfileName>
+      <TrustProfileName>DEMO_SecGw_TP</TrustProfileName>
+      <CertificateExtensions>
+        <CertificateExtension xsi:type="KeyUsage">
+          <Critical>true</Critical>
+	  <KeyUsageType>DIGITAL_SIGNATURE</KeyUsageType>
+	  <KeyUsageType>KEY_ENCIPHERMENT</KeyUsageType>
+	  <KeyUsageType>KEY_AGREEMENT</KeyUsageType>
+        </CertificateExtension>
+      </CertificateExtensions>
+    </EntityProfile>
+
+    <EntityProfile Name="CMPRA_IPsec_EP">
+      <Subject>
+        <SubjectDN>
+          <SubjectEntry>
+            <Type>COMMON_NAME</Type>
+            <Value>?</Value>
+          </SubjectEntry>
+          <SubjectEntry>
+            <Type>ORGANIZATION_UNIT</Type>
+            <Value>BUCI_DUAC_NAM</Value>
+          </SubjectEntry>
+          <SubjectEntry>
+            <Type>ORGANIZATION</Type>
+            <Value>ERICSSON</Value>
+          </SubjectEntry>
+          <SubjectEntry>
+            <Type>COUNTRY_NAME</Type>
+            <Value>SE</Value>
+          </SubjectEntry>
+        </SubjectDN>
+      </Subject>
+      <KeyGenerationAlgorithm>
+        <Name>RSA</Name>
+        <KeySize>2048</KeySize>
+      </KeyGenerationAlgorithm>
+      <CertificateProfileName>CMPRA_IPsec_CP</CertificateProfileName>
+      <TrustProfileName>DEMO_SBI_FCTP_TP</TrustProfileName>
+      <TrustProfileName>EPPKI_TP</TrustProfileName>
+      <TrustProfileName>DEMO_SecGw_TP</TrustProfileName>
+      <CertificateExtensions>
+        <CertificateExtension xsi:type="KeyUsage">
+          <Critical>true</Critical>
+	  <KeyUsageType>DIGITAL_SIGNATURE</KeyUsageType>
+   	  <KeyUsageType>KEY_ENCIPHERMENT</KeyUsageType>
+          <KeyUsageType>KEY_AGREEMENT</KeyUsageType>
+        </CertificateExtension>
+      </CertificateExtensions>
+    </EntityProfile>
+  </Entity-Profiles>
+</Profiles>

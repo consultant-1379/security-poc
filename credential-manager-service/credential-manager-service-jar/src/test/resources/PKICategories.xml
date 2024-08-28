@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EndEntityCategories xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="CategoriesSchema.xsd">
+	<undefinedCategoryName>UNDEFINED</undefinedCategoryName>
+	<serviceCategoryName>SERVICE</serviceCategoryName>
+	<categoryNameList>USER-SLS</categoryNameList>
+    <categoryNameList>USER-ENIS</categoryNameList>
+    <categoryNameList>NODE-IPSEC</categoryNameList>
+    <categoryNameList>NODE-OAM</categoryNameList>
+</EndEntityCategories>

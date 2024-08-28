@@ -1,0 +1,39 @@
+{{- if .Values.monitoring.enabled }}
+- name: {{ .Values.service.name }}-monitoring
+  image: {{ template "eric-enmsg-gossiprouter-eap7.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "eric-enm-monitoring" "name" }}:{{ index .Values "images" "eric-enm-monitoring" "tag" }}
+  imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+  env:
+  - name: JMX_SERVICE_URL
+    value: {{ .Values.monitoring.jmx_service_url }}
+  - name: SERVICENAME
+    value: {{ .Values.service.name }}
+  - name: TZ
+    value: {{ .Values.global.timezone }}
+  startupProbe:
+    tcpSocket:
+      port: 9600
+    initialDelaySeconds: 10
+    periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+    timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+    failureThreshold: 4
+  livenessProbe:
+    tcpSocket:
+      port: 9600
+    initialDelaySeconds: 30
+    periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+    timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+    failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+  resources:
+    requests:
+      memory: {{ .Values.resources.monitoring.requests.memory }}
+      cpu: {{ .Values.resources.monitoring.requests.cpu }}
+{{- if index .Values "resources" "monitoring" "requests" "ephemeral-storage" }}
+      ephemeral-storage: {{ index .Values "resources" "monitoring" "requests" "ephemeral-storage" }}
+{{- end }}
+    limits:
+      memory: {{ .Values.resources.monitoring.limits.memory }}
+      cpu: {{ .Values.resources.monitoring.limits.cpu }}
+{{- if index .Values "resources" "monitoring" "limits" "ephemeral-storage" }}
+      ephemeral-storage: {{ index .Values "resources" "monitoring" "limits" "ephemeral-storage" }}
+{{- end }}
+{{- end }}

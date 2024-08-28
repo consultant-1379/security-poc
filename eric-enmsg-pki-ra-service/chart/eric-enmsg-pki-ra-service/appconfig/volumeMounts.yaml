@@ -1,0 +1,42 @@
+- name: gp
+  mountPath: /gp
+- name: data
+  mountPath: /ericsson/tor/data
+- name: cron
+  mountPath: /ericsson/vmcrons
+- name: netlog
+  mountPath: /ericsson/netlog
+- name: mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment
+- name: shared
+  mountPath: /ericsson/home
+- name: custom
+  mountPath: /ericsson/custom
+- name: dumps
+  mountPath: /ericsson/enm/dumps
+- name: dlms
+  mountPath: /ericsson/enm/dlms/history/data
+- name: batch
+  mountPath: /ericsson/batch
+- name: norollback
+  mountPath: /ericsson/tor/no_rollback
+- name: configmgt
+  mountPath: /ericsson/config_mgt
+- name: upgind
+  mountPath: /ericsson/configuration_management/UpgradeIndependence
+- name: pmic1
+  mountPath: /ericsson/pmic1
+- name: pmic2
+  mountPath: /ericsson/pmic2
+- name: pmlinks
+  mountPath: /ericsson/symvol
+- name: tls-secret-1
+  mountPath: {{ .Values.service.tlsMountPath }}/tls1
+- name: tls-secret-2
+  mountPath: {{ .Values.service.tlsMountPath }}/tls2
+- name: tls-secret-3
+  mountPath: {{ .Values.service.tlsMountPath }}/tls3
+- name: tls-secret-4
+  mountPath: {{ .Values.service.tlsMountPath }}/tls4
+- name: tls-secret-5
+  mountPath: {{ .Values.service.tlsMountPath }}/tls5

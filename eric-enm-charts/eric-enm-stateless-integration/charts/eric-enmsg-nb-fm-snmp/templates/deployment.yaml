@@ -1,0 +1,7 @@
+{{- template "eric-enm-common-helmchart-library.deployment" (list . "eric-enmsg-nb-fm-snmp.deployment") -}}
+{{- define "eric-enmsg-nb-fm-snmp.deployment" -}}
+spec:
+  template:
+    spec:
+      serviceAccountName: nbfmsnmp-serviceaccount
+{{- end -}}

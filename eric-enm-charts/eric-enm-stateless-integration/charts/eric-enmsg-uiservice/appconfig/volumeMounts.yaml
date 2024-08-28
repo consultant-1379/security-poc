@@ -1,0 +1,16 @@
+- name: gp
+  mountPath: /gp
+- name: data
+  mountPath: /ericsson/tor/data
+- name: mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment
+- name: custom
+  mountPath: /ericsson/custom
+- name: dumps
+  mountPath: /ericsson/enm/dumps
+- name: cron
+  mountPath: /ericsson/vmcrons
+- name: shared
+  mountPath: /home/shared
+- name: norollback
+  mountPath: /ericsson/no_rollback

@@ -1,0 +1,100 @@
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ProfilesSchema.xsd">
+  <Certificate-Profiles>
+    <CertificateProfile Name="SCEPRA_OAM_CP">
+		<SubjectCapabilities>
+			<SubjectDN>
+				<SubjectEntry>
+					<Type>COMMON_NAME</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>SURNAME</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>COUNTRY_NAME</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>LOCALITY_NAME</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>STATE</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>STREET_ADDRESS</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>ORGANIZATION</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>ORGANIZATION_UNIT</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>DN_QUALIFIER</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>TITLE</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>GIVEN_NAME</Type>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>SERIAL_NUMBER</Type>
+				</SubjectEntry>
+			</SubjectDN> 
+		</SubjectCapabilities>				
+      <IsCAEntity>false</IsCAEntity>
+      <Version>V3</Version>
+      <SignatureAlgorithm>
+        <Name>SHA256withRSA</Name>
+        <KeySize>2048</KeySize>
+      </SignatureAlgorithm>
+      <KeyGenerationAlgorithm>
+        <Name>RSA</Name>
+        <KeySize>2048</KeySize>
+      </KeyGenerationAlgorithm>
+      <Validity>P8Y</Validity>
+      <Issuer>DEMO_NE_OAM_CA</Issuer>
+      <SubjectUniqueIdentifier>false</SubjectUniqueIdentifier>
+      <IssuerUniqueIdentifier>false</IssuerUniqueIdentifier>
+      <SkewCertificateTime>PT30M</SkewCertificateTime>
+      <CertificateExtensions>	
+				<CertificateExtension xsi:type="CRLDistributionPoints">
+					<Critical>false</Critical>
+					<CRLDistributionPoint>
+						<DistributionPointName>
+							<FullName>http://$FQDN_IPV4/pki-cdps?ca_name=$CANAME&amp;ca_cert_serialnumber=$CACERTSERIALNUMBER</FullName>
+						</DistributionPointName>
+					</CRLDistributionPoint>
+					<CRLDistributionPoint>
+						<DistributionPointName>
+							<FullName>http://$FQDN_IPV6/pki-cdps?ca_name=$CANAME&amp;ca_cert_serialnumber=$CACERTSERIALNUMBER</FullName>
+						</DistributionPointName>
+					</CRLDistributionPoint>
+					<CRLDistributionPoint>
+						<DistributionPointName>
+							<FullName>http://$FQDN_DNS/pki-cdps?ca_name=$CANAME&amp;ca_cert_serialnumber=$CACERTSERIALNUMBER</FullName>
+						</DistributionPointName>
+					</CRLDistributionPoint>					
+				</CertificateExtension>
+
+		<CertificateExtension xsi:type="BasicConstraints">
+			<Critical>true</Critical>
+			<CA>false</CA>
+		</CertificateExtension>	 	  
+        <CertificateExtension xsi:type="AuthorityKeyIdentifier">
+          <Critical>false</Critical>
+          <ByAuthorityCertIssuerAndSerialNumber>true</ByAuthorityCertIssuerAndSerialNumber>
+        </CertificateExtension>
+        <CertificateExtension xsi:type="SubjectKeyIdentifier">
+          <Critical>false</Critical>
+          <KeyIdentifierAlgorithm>160-BIT_SHA-1</KeyIdentifierAlgorithm>
+        </CertificateExtension>
+        <CertificateExtension xsi:type="KeyUsage">
+          <Critical>true</Critical>
+			<KeyUsageType>DIGITAL_SIGNATURE</KeyUsageType>
+			<KeyUsageType>KEY_ENCIPHERMENT</KeyUsageType>
+			<KeyUsageType>KEY_AGREEMENT</KeyUsageType>
+        </CertificateExtension>
+      </CertificateExtensions>
+    </CertificateProfile>
+  </Certificate-Profiles>
+</Profiles>

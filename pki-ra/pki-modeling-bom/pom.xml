@@ -1,0 +1,125 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+    <artifactId>pki-ra</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+  </parent>
+  <artifactId>pki-modeling-bom</artifactId>
+  <packaging>pom</packaging>
+
+	<name>Pki Modeling Service BOM</name>
+
+	<properties>
+		<maven.site.skip>true</maven.site.skip>
+		<maven.site.deploy.skip>true</maven.site.deploy.skip>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- now for BOM define versions of all exposed submodules -->
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-core-model-deploy-model</artifactId>
+				<version>${version.pki.core.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-core-model-jar</artifactId>
+				<version>${version.pki.core.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-manager-config-model-deploy-model</artifactId>
+				<version>${version.pki.manager.config.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-manager-config-model-api</artifactId>
+				<version>${version.pki.manager.config.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-manager-config-model-jar</artifactId>
+				<version>${version.pki.manager.config.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-ra-scep-model-deploy-model</artifactId>
+				<version>${version.pki.ra.scep.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-ra-scep-model-api</artifactId>
+				<version>${version.pki.ra.scep.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-ra-scep-model-jar</artifactId>
+				<version>${version.pki.ra.scep.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-ra-cmp-model-jar</artifactId>
+				<version>${version.pki.ra.cmp.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-ra-cmp-model-deploy-model</artifactId>
+				<version>${version.pki.ra.cmp.model}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-ra-tdps-model-jar</artifactId>
+				<version>${version.pki.ra.tdps.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-ra-tdps-model-deploy-model</artifactId>
+				<version>${version.pki.ra.tdps.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-cdps-model-deploy-model</artifactId>
+				<version>${version.pki.cdps.model}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-cdps-model-api</artifactId>
+				<version>${version.pki.cdps.model}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<configuration>
+					<generateReports>false</generateReports>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

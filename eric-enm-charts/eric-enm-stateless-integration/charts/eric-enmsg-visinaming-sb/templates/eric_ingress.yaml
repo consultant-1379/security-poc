@@ -1,0 +1,17 @@
+{{- if .Values.global.ericIngress.enabled }}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: visinamingsb
+spec:
+  virtualServiceIP: {{ .Values.global.vips.visinamingsb_service }}
+  backends:
+    name: visinamingsb
+    config:
+      - ports:
+          vipPort: 50073
+          svcPort: 50073
+        protocol: tcp
+        algo: rr
+        mode: nat
+{{- end }}

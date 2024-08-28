@@ -1,0 +1,23 @@
+{{- if .Values.global.ericIngress.enabled }}
+  {{- $replicas := index .Values.global "replicas-eric-enmsg-amos" -}}
+  {{- $amosVip := .Values.global.vips.amos_vip_address -}}
+  {{- range untilStep 0 (int $replicas) 1 }}
+  {{- $externalPort := add 5020 . -}}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: amos-{{ . }}
+spec:
+  virtualServiceIP: {{ $amosVip }}
+  backends:
+    name: amos-{{ . }}
+    config:
+      - ports:
+          vipPort: {{ $externalPort }}
+          svcPort: 22
+        protocol: tcp
+        algo: lc
+        mode: nat
+---
+  {{- end }}
+{{- end }}

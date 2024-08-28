@@ -1,0 +1,3 @@
+{{- template "eric-enm-common-helmchart-library.statefulset" (list . "eric-enmsg-vault-service.statefulset") -}}
+{{- define "eric-enmsg-vault-service.statefulset" -}}
+{{- end -}}

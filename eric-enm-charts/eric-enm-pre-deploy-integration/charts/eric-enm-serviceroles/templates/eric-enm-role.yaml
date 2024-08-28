@@ -1,0 +1,17 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+ name: role-read-services
+ labels:
+  app.kubernetes.io/name: "{{ .Values.service.name }}"
+  app.kubernetes.io/instance: "{{ .Release.Name }}"
+  app.kubernetes.io/version: {{ template "eric-enm-serviceroles.chart" . }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - get
+  - list
+  - watch

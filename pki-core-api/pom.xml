@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!--Please Use the latest version of integration pom.xml or the one you 
+		want to reference to -->
+	<!-- dummy update -->
+	<parent>
+		<groupId>com.ericsson.nms</groupId>
+		<artifactId>integration</artifactId>
+		<version>15.2.0.35</version>
+	</parent>
+
+	<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+	<artifactId>pki-core-api</artifactId>
+	<version>1.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>[${project.artifactId}] JEE8 Project</name>
+
+	<properties>
+		<version.service.framework>4.10.6</version.service.framework>
+		<version.pki-common.model>1.0.1-SNAPSHOT</version.pki-common.model>
+		<!-- ENM Check Style version dependencies -->
+		 <version.maven.checkstyle>2.15</version.maven.checkstyle>
+		 <version.checkstyle>6.2</version.checkstyle>
+		 <version.checkstyle.module>1.1.74</version.checkstyle.module>
+		 <!-- Sonar Configuration -->
+		 <sonar.sources>pom.xml,src</sonar.sources>
+		 <sonar.tests />
+	</properties>
+	<build>
+        <plugins>
+	        <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                 <version>${version.maven.checkstyle}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${version.checkstyle}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.ericsson.cds</groupId>
+                        <artifactId>checkstyle-module</artifactId>
+                       <version>${version.checkstyle.module}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <consoleOutput>false</consoleOutput>
+                    <logViolationsToConsole>false</logViolationsToConsole>
+                    <configLocation>/cds/cds-checkstyle.xml</configLocation>
+                    <violationSeverity>warning</violationSeverity>
+                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <!-- change this to true if you want the build to fail if there's warnings -->
+                            <failOnViolation>false</failOnViolation>
+                        </configuration>
+                        <id>check-style</id>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>checkstyle-aggregate</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+            </plugin>
+	  </plugins>
+   </build>
+	<dependencyManagement>
+		<dependencies>
+			<!-- here we specify what version of Service Framework we want to use. 
+				All modules will be imported -->
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.sdk</groupId>
+				<artifactId>ServiceFrameworkJBossBOM</artifactId>
+				<version>${version.service.framework}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<!--Profiles for site documentation -->
+
+	<!--Profile to deploy latest site -->
+	<profiles>
+		<profile>
+			<id>site_latest</id>
+			<distributionManagement>
+				<site>
+					<id>site</id>
+					<name>Site</name>
+					<url>${site.url}/pki-core-api/latest</url>
+				</site>
+			</distributionManagement>
+		</profile>
+
+		<!--Profile to stage site for review -->
+
+		<profile>
+			<id>site_review</id>
+			<distributionManagement>
+				<site>
+					<id>site</id>
+					<name>Site</name>
+					<url>${site.url}</url>
+				</site>
+			</distributionManagement>
+		</profile>
+	</profiles>
+
+	<!--Deployment of versioned documentation -->
+	<distributionManagement>
+		<site>
+			<id>site</id>
+			<name>Site</name>
+			<url>${site.url}/pki-core-api/${project.version}</url>
+		</site>
+	</distributionManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-core-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>pki-common-model</artifactId>
+			<version>${version.pki-common.model}</version>
+		</dependency>
+	</dependencies>
+	<modules>
+		<module>ERICpkicoreapi_CXP9031872</module>
+		<module>pki-core-api-jar</module>
+		<module>pki-core-certificatemanagement-api</module>
+		<module>pki-core-entitymanagement-api</module>
+		<module>pki-core-crlmanagement-api</module>
+		<module>pki-core-common-model</module>
+	</modules>
+</project>

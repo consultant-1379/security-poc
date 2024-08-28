@@ -1,0 +1,45 @@
+- name: gp
+  configMap:
+    name: gpcellserv
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dlms
+  persistentVolumeClaim:
+    claimName: dlms
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: pmic1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pmic2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks
+- name: upgind
+  persistentVolumeClaim:
+    claimName: upgind
+- name: batch
+  persistentVolumeClaim:
+    claimName: batch
+- name: norollback
+  persistentVolumeClaim:
+    claimName: norollback
+- name: netlog
+  persistentVolumeClaim:
+    claimName: netlog
+- name: shared
+  persistentVolumeClaim:
+    claimName: home

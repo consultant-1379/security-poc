@@ -1,0 +1,9 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg-general-scripting.service") -}}
+  {{- define "eric-enmsg-general-scripting.service" -}}
+metadata:
+  name: general-scripting-sts
+  labels:
+    service: {{ .Values.service.name }}
+spec:
+  clusterIP: None
+  {{- end -}}

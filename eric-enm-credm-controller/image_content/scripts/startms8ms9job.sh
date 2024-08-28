@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# used env variables:
+# NAMESPACE
+# MS8MS9_CRONJOB_NAME
+# MS8MS9_JOB_NAME
+
+echo "launch of CREDM CONTROLLER MS8MS9 JOB"
+
+echo "MS8MS9_CRONJOB_NAME : "$MS8MS9_CRONJOB_NAME
+echo "MS8MS9_JOB_NAME : "$MS8MS9_JOB_NAME
+kubectl create job --from=cronjob/${CONTROLLER_NAME}-${MS8MS9_CRONJOB_NAME} ${CONTROLLER_NAME}-${MS8MS9_JOB_NAME}
+echo "executed"

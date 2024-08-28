@@ -1,0 +1,33 @@
+- name: gp
+  configMap:
+    name: gpeventbasedclient
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks
+- name: pm1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pm2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: norollback
+  persistentVolumeClaim:
+    claimName: norollback
+- name: upgind
+  persistentVolumeClaim:
+    claimName: upgind
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt

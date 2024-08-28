@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: "1.0"
+dependencies:
+- condition: eric-log-transformer.enabled
+  name: eric-log-transformer
+  repository: https://arm.sero.gic.ericsson.se/artifactory/proj-adp-gs-all-helm/
+  version: 8.3.0+21
+description: A Helm chart for log transformer integration
+name: eric-enm-int-log-transformer
+version: 5.0.1

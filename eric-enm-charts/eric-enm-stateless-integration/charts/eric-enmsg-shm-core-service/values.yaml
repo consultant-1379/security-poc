@@ -1,0 +1,139 @@
+## eric-enmsg-shm-core-service image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  ingress:
+    enmHost:
+  enmProperties:
+    COM_INF_LDAP_ROOT_SUFFIX:
+    COM_INF_LDAP_ADMIN_ACCESS:
+    COM_INF_LDAP_ADMIN_CN:
+    COM_INF_LDAP_PORT:
+    postgresql01_admin_password:
+    LDAP_ADMIN_CN:
+    LDAP_ADMIN_PASSWORD:
+    postgres_service:
+  timezone:
+productNumber: CXC 174 2123
+productRevision: R28K
+labels: {}
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-shm-core-service: 1
+images:
+  eric-enmsg-shm-core-service:
+    name: eric-enmsg-shm-core-service
+    tag: 1.27.9-1
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s gossiprouter-cache,gossiprouter-eap7,jms01,postgres,sps'
+      ]"
+  eric-enm-httpd:
+    name: eric-enmsg-shm-core-service-httpd
+    tag: 1.27.9-1
+  eric-enm-monitoring:
+    enabled: true
+    name: eric-enm-monitoring-eap7
+    tag: 1.27.9-1
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  pullSecret:
+  registry:
+    url:
+eric-enm-common-helmchart-library:
+  enabled: true
+## Configure the service
+service:
+  name: shmcoreserv
+  sgname: shmcoreservice
+  additionalServiceNames:
+  - shmcoreservbal
+  annotations: {}
+  labels: {}
+ingress:
+  enabled: false
+ingress_jboss_web_context:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+## Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 3072Mi
+  limits:
+    enabled: true
+    memory: 6144Mi
+  httpd:
+    enabled: false
+    requests:
+      memory:
+      cpu:
+    limits:
+      memory:
+      cpu:
+  monitoring:
+    enabled: false
+    requests:
+      memory:
+      cpu:
+    limits:
+      memory:
+      cpu:
+# StartupProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 30
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+# Termiation grace wait before force terminate pod
+terminationGracePeriod:
+  enabled: true
+  seconds: 10
+# Lifecycle hooks before terminating pod
+lifecycle:
+  handler:
+    enabled: true
+# Extra Annotations to be added to pod
+podAnnotations: {}
+## Tolerations for pod assignment
+tolerations: []
+## Affinity for pod assignment
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+# Constrain which nodes your pod is eligible to be scheduled on
+nodeAffinity: {}
+priorityClassName: ""
+## Node selector
+nodeSelector: {}
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1

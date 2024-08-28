@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PKIEntities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="EntitiesSchema.xsd">
+	<Entities>
+		<Entity Name="WrongEntity">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>WrongEntity</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			
+			<SubjectAltNameValues>
+				
+				<SubjectAltNameValue>
+					<Type>IP_ADDRESS</Type>
+					<Value xsi:type="SubjectAltNameString">
+						<StringValue>1.1.1.1</StringValue>
+					</Value>
+				</SubjectAltNameValue>					
+			
+				<SubjectAltNameValue>
+					<Type>RFC822_NAME</Type>
+					<Value xsi:type="SubjectAltNameString">
+						<StringValue>Subjectrfc822</StringValue>
+					</Value>
+				</SubjectAltNameValue>
+
+				<SubjectAltNameValue>
+						<Type>OTHER_NAME</Type>
+						<Value xsi:type="OtherName">
+							<TypeId>1.6.5.1.8</TypeId>
+							<Value>value</Value>
+						</Value>
+				</SubjectAltNameValue>
+
+				<SubjectAltNameValue>
+						<Type>EDI_PARTY_NAME</Type>
+						<Value xsi:type="EdiPartyName">
+							<NameAssigner>nameAssigner</NameAssigner>
+							<PartyName>partyName</PartyName>
+						</Value>
+				</SubjectAltNameValue>
+				
+			</SubjectAltNameValues>
+
+			<EntityProfileName>NotExistentProfile</EntityProfileName>
+
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+
+			<OTP>changeit</OTP>
+			
+		</Entity>
+	</Entities>
+</PKIEntities>

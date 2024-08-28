@@ -1,0 +1,70 @@
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 443
+  path: /pmul-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 443
+  path: /smm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 443
+  path: /locales/en-us/smm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 443
+  path: /help/en-us/smm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 443
+  path: /sam/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 443
+  path: /locales/en-us/sam/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 443
+  path: /sa/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 443
+  path: /locales/en-us/sa/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 443
+  path: /sauicommon/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: saserv
+      port:
+        number: 443
+  path: /locales/en-us/sauicommon/
+  pathType: ImplementationSpecific

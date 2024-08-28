@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-version-configmap
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    chart: {{ template "bro-integration.chart" . }}
+    app.kubernetes.io/name: {{ template "bro-integration.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  annotations:
+    ericsson.com/product-name: {{ .Values.productInfo.name | quote}}
+    ericsson.com/product-number: {{ .Values.productInfo.number }} - {{ .Values.productInfo.productSet }}
+    ericsson.com/product-revision: {{ .Values.productInfo.productSet | quote }}
+    ericsson.com/production-date: {{ .Values.productInfo.date }}
+    ericsson.com/description: {{ .Values.productInfo.description | quote }}
+    ericsson.com/type: {{ .Values.productInfo.type | quote }}
+

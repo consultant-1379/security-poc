@@ -1,0 +1,5 @@
+- name: {{ template "eric-enm-common-helmchart-library.name" . }}
+  mountPath: {{ .Values.persistentVolumeClaim.mountPath }}
+- name: omnidaemon-bragent-config
+  mountPath: "/etc/bragent/agent"
+  readOnly: true

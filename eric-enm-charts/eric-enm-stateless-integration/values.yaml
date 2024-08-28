@@ -1,0 +1,536 @@
+global:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  pullSecret:
+  timezone: UTC
+
+  replicas-eric-enmsg-access-control: 2
+  replicas-eric-enmsg-amos: 2
+  replicas-eric-enmsg-autoprovisioning: 2
+  replicas-eric-enmsg-autoid-service: 1
+  replicas-eric-enmsg-cmevents: 2
+  replicas-eric-enmsg-cmutilities: 2
+  replicas-eric-enmsg-cmservice: 2
+  replicas-eric-enmsg-com-ecim-mscm: 2
+  replicas-eric-enmsg-comecimpolicy: 2
+  replicas-eric-enmsg-eventbasedclient: 2
+  replicas-eric-enmsg-flowautomation: 2
+  replicas-eric-enmsg-fls: 2
+  replicas-eric-enmsg-fm-alarm-processing: 2
+  replicas-eric-enmsg-fm-service: 2
+  replicas-eric-enmsg-ip-service-management: 2
+  replicas-eric-enmsg-kpi-calc-serv: 2
+  replicas-eric-enmsg-lcmservice: 2
+  replicas-eric-enmsg-medrouter: 2
+  replicas-eric-enmsg-msap: 2
+  replicas-eric-enmsg-mscm: 2
+  replicas-eric-enmsg-mscmip: 2
+  replicas-eric-enmsg-msfm: 2
+  replicas-eric-enmsg-mspm: 2
+  replicas-eric-enmsg-mspmip: 2
+  replicas-eric-enmsg-mssnmpcm: 2
+  replicas-eric-enmsg-nedo-serv: 2
+  replicas-eric-enmsg-networkexplorer: 2
+  replicas-eric-enmsg-openidm: 1
+  replicas-eric-enmsg-pki-ra-service: 2
+  replicas-eric-enmsg-pmic-router-policy: 2
+  replicas-eric-enmsg-pmservice: 2
+  replicas-eric-enmsg-security-service: 2
+  replicas-eric-enmsg-sps-service: 2
+  replicas-eric-enmsg-sps-web-service: 2
+  replicas-eric-enmsg-shmservice: 2
+  replicas-eric-enmsg-smrs-service: 2
+  replicas-eric-enmsg-sso: 2
+  replicas-eric-enmsg-uiservice: 2
+  replicas-eric-enmsg-web-push-service: 2
+  replicas-eric-enmsg-supervisionclient: 2
+  replicas-eric-enmsg-visinaming-sb: 2
+  replicas-eric-enmsg-msnetlog: 2
+  replicas-eric-enmsg-node-plugins: 2
+  replicas-eric-enmsg-shm-core-service: 2
+  replicas-eric-enmsg-mssnmpfm: 2
+  replicas-eric-enmsg-msapgfm: 2
+  replicas-eric-enmsg-import-export-service: 2
+  replicas-eric-enmsg-kpi-service: 2
+  replicas-eric-enmsg-mscmapg: 2
+  replicas-eric-enmsg-nodecli: 2
+  replicas-eric-enmsg-winfiol-sg: 2
+  replicas-eric-enmsg-domain-proxy-coordinator: 2
+  replicas-eric-enmsg-general-scripting: 2
+  replicas-eric-enmsg-nb-fm-snmp: 2
+  replicas-eric-enmsg-mskpirt: 2
+  replicas-eric-enmsg-nbi-bnsi-fm: 2
+  replicas-eric-enmsg-visinaming-nb: 2
+  replicas-eric-enmsg-sa-service: 2
+  replicas-eric-enmsg-element-manager: 2
+  replicas-eric-enmsg-remotedesktop: 1
+  replicas-eric-enmsg-ops: 2
+  replicas-eric-enmsg-fm-history: 2
+  replicas-eric-enmsg-dlms: 2
+  replicas-eric-enmsg-dc-history: 2
+  replicas-eric-enmsg-elex: 1
+  replicas-eric-enmsg-identity-mgmt-service: 2
+  replicas-eric-enmsg-nbalarmirp-1: 1
+  replicas-eric-enmsg-nbalarmirp-2: 1
+  replicas-eric-enmsg-cellserv: 2
+  replicas-eric-enm-credm-controller: 2
+  replicas-eric-enmsg-itservices: 1
+  persistentVolumeClaim:
+    storageClass:
+  ingress:
+    enmHost:
+  vips:
+    fm_vip_address:
+    cm_vip_address:
+    pm_vip_address:
+    ui_vip_address:
+    amos_vip_address:
+    general_scripting_vip_address:
+    visinamingsb_vip_address:
+    itservices_0_vip_address:
+    itservices_1_vip_address:
+    cm_vip_ipv6address:
+    fm_vip_ipv6address:
+  ericIngress:
+    enabled: true
+  enmProperties:
+    host_system_identifier:
+    COM_INF_LDAP_ADMIN_ACCESS: U2FsdGVkX1+Th331ViwStKrs91kgAE88zyFbqQDBjN0=
+    COM_INF_LDAP_ADMIN_CN:
+    COM_INF_LDAP_PORT: 1636
+    COM_INF_LDAP_ROOT_SUFFIX:
+    postgresql01_admin_password: U2FsdGVkX19uWU+/kfu7jHGmy9BQdkr1Wz7pcHG56M8=
+    default_security_admin_password: U2FsdGVkX18E0yK+cT5A6t0/tWFhT2MW48C279fNStA=
+    PKI_EntityProfile_DN_COUNTRY_NAME:
+    PKI_EntityProfile_DN_ORGANIZATION:
+    PKI_EntityProfile_DN_ORGANIZATION_UNIT:
+    certificatesRevListDistributionPointServiceDnsEnable: false
+    certificatesRevListDistributionPointServiceIpv4Enable: true
+    certificatesRevListDistributionPointServiceIpv6Enable: false
+    publicKeyInfraRegAutorithyPublicServerName: notAssigned
+    dps_persistence_provider: neo4j
+    LDAP_ADMIN_CN: "\"cn=directory manager\""
+    LDAP_ADMIN_PASSWORD: U2FsdGVkX1+KJ3KtE2zpudi9Vqko/a4vRDzruu3lk0E=
+    smrs_sftp_port_partition_enable: false
+    smrs_sftp_securePort: 22
+    web_protocols_default: https
+    web_ports_default: 443
+    pmicNfsShareList: /ericsson/pmic1/,/ericsson/pmic2/
+    postgres_service: postgres
+    defaultJbossLogLevel: "INFO"
+    autoProvisioning_bind_nodeName: true
+    hqs_persistence_provider_es: true
+    hqs_persistence_provider: eshistory
+    hqs_persistence_provider_port: 9200
+  restore:
+    state: ""
+    configMap:
+      name: backup-restore-configmap
+    serviceaccount:
+      # Name of the ServiceAccount to be used for restore/rollback operations.
+      # Leave empty to use the default value of 'restore-service-account'
+      # If the ServiceAccount, Role and RoleBinding are externally defined,
+      # the Role MUST have at least get, list, patch and delete authorization
+      # for configmaps and pods resources
+      # as well as create, list and delete authorization for batch.jobs resource
+      name:
+images:
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s eric-enm-modeldeployservice' ]"
+  eric-enm-models-post-install:
+    name: eric-enm-models-post-install
+    tag: 1.27.9-1
+  eric-enm-models-nrm:
+    name: eric-enm-models-nrm
+    tag: 1.27.9-1
+  eric-enm-chart-hooks:
+    name: eric-enm-chart-hooks
+    tag: 1.0.3-1
+    hook-post-weight: 99
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  registry:
+    url:
+    pullSecret:
+
+modelsPostInstallJob:
+  name: eric-enm-models-post-install
+  restartPolicy: OnFailure
+  timeout: 14400
+
+modelsNrmJob:
+  name: eric-enm-models-nrm
+  restartPolicy: OnFailure
+  timeout: 14400
+
+tags:
+  value_pack_ebs_ln: true
+  value_pack_ebs_m: true
+
+updateSoftwareVersionHistoryJob:
+  name: eric-enm-update-software-version-history
+  restartPolicy: OnFailure
+  softwareVersionConfigmap: eric-enm-version-configmap
+
+## Persist data to a persistent volume
+## database data Persistent Volume Storage Class
+mdtPersistentVolumeClaim:
+  enabled: true
+  name: mdt
+  claimName: eric-enm-rwxpvc-mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment
+
+
+#Enable software to be included.
+eric-enmsg-access-control:
+  enabled: false
+
+
+eric-enmsg-amos:
+  enabled: false
+
+
+eric-enmsg-autoid-service:
+  enabled: false
+
+
+eric-enmsg-autoprovisioning:
+  enabled: false
+
+eric-enmsg-cmevents:
+  enabled: false
+
+eric-enmsg-cmservice:
+  enabled: false
+
+
+eric-enmsg-cmutilities:
+  enabled: false
+
+
+eric-enmsg-com-ecim-mscm:
+  enabled: false
+
+
+eric-enmsg-comecimpolicy:
+  enabled: false
+
+
+eric-enmsg-dc-history:
+  enabled: false
+
+
+eric-enmsg-elex:
+  enabled: false
+
+
+eric-enmsg-dlms:
+  enabled: false
+
+
+eric-enmsg-domain-proxy-coordinator:
+  enabled: false
+
+
+eric-enmsg-element-manager:
+  enabled: false
+
+
+eric-enmsg-remotedesktop:
+  enabled: false
+
+
+eric-enmsg-eventbasedclient:
+  enabled: false
+
+
+eric-enmsg-flowautomation:
+  enabled: false
+
+
+eric-enmsg-fls:
+  enabled: false
+
+
+eric-enmsg-fm-alarm-processing:
+  enabled: false
+
+
+eric-enmsg-fm-history:
+  enabled: false
+
+
+eric-enmsg-fm-service:
+  enabled: false
+
+
+eric-enmsg-general-scripting:
+  enabled: false
+
+
+eric-enmsg-import-export-service:
+  enabled: false
+
+
+eric-enmsg-ip-service-management:
+  enabled: false
+
+
+eric-enmsg-kpi-calc-serv:
+  enabled: false
+
+
+eric-enmsg-kpi-service:
+  enabled: false
+
+
+eric-enmsg-lcmservice:
+  enabled: false
+
+
+eric-enmsg-medrouter:
+  enabled: false
+
+
+eric-enmsg-msap:
+  enabled: false
+
+
+eric-enmsg-msapgfm:
+  enabled: false
+
+
+eric-enmsg-mscm:
+  enabled: false
+
+
+eric-enmsg-mscmapg:
+  enabled: false
+
+
+eric-enmsg-mscmip:
+  enabled: false
+
+
+eric-enmsg-msfm:
+  enabled: false
+
+
+eric-enmsg-mskpirt:
+  enabled: false
+
+
+eric-enmsg-msnetlog:
+  enabled: false
+
+eric-enmsg-mspm:
+  enabled: false
+
+
+eric-enmsg-mspmip:
+  enabled: false
+
+
+eric-enmsg-mssnmpcm:
+  enabled: false
+
+
+eric-enmsg-mssnmpfm:
+  enabled: false
+
+
+eric-enmsg-nb-fm-snmp:
+  enabled: false
+
+
+eric-enmsg-nbi-bnsi-fm:
+  enabled: false
+
+
+eric-enmsg-nedo-serv:
+  enabled: false
+
+
+eric-enmsg-networkexplorer:
+  enabled: false
+
+
+eric-enmsg-node-plugins:
+  enabled: false
+
+
+eric-enmsg-nodecli:
+  enabled: false
+
+
+eric-enmsg-openidm:
+  enabled: true
+
+
+eric-enmsg-ops:
+  enabled: false
+  persistentVolumeClaim:
+    size: 1Gi
+
+
+eric-enmsg-pki-ra-service:
+  enabled: true
+
+
+eric-enmsg-pmic-router-policy:
+  enabled: false
+
+
+eric-enmsg-pmservice:
+  enabled: false
+
+
+eric-enmsg-sa-service:
+  enabled: false
+
+
+eric-enmsg-security-service:
+  enabled: false
+
+
+eric-enmsg-shm-core-service:
+  enabled: false
+
+
+eric-enmsg-shmservice:
+  enabled: false
+
+
+eric-enmsg-smrs-service:
+  enabled: false
+
+eric-enmsg-sps-service:
+  enabled: true
+
+eric-enmsg-sps-web-service:
+  enabled: false
+
+eric-enmsg-sso:
+  enabled: false
+
+
+eric-enmsg-supervisionclient:
+  enabled: false
+
+
+eric-enmsg-uiservice:
+  enabled: false
+
+
+eric-enmsg-visinaming-nb:
+  enabled: false
+
+
+eric-enmsg-visinaming-sb:
+  enabled: false
+
+
+eric-enmsg-web-push-service:
+  enabled: false
+
+eric-enmsg-winfiol-sg:
+  enabled: false
+
+eric-enmsg-cellserv:
+  enabled: false
+
+eric-enmsg-identity-mgmt-service:
+  enabled: false
+
+eric-enmsg-nbalarmirp-1:
+  enabled: false
+  service:
+    name: nbalarmirp1
+    port: 9954
+    commonService:
+      enabled: true
+  ingress_jboss_web_context:
+    enabled: true
+  configmap:
+    enabled: true
+            
+eric-enmsg-nbalarmirp-2:
+  enabled: false
+  service:
+    name: nbalarmirp2
+    port: 9956
+    commonService:
+      enabled: false
+  ingress_jboss_web_context:
+    enabled: false
+  configmap:
+    enabled: false
+              
+eric-enm-credm-controller:
+  enabled: true
+
+eric-enmsg-itservices:
+  enabled: false
+
+eric-enm-data-migration:
+  enabled: false
+
+eric-cnom-server:
+  enabled: false
+  global:
+    security:
+      tls:
+        enabled: false
+  imageCredentials:
+    registry:
+      url: selndocker.mo.sw.ericsson.se
+  ingress:
+    enabled: true
+    useHttpProxy: false
+    certificates:
+      enabled: false
+  server:
+    basePath: /cnom-server
+  documentDatabase:
+    enabled: true
+    hosts:
+      - "eric-cnom-document-database-mg-0:27017"
+      - "eric-cnom-document-database-mg-1:27017"
+      - "eric-cnom-document-database-mg-2:27017"
+  authentication:
+    enabled: true
+  updateStrategy:
+    # CNOM's update strategy
+    type: RollingUpdate
+    rollingUpdate:
+      # The maximum number of Pods that can be unavailable during the update process
+      maxUnavailable: 1
+      # The maximum number of Pods that can be created over the desired number of Pods
+      maxSurge: 0
+  features:
+    statusOverview: true
+    alarmViewer: false
+    logViewer: false
+    nrfProvisionUeGroupProfile: false
+    nrfProvisionUeIndividualProfile: false
+    nrfProvisionNfProfile: false
+    nrfProvisionNrfAddress: false
+    nrfProvisionSnssaiUutMapping: false
+    nssfProvision: false
+    healthCheckViewer: false
+    metricViewer: false
+    centralConfigurationRepository: false
+    switchBrandBaseOnRole: false
+    yangStateData: false
+  productName: ENM System Monitor
+  productNameShort: ESM
+  dashboards:
+    import: {}
+    configMaps: [eric-enm-monitoring-pkisecurity,eric-enm-monitoring-securityservice,eric-enm-monitoring-ssoopenam,eric-enm-monitoring-apg-mediation,eric-enm-monitoring-cpp-mediation,eric-enm-monitoring-ecim-mediation,eric-enm-monitoring-ip-mediation,eric-enm-monitoring-snmp-mediation,eric-enm-monitoring-dp-mediation,eric-enm-monitoring-mskpirt,eric-enm-monitoring-mspm,eric-enm-monitoring-mspmip,eric-enm-monitoring-pmservice,eric-enm-monitoring-nhm,eric-enm-monitoring-pm-router-policy,eric-enm-monitoring-uplink-spectrum,eric-enm-monitoring-fm-alarm-processing,eric-enm-monitoring-fm-bnsi-nbi,eric-enm-monitoring-fm-corba-nbi,eric-enm-monitoring-fm-cpp,eric-enm-monitoring-fm-snmp,eric-enm-monitoring-fm-snmp-nbi,eric-enm-monitoring-netlog,eric-enm-monitoring-fm-axe,eric-enm-monitoring-fm-history,eric-enm-monitoring-fm-service,eric-enm-monitoring-amos,eric-enm-monitoring-autoid,eric-enm-monitoring-bulkimportexport,eric-enm-monitoring-cmcli,eric-enm-monitoring-cmevents,eric-enm-monitoring-netex,eric-enm-monitoring-nhc,eric-enm-monitoring-cellserv,eric-enm-monitoring-elasticsearch,eric-enm-monitoring-eshistory,eric-enm-monitoring-flowautomation,eric-enm-monitoring-smrsconnections,eric-enm-monitoring-jms,eric-enm-monitoring-neo4j,eric-enm-monitoring-webpush,eric-enm-monitoring-mediationframework]
+    predefined:
+      - common
+      - alarm

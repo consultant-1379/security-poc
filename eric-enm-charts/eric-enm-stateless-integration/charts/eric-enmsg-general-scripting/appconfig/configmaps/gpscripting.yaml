@@ -1,0 +1,21 @@
+global.properties: |
+  COM_INF_LDAP_ROOT_SUFFIX={{ .Values.global.enmProperties.COM_INF_LDAP_ROOT_SUFFIX }}
+  COM_INF_LDAP_ADMIN_ACCESS={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_ACCESS }}
+  COM_INF_LDAP_ADMIN_CN={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_CN }}
+  COM_INF_LDAP_PORT={{ .Values.global.enmProperties.COM_INF_LDAP_PORT }}
+  LDAP_ADMIN_PASSWORD={{ .Values.global.enmProperties.LDAP_ADMIN_PASSWORD }}
+  LDAP_ADMIN_CN={{ .Values.global.enmProperties.LDAP_ADMIN_CN }}
+  postgresql01_admin_password={{ .Values.global.enmProperties.postgresql01_admin_password }}
+  dps_persistence_provider={{ .Values.global.enmProperties.dps_persistence_provider }}
+  smrs_sftp_port_partition_enable={{ .Values.global.enmProperties.smrs_sftp_port_partition_enable }}
+  smrs_sftp_securePort={{ .Values.global.enmProperties.smrs_sftp_securePort }}
+  host_system_identifier={{ .Values.global.enmProperties.host_system_identifier }}
+  web_host_default={{ .Values.global.ingress.enmHost }}
+  UI_PRES_SERVER={{ .Values.global.ingress.enmHost }}
+  svc_FM_vip_ipaddress={{ .Values.global.vips.fm_vip_address }}
+  svc_CM_vip_ipaddress={{ .Values.global.vips.cm_vip_address }}
+  svc_PM_vip_ipaddress={{ .Values.global.vips.pm_vip_address }}
+  amos_vip_address={{ .Values.global.vips.amos_vip_address }}
+  general_scripting_vip_address={{ .Values.global.vips.general_scripting_vip_address }}
+  visinamingsb_service={{ .Values.global.vips.visinamingsb_service }}
+  itservices=itservices-0,itservices-1

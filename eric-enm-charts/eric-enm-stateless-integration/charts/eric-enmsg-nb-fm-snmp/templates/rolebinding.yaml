@@ -1,0 +1,18 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: snmp-master-binding
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    chart: eric-enmsg-nb-fm-snmp
+    app.kubernetes.io/name: eric-enmsg-nb-fm-snmp
+    app.kubernetes.io/instance: {{ print "eric-enm-stateless-integration-" .Release.Namespace }}
+subjects:
+  - kind: ServiceAccount
+    name: nbfmsnmp-serviceaccount
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: snmp-master
+  apiGroup: rbac.authorization.k8s.io

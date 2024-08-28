@@ -1,0 +1,3 @@
+{{- if .Values.logging.logshipper.enabled }}
+{{- include "eric-cnom-server.logshipper-tls-cert-lt-client" . }}
+{{- end }}

@@ -1,0 +1,176 @@
+/*------------------------------------------------------------------------------
+ *******************************************************************************
+ * COPYRIGHT Ericsson 2015
+ *
+ * The copyright to the computer program(s) herein is the property of
+ * Ericsson Inc. The programs may be used and/or copied only with written
+ * permission from Ericsson Inc. or in accordance with the terms and
+ * conditions stipulated in the agreement/contract under which the
+ * program(s) have been supplied.
+ *******************************************************************************
+ *----------------------------------------------------------------------------*/
+package com.ericsson.oss.itpf.security.pki.core.entitymanagement.validators;
+
+import java.util.*;
+
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+
+import com.ericsson.oss.itpf.security.pki.common.model.*;
+import com.ericsson.oss.itpf.security.pki.core.common.utils.ValidationUtils;
+
+public class SubjectValidator {
+
+    @Inject
+    Logger logger;
+
+    private static final String COUNTRY_REGEX = "^[A-Z]{2}$";
+    private static final String OVERRIDING_OPERATOR = "?";
+    private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+    private static final int MAX_ALLOWABLE_LENGTH_64 = 64;
+    private static final int MAX_ALLOWABLE_LENGTH_40 = 40;
+    private static final int MAX_ALLOWABLE_LENGTH_128 = 128;
+    private static final int MAX_ALLOWABLE_LENGTH_16 = 16;
+    private static final int MAX_ALLOWABLE_LENGTH_3 = 3;
+    private static final int MAX_ALLOWABLE_LENGTH_5 = 5;
+    private static final int MAX_ALLOWABLE_LENGTH_255 = 255;
+
+    /**
+     * All the Subject Field Types and Values will be retrieved from the given Subject
+     *
+     * @param subject
+     * @return Nothing
+     */
+    public boolean validate(final Subject subject) {
+        int validSubjectFieldCount = 0;
+
+        final List<SubjectField> subjectFieldList = subject.getSubjectFields();
+
+        for (final SubjectField subjectField : subjectFieldList) {
+            final SubjectFieldType subjectFieldType = subjectField.getType();
+            String subjectFieldValue = subjectField.getValue();
+
+            if ((!ValidationUtils.isNullOrEmpty(subjectFieldValue))) {
+                subjectFieldValue = subjectFieldValue.trim();
+
+                if (ValidationUtils.isValidSubjectString(subjectFieldValue)) {
+                    validSubjectFieldCount++;
+                } else {
+                    validateSubjectValue(subjectFieldType, subjectFieldValue);
+                    validSubjectFieldCount++;
+                }
+            }
+        }
+
+        if (validSubjectFieldCount == 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * This method validates all the fields present in the Subject
+     * 
+     * @param subjectFieldType
+     * @param subjectFieldValue
+     * @return Nothing
+     */
+    public void validateSubjectValue(final SubjectFieldType subjectFieldType, final String subjectFieldValue) {
+        switch (subjectFieldType) {
+        case COMMON_NAME:
+        case ORGANIZATION:
+        case ORGANIZATION_UNIT:
+        case SERIAL_NUMBER:
+        case DN_QUALIFIER:
+        case TITLE:
+            subjectFieldValidation(subjectFieldType.name(), subjectFieldValue);
+            break;
+        case COUNTRY_NAME:
+            validateCountryName(subjectFieldValue);
+            break;
+        case STATE:
+        case LOCALITY_NAME:
+            subjectFieldValidation(subjectFieldType.name(), subjectFieldValue, MAX_ALLOWABLE_LENGTH_128);
+            break;
+        case GIVEN_NAME:
+            subjectFieldValidation(subjectFieldType.name(), subjectFieldValue, MAX_ALLOWABLE_LENGTH_16);
+            break;
+        case SURNAME:
+            subjectFieldValidation(subjectFieldType.name(), subjectFieldValue, MAX_ALLOWABLE_LENGTH_40);
+            break;
+        case STREET_ADDRESS:
+            subjectFieldValidation(subjectFieldType.name(), subjectFieldValue, MAX_ALLOWABLE_LENGTH_40);
+            break;
+        case DC:
+            subjectFieldValidation(subjectFieldType.name(), subjectFieldValue, MAX_ALLOWABLE_LENGTH_255);
+            break;
+        case INITIALS:
+            subjectFieldValidation(subjectFieldType.name(), subjectFieldValue, MAX_ALLOWABLE_LENGTH_5);
+            break;
+        case GENERATION:
+            subjectFieldValidation(subjectFieldType.name(), subjectFieldValue, MAX_ALLOWABLE_LENGTH_3);
+            break;
+        case EMAIL_ADDRESS:
+            validateEmailEntries(Arrays.asList(subjectFieldValue));
+            break;
+        default:
+            throw new IllegalArgumentException("Unknown Field Type in Subject " + subjectFieldType);
+        }
+    }
+
+    /**
+     * This method checks whether the input String is ASCII printable or not
+     * 
+     * @param fieldname
+     * @param fieldvalue
+     * @param MaximumLength
+     * @return Nothing
+     */
+    public void subjectFieldValidation(final String fieldName, final String fieldValue, final int maxLength) {
+
+        if (fieldValue.length() > maxLength) {
+            throw new IllegalArgumentException(fieldName + " length should be under " + maxLength);
+        }
+
+        if (!ValidationUtils.isAsciiPrintable(fieldValue)) {
+            throw new IllegalArgumentException("Improper " + fieldName + " entered: {}, provide valid field");
+        }
+    }
+
+    public void validateEmailEntries(final List<String> emailEntries) {
+
+        for (final String emailAddress : emailEntries) {
+            if (ValidationUtils.isNullOrEmpty(emailAddress)) {
+                throw new IllegalArgumentException("Email can not be Null or Empty");
+            }
+
+            if (emailAddress.equals(OVERRIDING_OPERATOR)) {
+                continue;
+            }
+
+            if (!ValidationUtils.validatePattern(EMAIL_REGEX, emailAddress)) {
+                throw new IllegalArgumentException("Improper EmailId entered: " + emailAddress + ", provide valid EmailId");
+            }
+        }
+    }
+    private void subjectFieldValidation(final String fieldName, final String fieldValue) {
+        subjectFieldValidation(fieldName, fieldValue, MAX_ALLOWABLE_LENGTH_64);
+    }
+
+    private void validateCountryName(final String countryName) {
+
+        boolean isValidCountryName = false;
+
+        if (ValidationUtils.validatePattern(COUNTRY_REGEX, countryName)) {
+            final String countryCodeList[] = Locale.getISOCountries();
+            isValidCountryName = (Arrays.binarySearch(countryCodeList, countryName.toUpperCase()) > 0);
+        }
+
+        if (!isValidCountryName) {
+            throw new IllegalArgumentException("Illegal Country Name");
+        }
+    }
+}

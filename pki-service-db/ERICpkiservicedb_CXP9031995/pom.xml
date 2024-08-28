@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>pki-service-db</artifactId>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>ERICpkiservicedb_CXP9031995</artifactId>
+	<packaging>${rpm.packaging}</packaging>
+	<name>[${project.parent.artifactId}] CXP module</name>
+
+	<properties>
+		<!-- RPM build properties -->
+		<com.ericsson.oss.rpm.architecture>noarch</com.ericsson.oss.rpm.architecture>
+		<rpm.name>${project.artifactId}</rpm.name>
+		<rpm.version>${project.version}</rpm.version>
+		<rpm-root>opt</rpm-root>
+		<comp-name>ericsson</comp-name>
+		<install-path>com.ericsson.oss.ci-archetypes</install-path>
+		<install-path>com.ericsson.oss.itpf.security.pki-service-db</install-path>
+		<postgres-name>pki_postgres</postgres-name>
+		<publish_artifact>true</publish_artifact>
+		<media.category>db,service</media.category>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>rpm-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>rpm</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<requires>
+						<require>ERICpostgresutils_CXP9038493</require>
+					</requires>
+					<mappings>
+						<mapping>
+							<!-- Copies all the bash scripts into installation directory. May be used for trouble shooting etc.. if needed -->
+							<directory>/${comp-name}/${postgres-name}/db/pkimanager/</directory>
+							<!-- Read and execute -->
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/db/pkimanager/</location>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+									<excludes>
+										<exclude>**/*drop*.sh</exclude>
+									</excludes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<!-- Copies all the bash scripts into installation directory. May be used for trouble shooting etc.. if needed -->
+							<directory>/${comp-name}/${postgres-name}/db/pkicore/</directory>
+							<!-- Read and execute -->
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/db/pkicore/</location>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+									<excludes>
+										<exclude>**/*drop*.sh</exclude>
+									</excludes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<!-- Copies all the bash scripts into installation directory. May be used for trouble shooting etc.. if needed -->
+							<directory>/${comp-name}/${postgres-name}/db/pkirascep/</directory>
+							<!-- Read and execute -->
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/db/pkirascep/</location>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+									<excludes>
+										<exclude>**/*drop*.sh</exclude>
+									</excludes>
+								</source>
+							</sources>
+						</mapping>
+
+						<mapping>
+							<!-- Copies all the bash scripts into installation directory. May be used for trouble shooting etc.. if needed -->
+							<directory>/${comp-name}/${postgres-name}/db/pkiratdps/</directory>
+							<!-- Read and execute -->
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/db/pkiratdps/</location>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+									<excludes>
+										<exclude>**/*drop*.sh</exclude>
+									</excludes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<!-- Copies all the bash scripts into installation directory. May be used for trouble shooting etc.. if needed -->
+							<directory>/${comp-name}/${postgres-name}/db/pkiracmp/</directory>
+							<!-- Read and execute -->
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/db/pkiracmp/</location>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+									<excludes>
+										<exclude>**/*drop*.sh</exclude>
+									</excludes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<!-- Copies all the bash scripts into installation directory. May be used for trouble shooting etc.. if needed -->
+							<directory>/${comp-name}/${postgres-name}/db/kaps/</directory>
+							<!-- Read and execute -->
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/db/kaps/</location>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+									<excludes>
+										<exclude>**/*drop*.sh</exclude>
+									</excludes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<!-- Copies all the bash scripts into installation directory. May be used for trouble shooting etc.. if needed -->
+							<directory>/${comp-name}/${postgres-name}/db/pkicdps/</directory>
+							<!-- Read and execute -->
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/db/pkicdps/</location>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+									<excludes>
+										<exclude>**/*drop*.sh</exclude>
+									</excludes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<!-- Copies all the bash scripts into installation directory. May be used for trouble shooting etc.. if needed -->
+							<directory>/${comp-name}/${postgres-name}/db/custom/</directory>
+							<!-- Read and execute -->
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/db/custom/</location>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+									<excludes>
+										<exclude>**/*drop*.sh</exclude>
+									</excludes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<!-- Copies all the bash scripts into installation directory. May be used for trouble shooting etc.. if needed -->
+							<directory>/${comp-name}/${postgres-name}/db/common/</directory>
+							<!-- Read and execute -->
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/db/common/</location>
+									<includes>
+										<include>**/*.*</include>
+									</includes>
+									<excludes>
+										<exclude>**/*drop*.sh</exclude>
+									</excludes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<!-- Creates the etc folder where the Postgres password file will be created -->
+							<directory>/${comp-name}/${postgres-name}/db/etc/</directory>
+							<!-- Read and execute -->
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+						</mapping>
+						<mapping>
+							<!-- Creates kaps log folder -->
+							<directory>/${comp-name}/${postgres-name}/db/kaps/logs/</directory>
+							<!-- Read and execute -->
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+						</mapping>
+						<mapping>
+							<!-- Creates pkicdps log folder -->
+							<directory>/${comp-name}/${postgres-name}/db/pkicdps/logs/</directory>
+							<!-- Read and execute -->
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+						</mapping>
+						<mapping>
+							<!-- Creates pkicore log folder -->
+							<directory>/${comp-name}/${postgres-name}/db/pkicore/logs/</directory>
+							<!-- Read and execute -->
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+						</mapping>
+						<mapping>
+							<!-- Creates pkimanager log folder -->
+							<directory>/${comp-name}/${postgres-name}/db/pkimanager/logs/</directory>
+							<!-- Read and execute -->
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+						</mapping>
+						<mapping>
+							<!-- Creates pkiracmp log folder -->
+							<directory>/${comp-name}/${postgres-name}/db/pkiracmp/logs/</directory>
+							<!-- Read and execute -->
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+						</mapping>
+						<mapping>
+							<!-- Creates pkirascep log folder -->
+							<directory>/${comp-name}/${postgres-name}/db/pkirascep/logs/</directory>
+							<!-- Read and execute -->
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+						</mapping>
+						<mapping>
+							<!-- Creates pkiratdps log folder -->
+							<directory>/${comp-name}/${postgres-name}/db/pkiratdps/logs/</directory>
+							<!-- Read and execute -->
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>true</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+						</mapping>
+						<mapping>
+							<directory>/${comp-name}/${postgres-name}/db/pkimanager/</directory>
+							<sources>
+								<softlinkSource>
+									<destination>install_update_pkimanager_db.sh</destination>
+									<location>/${comp-name}/${postgres-name}/db/pkimanager/install_update_pkimanager_db_024.sh</location>
+								</softlinkSource>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/${comp-name}/${postgres-name}/db/pkicore/</directory>
+							<sources>
+								<softlinkSource>
+									<destination>install_update_pkicore_db.sh</destination>
+									<location>/${comp-name}/${postgres-name}/db/pkicore/install_update_pkicore_db_016.sh</location>
+								</softlinkSource>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/${comp-name}/${postgres-name}/db/pkirascep/</directory>
+							<sources>
+								<softlinkSource>
+									<destination>install_update_pkirascep_db.sh</destination>
+									<location>/${comp-name}/${postgres-name}/db/pkirascep/install_update_pkirascep_db_004.sh</location>
+								</softlinkSource>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/${comp-name}/${postgres-name}/db/pkiratdps/</directory>
+							<sources>
+								<softlinkSource>
+									<destination>install_update_pkiratdps_db.sh</destination>
+									<location>/${comp-name}/${postgres-name}/db/pkiratdps/install_update_pkiratdps_db_002.sh</location>
+								</softlinkSource>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/${comp-name}/${postgres-name}/db/pkiracmp/</directory>
+							<sources>
+								<softlinkSource>
+									<destination>install_update_pkiracmp_db.sh</destination>
+									<location>/${comp-name}/${postgres-name}/db/pkiracmp/install_update_pkiracmp_db_004.sh</location>
+								</softlinkSource>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/${comp-name}/${postgres-name}/db/kaps/</directory>
+							<sources>
+								<softlinkSource>
+									<destination>install_update_kaps_db.sh</destination>
+									<location>/${comp-name}/${postgres-name}/db/kaps/install_update_kaps_db_006.sh</location>
+								</softlinkSource>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/${comp-name}/${postgres-name}/db/pkicdps/</directory>
+							<sources>
+								<softlinkSource>
+									<destination>install_update_pkicdps_db.sh</destination>
+									<location>/${comp-name}/${postgres-name}/db/pkicdps/install_update_pkicdps_db_002.sh</location>
+								</softlinkSource>
+							</sources>
+						</mapping>
+					</mappings>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

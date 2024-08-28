@@ -1,0 +1,1 @@
+Elasticsearch Backup and Restore Agent deployed to {{ .Release.Namespace }}

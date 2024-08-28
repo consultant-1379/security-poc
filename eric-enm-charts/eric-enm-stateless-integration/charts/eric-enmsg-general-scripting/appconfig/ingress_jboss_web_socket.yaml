@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: general-scripting
+      port:
+        number: 8080
+  path: /scripting-terminal-ws/
+  pathType: ImplementationSpecific

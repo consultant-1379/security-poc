@@ -1,0 +1,64 @@
+<Entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="EntitiesSchema.xsd">
+<CAEntity>	
+	<EntityProfileName>RootCA_Entity_Profile</EntityProfileName>
+		<KeyGenerationAlgorithm>
+			<Name>DES</Name>
+			<KeySize>1024</KeySize>
+		</KeyGenerationAlgorithm>
+		<CertificateAuthority>
+		<Name>RootCA_127</Name>
+		<IsRootCA>true</IsRootCA>
+		<SubjectIdentifier>
+		<Subject>
+			<SubjectDN>
+				<SubjectEntry>
+					<Type>COMMON_NAME</Type>
+					<Value> ARJ_Root </Value>
+				</SubjectEntry>
+			</SubjectDN>
+		</Subject>
+		<SubjectAltNameValues>
+			<SubjectAltNameValue>
+				<Type>DIRECTORY_NAME</Type>
+				<Value xsi:type="SubjectAltNameString">
+					<StringValue>www.xyz.com (http://www.xyz.com)</StringValue>
+				</Value>
+			</SubjectAltNameValue>
+		</SubjectAltNameValues>
+		</SubjectIdentifier>
+		<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+		</CertificateAuthority>
+	</CAEntity> 
+	<Entity >	
+	<EntityProfileName>RootCA_Entity_Profile</EntityProfileName>
+		<KeyGenerationAlgorithm>
+			<Name>DES</Name>
+			<KeySize>2048</KeySize>
+		</KeyGenerationAlgorithm>
+		<EntityInfo>
+				<Name>ERBS_13</Name>
+				<SubjectIdentifier>
+						<Subject>
+							<SubjectDN>
+								<SubjectEntry>
+									<Type>COMMON_NAME</Type>
+									<Value>Entity_ERBS_1</Value>
+								</SubjectEntry>
+							</SubjectDN>
+						</Subject>
+						<SubjectAltNameValues>
+							<SubjectAltNameValue>
+								<Type>EDI_PARTY_NAME</Type>
+								<Value xsi:type="EdiPartyName">
+									<NameAssigner>TCS</NameAssigner>
+									<PartyName>adksl</PartyName>
+								</Value>
+							</SubjectAltNameValue>
+						</SubjectAltNameValues>
+				</SubjectIdentifier>
+		</EntityInfo>
+		<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+		<OTP>2ER13SA32SAD2G3</OTP>
+</Entity> 
+	</Entities>

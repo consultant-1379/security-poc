@@ -1,0 +1,13 @@
+NAME=eric-enmsg-itservices
+REQUESTS=true
+REQUESTS_LIST=1021
+LIMITS=true
+LIMITS_LIST=1420
+STS=true
+USER=true
+USER_LIST=1000,1000
+IMAGE=true
+IMAGE_LIST=rhel
+WAIT=true
+WAIT_LIST=gossiprouter-cache,gossiprouter-remoting,models,jms01,postgres,sps
+SVC=itservices

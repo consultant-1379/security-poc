@@ -1,0 +1,9 @@
+DEP=true
+NAME=eric-enmsg-flowautomation
+SVC=flowautomation
+WAIT=true
+WAIT_LIST=gossiprouter-cache,gossiprouter-remoting,jms01,postgres,sps
+REQUESTS=true
+REQUESTS_LIST=2048Mi
+LIMITS=true
+LIMITS_LIST=4096Mi

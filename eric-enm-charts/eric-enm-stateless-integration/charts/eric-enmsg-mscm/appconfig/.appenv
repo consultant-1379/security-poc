@@ -1,0 +1,11 @@
+NAME=eric-enmsg-mscm
+DEP=true
+SVC=mscm
+EXTRASVC=true
+ESVC_LIST=mscm-corba
+REQUESTS=true
+REQUESTS_LIST=6Gi
+LIMITS=true
+LIMITS_LIST=8192Mi
+WAIT=true
+WAIT_LIST=gossiprouter-cache,gossiprouter-eap7,jms01,postgres,sps

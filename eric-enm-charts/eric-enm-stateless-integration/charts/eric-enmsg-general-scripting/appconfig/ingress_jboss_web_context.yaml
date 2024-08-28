@@ -1,0 +1,56 @@
+- backend:
+    service:
+      name: general-scripting
+      port:
+        number: 443
+  path: /scripting-terminal-ws/vm/healthcheck
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: general-scripting
+      port:
+        number: 443
+  path: /scriptingterminal/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: general-scripting
+      port:
+        number: 443
+  path: /locales/en-us/scriptingterminal/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: general-scripting
+      port:
+        number: 443
+  path: /help/en-us/scriptingterminal/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: general-scripting
+      port:
+        number: 443
+  path: /advancedmoscripting/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: general-scripting
+      port:
+        number: 443
+  path: /locales/en-us/advancedmoscripting/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: general-scripting
+      port:
+        number: 443
+  path: /help/en-us/advancedmoscripting/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: general-scripting
+      port:
+        number: 443
+  path: /scripting/
+  pathType: ImplementationSpecific

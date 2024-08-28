@@ -1,0 +1,26 @@
+{{- if .Values.podDisruptionBudget }}
+{{- if and .Values.podDisruptionBudget.minAvailable .Values.podDisruptionBudget.maxUnavailable }}
+  {{ fail "Only one of podDisruptionBudget.minAvailable and podDisruptionBudget.maxUnavailable can be set" }}
+{{- end }}
+apiVersion: {{ .Capabilities.APIVersions.Has "policy/v1/PodDisruptionBudget" | ternary "policy/v1" "policy/v1beta1" }}
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "eric-cnom-server.fullname" . }}
+  labels:
+    {{- include "eric-cnom-server.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-cnom-server.product-info" . | nindent 4 }}
+    {{- if .Values.annotations }}
+    {{- .Values.annotations | toYaml | nindent 4 }}
+    {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "eric-cnom-server.selectorLabels" . | nindent 6 }}
+  {{- if .Values.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ kindIs "string" .Values.podDisruptionBudget.minAvailable | ternary (quote .Values.podDisruptionBudget.minAvailable) .Values.podDisruptionBudget.minAvailable }}
+  {{- else }}
+  {{- $maxUnavailable := default 1 .Values.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ kindIs "string" $maxUnavailable  | ternary (quote $maxUnavailable ) $maxUnavailable }}
+  {{- end }}
+{{- end }}

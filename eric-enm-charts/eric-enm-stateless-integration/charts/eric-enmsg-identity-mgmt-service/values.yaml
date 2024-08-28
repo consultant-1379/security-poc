@@ -1,0 +1,154 @@
+## eric-enmsg-identity-mgmt-service image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  ingress:
+    enmHost:
+  enmProperties:
+    postgres_service:
+    postgresql01_admin_password:
+    COM_INF_LDAP_ROOT_SUFFIX:
+    COM_INF_LDAP_ADMIN_ACCESS:
+    COM_INF_LDAP_ADMIN_CN:
+    COM_INF_LDAP_PORT:
+    LDAP_ADMIN_PASSWORD:
+    LDAP_ADMIN_CN:
+    dps_persistence_provider:
+  timezone:
+productNumber: "CXC placeholder"
+productRevision: R25K
+labels: {}
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-identity-mgmt-service: 1
+images:
+  eric-enm-httpd:
+    name: eric-enmsg-identity-mgmt-service-httpd
+    tag: 1.24.9-1
+  eric-enm-monitoring:
+    enabled: true
+    name: eric-enm-monitoring-eap7
+    tag: 1.27.9-1
+  eric-enmsg-identity-mgmt-service:
+    name: eric-enmsg-identity-mgmt-service
+    tag: 1.24.9-1
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s gossiprouter-cache,gossiprouter-eap7,jms01,postgres,sps'
+      ]"
+  waitForCertificatesContainer:
+    enabled: true
+    name: enm-wait-for-certificates-container
+    tag: 1.0.0-13
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  pullSecret:
+  registry:
+    url:
+service:
+  name: idmserv
+  annotations: {}
+  labels:
+  xmlMountPath: "/ericsson/credm/certReqMount"
+  tlsMountPath: "/ericsson/credm/tlsMount"
+# Ingress
+ingress:
+  enabled: false
+ingress_jboss_web_context:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    ingress.kubernetes.io/ssl-passthrough: "true"
+## Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 5120Mi
+    cpu:
+  limits:
+    enabled: true
+    memory: 5120Mi
+    cpu:
+  httpd:
+    enabled: false
+    requests:
+      memory:
+      cpu:
+    limits:
+      memory:
+      cpu:
+  monitoring:
+    enabled: false
+    requests:
+      memory:
+      cpu:
+    limits:
+      memory:
+      cpu:
+# StartupProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 20
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+# Extra Annotations to be added to pod
+podAnnotations: {}
+## Tolerations for pod assignment
+tolerations: []
+## Affinity for pod assignment
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+# Constrain which nodes your pod is eligible to be scheduled on
+nodeAffinity: {}
+priorityClassName: ""
+## Node selector
+nodeSelector: {}
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1
+credmController:
+  name: eric-enm-credm-controller
+  port: 5001
+jobs:
+  jobAction: certrequest
+  certRequest:
+    imageName: enm-certrequestjob-container
+    pullPolicy: Always
+    tag: 1.0.0-13
+    resources:
+      requests:
+        enabled: true
+        cpu: 500m
+        memory: 512Mi
+      limits:
+        enabled: true
+        cpu: 1000m
+        memory: 512Mi

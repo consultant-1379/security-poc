@@ -1,0 +1,5 @@
+"alias" (* slogan = "Create an alias for a command (with optional arguments)" *) WS """ ALIAS_NAME { ARGUMENT } """ WS """ COMMAND """
+
+ALIAS_NAME ::= <alias_name> (* slogan = "Specify the alias name to be used for the command" *)
+ARGUMENT ::= WS "$" (* slogan = "Specify the argument-values required for the alias" *) <argument_number> (* slogan = "Enter an argument number >= 1 & <= 9" *)
+COMMAND ::= <command> (* slogan = "Insert the command for the alias. E.g cmedit get * NetworkElement" regex = "^[a-zA-Z0-9\\.,;:?%&@#^|\/ *=()\[\]<>!_$-+]+[a-zA-Z0-9\\.,;:?%&#@^|\/ *=()\[\]<>!_$-+]*$" *)

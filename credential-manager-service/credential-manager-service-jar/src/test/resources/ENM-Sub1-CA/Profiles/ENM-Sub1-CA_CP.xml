@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+	<Certificate-Profiles>
+
+		<CertificateProfile Name="ENM CA CP">
+
+
+			<SubjectCapabilities>
+              <SubjectDN>
+                <SubjectEntry>
+                   <Type>COMMON_NAME</Type>
+                </SubjectEntry>
+                <SubjectEntry>
+                   <Type>ORGANIZATION_UNIT</Type>
+                </SubjectEntry>
+                <SubjectEntry>
+                   <Type>ORGANIZATION</Type>
+                </SubjectEntry>
+                <SubjectEntry>
+                   <Type>COUNTRY_NAME</Type>
+                </SubjectEntry>
+                </SubjectDN>
+              </SubjectCapabilities>
+
+			<IsCAEntity>true</IsCAEntity>
+			<Version>V3</Version>
+			<SignatureAlgorithm>
+				<Name>SHA256withRSA</Name>
+				<KeySize>2048</KeySize>
+			</SignatureAlgorithm>
+
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+
+			<Validity>P8Y</Validity>
+
+			<Issuer>ENM_PKI_Root_CA</Issuer>
+			<SubjectUniqueIdentifier>true</SubjectUniqueIdentifier>
+			<IssuerUniqueIdentifier>true</IssuerUniqueIdentifier>
+			<SkewCertificateTime>PT30M</SkewCertificateTime>
+
+			<CertificateExtensions>
+
+				<CertificateExtension xsi:type="ExtendedKeyUsage">
+					<Critical>false</Critical>
+					<KeyPurposeId>ID_KP_EMAIL_PROTECTION</KeyPurposeId>
+					<KeyPurposeId>ID_KP_TIMESTAMPING</KeyPurposeId>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="SubjectKeyIdentifier">			
+					<Critical>false</Critical>
+					<KeyIdentifierAlgorithm>160-BIT_SHA-1</KeyIdentifierAlgorithm>
+				</CertificateExtension>
+				
+				<CertificateExtension xsi:type="BasicConstraints">
+					<Critical>true</Critical>
+					<CA>true</CA>
+					<PathLenConstraint>2147483646</PathLenConstraint>	
+				</CertificateExtension>
+
+<!--				<CertificateExtension xsi:type="CRLDistributionPoint">
+					<Critical>true</Critical>
+					<DistributionPointURL>http://www.RootlocationofCrl</DistributionPointURL>
+				</CertificateExtension>
+-->
+				<CertificateExtension xsi:type="AuthorityKeyIdentifier">
+					<Critical>false</Critical>
+					<ByKeyIdentifier>true</ByKeyIdentifier>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="KeyUsage">
+					<Critical>true</Critical>
+					<KeyUsageType>DIGITAL_SIGNATURE</KeyUsageType>
+					<KeyUsageType>KEY_CERT_SIGN</KeyUsageType>
+					<KeyUsageType>CRL_SIGN</KeyUsageType>
+				</CertificateExtension>
+
+			</CertificateExtensions>
+		</CertificateProfile>
+
+		<CertificateProfile Name="NE CA CP">
+
+			<IsCAEntity>true</IsCAEntity>
+			<Version>V3</Version>
+			<SignatureAlgorithm>
+				<Name>SHA256withRSA</Name>
+				<KeySize>2048</KeySize>
+			</SignatureAlgorithm>
+
+			<KeyGenerationAlgorithm>
+				<Name>RSA</Name>
+				<KeySize>2048</KeySize>
+			</KeyGenerationAlgorithm>
+
+			<Validity>P8Y</Validity>
+
+			<Issuer>ENM_PKI_Root_CA</Issuer>
+			<SubjectUniqueIdentifier>true</SubjectUniqueIdentifier>
+			<IssuerUniqueIdentifier>true</IssuerUniqueIdentifier>
+			<SkewCertificateTime>PT30M</SkewCertificateTime>
+
+			<CertificateExtensions>
+
+				<CertificateExtension xsi:type="ExtendedKeyUsage">
+					<Critical>false</Critical>
+					<KeyPurposeId>ID_KP_EMAIL_PROTECTION</KeyPurposeId>
+					<KeyPurposeId>ID_KP_TIMESTAMPING</KeyPurposeId>
+				</CertificateExtension>			
+			
+				<CertificateExtension xsi:type="SubjectKeyIdentifier">			
+					<Critical>false</Critical>
+					<KeyIdentifierAlgorithm>160-BIT_SHA-1</KeyIdentifierAlgorithm>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="BasicConstraints">
+					<Critical>true</Critical>
+					<CA>true</CA>
+					<PathLenConstraint>2147483646</PathLenConstraint>	
+				</CertificateExtension>
+
+<!--				<CertificateExtension xsi:type="CRLDistributionPoint">
+					<Critical>true</Critical>
+					<DistributionPointURL>http://www.RootlocationofCrl</DistributionPointURL>
+				</CertificateExtension>
+-->
+				<CertificateExtension xsi:type="AuthorityKeyIdentifier">
+					<Critical>false</Critical>
+					<ByKeyIdentifier>true</ByKeyIdentifier>
+				</CertificateExtension>
+
+				<CertificateExtension xsi:type="KeyUsage">
+					<Critical>true</Critical>
+					<KeyUsageType>DIGITAL_SIGNATURE</KeyUsageType>
+					<KeyUsageType>KEY_CERT_SIGN</KeyUsageType>
+					<KeyUsageType>CRL_SIGN</KeyUsageType>
+				</CertificateExtension>
+
+			</CertificateExtensions>
+		</CertificateProfile>
+		
+		
+	</Certificate-Profiles>
+</Profiles>
+
+
+
+
+
+
+
+
+

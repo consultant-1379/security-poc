@@ -1,0 +1,9 @@
+NAME=eric-enmsg-openidm
+SVC=openidm
+WAIT=true
+WAIT_LIST=postgres
+REQUESTS=true
+REQUESTS_LIST=4096Mi
+LIMITS=true
+LIMITS_LIST=4096Mi
+DEP=true

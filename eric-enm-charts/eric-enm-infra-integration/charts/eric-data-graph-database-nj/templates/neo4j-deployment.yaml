@@ -1,0 +1,198 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "{{.Chart.Name}}.replica.name" . }}
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    chart: {{ template "{{.Chart.Name}}.chart" . }}
+    app.kubernetes.io/name: {{ template "{{.Chart.Name}}.name" . }}
+    app.kubernetes.io/version: {{ template "{{.Chart.Name}}.version" . }}
+    app.kubernetes.io/instance: {{.Release.Name | quote }} 
+    app: {{ template "{{.Chart.Name}}.name" . }}
+    component: replica
+    env: {{ .Values.global.env | quote }}
+  annotations:
+{{ include "{{.Chart.Name}}.prodInfoAnnotations" . | indent 4 }}  
+spec:
+  replicas: {{ .Values.readReplica.numberOfServers }}
+  selector:
+    matchLabels:
+      app: {{ template "{{.Chart.Name}}.name" . }}
+      app.kubernetes.io/instance: {{.Release.Name | quote }}
+      component: replica
+
+  strategy:
+    rollingUpdate:
+      maxSurge: {{ .Values.updateStrategy.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+    type: {{ .Values.updateStrategy.type | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "{{.Chart.Name}}.name" . }}
+        app.kubernetes.io/name: {{ template "{{.Chart.Name}}.name" . }}
+        app.kubernetes.io/version: {{ template "{{.Chart.Name}}.version" . }}
+        app.kubernetes.io/instance: {{.Release.Name | quote }}
+        component: replica
+{{- if .Values.annotations }}
+      annotations:
+{{- if .Values.annotations.pod }}
+{{ toYaml .Values.annotations.pod | indent 8 }}
+{{- end }}
+{{- end }}
+    spec:
+      serviceAccountName: "{{ template "{{.Chart.Name}}.name" . }}-sa"
+      terminationGracePeriodSeconds: {{ .Values.config.terminationGracePeriodSeconds }}
+      containers:
+      - name: {{ template "{{.Chart.Name}}.name" . }}
+        {{- if .Values.imageCredentials.registry.url}}
+        image: "{{ .Values.imageCredentials.registry.url }}/{{ .Values.imageCredentials.repoPath }}/{{ .Values.images.graphdb_n4j.name }}:{{ .Values.images.graphdb_n4j.tag }}"
+        {{- else }}
+        image: "{{ .Values.global.registry.url }}/{{ .Values.imageCredentials.repoPath }}/{{ .Values.images.graphdb_n4j.name }}:{{ .Values.images.graphdb_n4j.tag }}"
+        {{- end }}
+        {{- if  .Values.securityContext.pod }}
+        securityContext:
+{{ toYaml .Values.securityContext.pod | indent 10 }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.images.graphdb_n4j.imagePullPolicy | quote }}
+        env:
+          # Required to enable server policy plugin
+          - name: NEO4J_causal__clustering_multi__dc__license
+            value: "true"
+          - name: NEO4J_causal__clustering_load__balancing_plugin
+            value: "server_policies"
+          # Required to create a server group in cluster.
+          - name: NEO4J_causal__clustering_server__groups
+            value: "core"
+          # Exclude non-core servers from load balancer, required due to backup agent running read replica.
+          - name: NEO4J_causal__clustering_load__balancing_config_server__policies_default
+            value: "groups(core)->min(1); halt();"
+          - name: NEO4J_ACCEPT_LICENSE_AGREEMENT
+            value: "{{ .Values.global.acceptLicenseAgreement }}"
+          - name: NEO4J_dbms_mode
+            value: READ_REPLICA
+          - name: NEO4J_dbms_security_auth__enabled
+            value: "{{ .Values.config.authEnabled }}"
+          - name: NEO4J_causal__clustering_discovery__type
+            value: {{ .Values.config.clusterDiscoveryType }}
+          - name: NEO4J_causal__clustering_initial__discovery__members
+            value: {{ include "{{.Chart.Name}}.podsname" . | quote }}
+          - name: NEO4J_causal__dbms_directories_data
+            value: "{{ .Values.persistentVolumeClaim.mountPath }}"
+          - name: NEO4J_causal__clustering_cluster__topology__refresh
+            value: {{ .Values.config.refreshRate }}
+          - name: TZ
+            value: {{ .Values.global.timezone }}
+          {{- if .Values.config.authEnabled }}
+          - name: NEO4J_SECRETS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "{{.Chart.Name}}.secrets.name" . }}
+                key: neo4j-password
+          {{- end }}
+{{- if .Values.config.prometheusMonitoring.enabled }}
+          - name: NEO4J_metrics_prometheus_enabled
+            value: "true"
+          - name: NEO4J_metrics_prometheus_endpoint
+            value: "0.0.0.0:2004"
+{{- end }}
+          - name: NEO4J_dbms_default__database
+            value: {{ .Values.config.defaultDatabaseName | quote }}
+          - name: NEO4J_SHUTDOWN_TIMEOUT
+            value: {{ .Values.config.neo4jShutDownTimeout | quote }}
+{{- if .Values.readReplica.extraVars }}
+{{ toYaml .Values.readReplica.extraVars | indent 10 }}
+{{- end }}
+        command:
+          - "/bin/bash"
+          - "-c"
+          - |
+            IP_ADDRESS=$(hostname -i)
+            export NEO4J_dbms_default__advertised__address=${IP_ADDRESS}
+            export NEO4J_dbms_connector_bolt__advertised__address=${IP_ADDRESS}:7687
+            export NEO4J_dbms_connector_http__advertised__address=${IP_ADDRESS}:7474
+            export NEO4J_dbms_connector_https__advertised__address=${IP_ADDRESS}:7473
+            export NEO4J_causal__clustering_transaction__advertised__address=${IP_ADDRESS}:{{ .Values.config.port.tx }}
+            export NEO4J_causal__clustering_raft__advertised__address=${IP_ADDRESS}:{{ .Values.config.port.raft }}
+            export NEO4J_causal__clustering_discovery__advertised__address=${IP_ADDRESS}:{{ .Values.config.port.discovery }}
+            export NEO4J_causal__clustering_kubernetes_label__selector="graphdb/cluster={{ template "{{.Chart.Name}}.name" . }},graphdb/role=CORE"
+            export NEO4J_causal__clustering_discovery__type=K8S
+            export NEO4J_causal__clustering_kubernetes_service__port__name="discovery"
+
+            if [ "${AUTH_ENABLED:-}" == "true" ]; then
+              export NEO4J_AUTH="neo4j/${NEO4J_SECRETS_PASSWORD}"
+            else
+              export NEO4J_AUTH="none"
+            fi
+
+            exec /sbin/tini -g -- /docker-entrypoint.sh "neo4j"
+        ports:
+        - containerPort: {{ .Values.config.port.http }}
+          name: http
+        - containerPort: {{ .Values.config.port.bolt }}
+          name: bolt
+        - containerPort: {{ .Values.config.port.tx }}
+          name: tx
+{{- if .Values.config.prometheusMonitoring.enabled }}
+        - containerPort: {{ .Values.config.port.prometheusMonitoring }}
+          name: metrics
+{{- end }}
+        resources:
+          limits:
+            cpu: {{ .Values.resources.graphdb.limits.cpu }} 
+            memory: {{ .Values.resources.graphdb.limits.memory }} 
+          requests:
+            cpu: {{ .Values.resources.graphdb.requests.cpu }} 
+            memory: {{ .Values.resources.graphdb.requests.memory }}
+{{- if .Values.config.liveness.enabled }}
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.config.port.bolt }}
+          initialDelaySeconds: {{ .Values.config.liveness.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.config.liveness.timeoutSeconds }}
+          successThreshold: {{ .Values.config.liveness.successThreshold }}
+          failureThreshold: {{ .Values.config.liveness.failureThreshold }}
+{{- end }}
+{{- if .Values.config.readinessProbe.enabled }}
+        readinessProbe:
+          exec:
+            command: ["/bin/bash", "-c", "exit 0"]        
+          initialDelaySeconds: {{ .Values.config.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.config.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.config.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.config.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.config.readinessProbe.failureThreshold }}
+{{- end }}
+        volumeMounts:
+        - name: plugins
+          mountPath: /plugins
+{{- if .Values.core.sidecarContainers }}
+{{ toYaml .Values.core.sidecarContainers | indent 6 }}
+{{- end }}
+{{- if  .Values.securityContext.service }}
+      securityContext:
+{{ toYaml .Values.securityContext.service | indent 8 }}
+{{- end }}
+{{- if .Values.readReplica.initContainers }}
+      initContainers:
+{{ toYaml .Values.readReplica.initContainers | indent 6 }}
+{{- end }}
+      volumes:
+        - name: {{ template "{{.Chart.Name}}.name" . }}-metrics
+          configMap:
+            name: {{ template "{{.Chart.Name}}.name" . }}-metrics-config
+        - name: plugins
+          emptyDir: {}
+        - name: {{ template "{{.Chart.Name}}.name" . }}-logs
+          emptyDir: {}
+        - name: {{ template "{{.Chart.Name}}.name" .  }}-data
+          configMap:
+            name: {{ template "{{.Chart.Name}}.name" . }}-data
+{{- if  .Values.imageCredentials.registry.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.imageCredentials.registry.pullSecret | quote}}
+      {{- else if .Values.global.registry.pullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.global.registry.pullSecret | quote }}
+{{- end }}
+

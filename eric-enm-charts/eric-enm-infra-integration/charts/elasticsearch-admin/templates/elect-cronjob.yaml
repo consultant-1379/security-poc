@@ -1,0 +1,72 @@
+{{- range $i, $cronjob := .Values.electCronJobSettings -}}
+{{- range $i, $cronparam := $cronjob }}
+{{- if $cronparam.enabled }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "{{ $cronparam.name }}"
+  labels:
+    {{- include "elasticsearch-admin.labels" $ | nindent 4 }}
+spec:
+  schedule: {{ $cronparam.schedule | quote }}
+  successfulJobsHistoryLimit: {{ $.Values.elect.cronjob.successfulJobHistoryLimit }}
+  failedJobsHistoryLimit: {{ $.Values.elect.cronjob.failedJobHistoryLimit }}
+  concurrencyPolicy: {{ $.Values.elect.cronjob.concurrencyPolicy | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: elect
+            image: "{{ $.Values.global.registry.url }}/{{ $.Values.imageCredentials.repoPath }}/{{ $.Values.image.name }}:{{ $.Values.image.tag }}"
+            env:
+              - name: TZ
+                value: {{ $.Values.global.timezone }}
+            command: ["/bin/bash", "-c"]
+            args: [
+              "su es_admin;
+               cd /opt/ericsson/elasticsearch/ &&
+               echo [$(date +'%Y-%m-%dT%H:%M:%S%z')]: Starting execution of elect script &&
+               python export_csv.py --policy export_logs_every_1_minute_with_retention_12_hours.json &&
+               echo [$(date +'%Y-%m-%dT%H:%M:%S%z')]: script executed &&
+               cat /var/log/messages"
+            ]
+            {{- /*
+            args: [
+             "{{ $.Values.electExecCommand.cmdUserChange }};
+              {{ $.Values.electExecCommand.cmdCd }} &&
+              {{ $cronparam.exeCommand }} &&
+              {{ $.Values.electExecCommand.cmdLogGeneration }}"
+            ]
+            */}}
+            resources:
+              {{- toYaml $.Values.elect.cronjob.resources | nindent 14 }}
+            volumeMounts:
+            - name: exportpath
+              mountPath: /ericsson/elect-export-path
+          restartPolicy: OnFailure
+          {{- if or $.Values.nodeSelector $.Values.global.nodeSelector }}
+          nodeSelector:
+          {{- if $.Values.nodeSelector }}
+          {{- toYaml $.Values.nodeSelector | nindent 12 }}
+          {{- end }}
+          {{- if $.Values.global.nodeSelector }}
+          {{- toYaml $.Values.global.nodeSelector | nindent 12 }}
+          {{- end }}
+          {{- end }}
+          {{- if or $.Values.tolerations }}
+          tolerations:
+          {{- toYaml $.Values.tolerations | nindent 12 }}
+          {{- end }}
+          volumes:
+          - name: exportpath
+            persistentVolumeClaim:
+              claimName: "{{ $.Values.utilityName }}"
+{{- if include "elasticsearch-admin.pullSecrets" $ }}
+          imagePullSecrets:
+            - name: {{ template "elasticsearch-admin.pullSecrets" $ }}
+{{- end }}
+---
+{{- end }}
+{{- end }}
+{{- end }}

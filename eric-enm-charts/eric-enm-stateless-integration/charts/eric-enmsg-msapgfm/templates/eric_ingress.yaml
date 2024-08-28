@@ -1,0 +1,23 @@
+{{- if .Values.global.ericIngress.enabled }}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: msapgfm
+spec:
+  virtualServiceIP: {{ .Values.global.vips.fm_vip_address }}
+  backends:
+    name: msapgfm
+    config:
+      - ports:
+          vipPort: 65506
+          svcPort: 65506
+        protocol: tcp
+        algo: lc
+        mode: nat
+      - ports:
+          vipPort: 10163
+          svcPort: 10163
+        protocol: udp
+        algo: lc
+        mode: nat
+{{- end }}

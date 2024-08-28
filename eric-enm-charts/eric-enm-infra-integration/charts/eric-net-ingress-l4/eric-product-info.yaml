@@ -1,0 +1,29 @@
+images:
+  logshipper:
+    productName: "ADP Log Shipper Image"
+    productNumber: "CXU 101 0642"
+    name: "eric-log-shipper"
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "proj-adp-log-released"
+    tag: "9.1.0-33"
+  httpalarmsforwarder:
+    productName: "CN http alarms forwarder"
+    productNumber: ""
+    name: "eric-enm-http-alarms-forwarder"
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "proj-enm"
+    tag: "1.0.9-0"
+  snmptrapforwarder:
+    productName: "cloud native: snmp trap forwarder"
+    productNumber: ""
+    name: "eric-enm-snmp-trap-forwarder"
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "proj-enm"
+    tag: "1.0.13-0"
+  ingressl4:
+    productName: "A Helm chart for ICL4"
+    productNumber: ""
+    name: "eric-net-ingress-l4"
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "proj-enm"
+    tag: "1.1.0-111"

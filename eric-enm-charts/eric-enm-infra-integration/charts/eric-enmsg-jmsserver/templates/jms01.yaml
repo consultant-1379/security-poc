@@ -1,0 +1,5 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg.jms") -}}
+{{- define "eric-enmsg.jms" -}}
+metadata:
+  name: {{ .Values.service.name1 }}
+{{- end -}}

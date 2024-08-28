@@ -1,0 +1,12 @@
+{{- if .Values.localEnv.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: eric-enm-rwxpvc-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+{{- end }}

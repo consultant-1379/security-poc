@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>credential-manager-service</artifactId>
+        <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+        <version>1.0.6-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>ERICcredentialmanagerservice_CXP9031868</artifactId>
+    <packaging>${rpm.packaging}</packaging>
+        <name>[${project.parent.artifactId}] CXP module</name>
+
+    <properties>
+        <publish_artifact>true</publish_artifact>
+        <media.category>service</media.category>
+        <com.ericsson.oss.rpm.architecture>noarch</com.ericsson.oss.rpm.architecture>
+        <!-- Install path = /${rpm-root}/${comp-name}/${install-path} -->
+        <rpm-root>opt</rpm-root>
+        <comp-name>ericsson</comp-name>
+        <install-path>com.ericsson.oss.ci-archetypes</install-path>
+        <install-path>com.ericsson.oss.itpf.security.credential-manager-service</install-path>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>${project.parent.artifactId}-ear</artifactId>
+            <version>${project.version}</version>
+            <type>ear</type>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources/version</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>rpm-maven-plugin</artifactId>
+                <configuration>
+                    <mapping>
+                        <!--needed for TORF-34847 to install rpm to known location from KVM -->
+                        <directory>${vm.install-path}</directory>
+                        <filemode>500</filemode>
+                        <username>${jboss-username}</username>
+                        <groupname>${jboss-groupname}</groupname>
+                        <dependency>
+                            <includes>
+                                <include>${project.groupId}:${project.parent.artifactId}-ear</include>
+                            </includes>
+                        </dependency>
+                    </mapping>
+                    <mappings combine.children="append">
+                        <mapping>
+                            <directory>/ericsson/credm/service/data</directory>
+                            <filemode>770</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                            <sources>
+                                <source>
+                                    <location>target/classes/version.properties</location>
+                                    <includes>
+                                        <include>version.properties</include>
+                                    </includes>
+                                </source>
+                            </sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/ericsson/credm/service</directory>
+                            <filemode>770</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                        </mapping>
+                        <mapping>
+                            <directory>/ericsson/credm/service/script</directory>
+                            <filemode>770</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                        </mapping>
+                    </mappings>
+                    <preinstallScriptlet combine.self="override">
+                        <scriptFile>src/main/scripts/preinstall.sh</scriptFile>
+                        <fileEncoding>utf-8</fileEncoding>
+                    </preinstallScriptlet>
+                    <postinstallScriptlet combine.self="override">
+                        <scriptFile>src/main/scripts/postinstall.sh</scriptFile>
+                        <fileEncoding>utf-8</fileEncoding>
+                    </postinstallScriptlet>
+                    <preremoveScriptlet combine.self="override">
+                        <scriptFile>src/main/scripts/preremove.sh</scriptFile>
+                        <fileEncoding>utf-8</fileEncoding>
+                    </preremoveScriptlet>
+                    <postremoveScriptlet combine.self="override">
+                        <scriptFile>src/main/scripts/postremove.sh</scriptFile>
+                        <fileEncoding>utf-8</fileEncoding>
+                    </postremoveScriptlet>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

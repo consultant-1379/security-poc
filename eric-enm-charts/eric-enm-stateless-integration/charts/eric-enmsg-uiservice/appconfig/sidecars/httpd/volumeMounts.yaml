@@ -1,0 +1,9 @@
+- name: gp
+  mountPath: /gp
+- name: data
+  mountPath: /ericsson/tor/data
+- name: mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment
+- name: enm-version-configmap
+  mountPath: /.enm-version
+  subPath: .enm-version

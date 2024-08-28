@@ -1,0 +1,2 @@
+- name: secserv-credentials-data
+  mountPath: /tmp/secserv_admin_password

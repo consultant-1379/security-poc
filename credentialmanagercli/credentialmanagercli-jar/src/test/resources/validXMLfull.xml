@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+	<application>
+		<certificates>
+			<certificate>
+			    <certificatechain>true</certificatechain>
+				<tbscertificate>
+					<subject>
+						<!--  <entityname>atclvm387##HOSTNAME##</entityname> -->
+						<entityname>atclvm387##HOSTNAME##</entityname>
+						<distinguishname>CN=##HOSTNAME##_atclvm387, O=ericsson, OU=enm, C=SE</distinguishname>
+					</subject>
+
+					<!-- 
+					<certificateextension>
+						<subjectalternativename>
+							<ipaddress>1.1.1.1</ipaddress>
+						</subjectalternativename>
+				    </certificateextension>
+					-->
+				</tbscertificate>
+				
+				<!-- <endentityprofilename>TOREndEntityProfile</endentityprofilename>  -->
+				<endentityprofilename>CMPRA_FCTP_EP</endentityprofilename>
+				
+				<!-- 
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+				-->
+				
+				<keystore>
+					<jkskeystore>
+						<storealias>Teste</storealias >
+						<storelocation>certs/TestChain.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkskeystore>					
+				</keystore>
+				<keystore>
+					<jkskeystore>
+						<storealias>test1</storealias >
+						<storelocation>certs/TestFull.JKS</storelocation>
+						<storepassword>changeit</storepassword>
+					</jkskeystore>					
+				</keystore>
+				<keystore>
+					<base64keystore>
+						<storealias>test</storealias>
+						<keyfilelocation>certs/private.KEY</keyfilelocation>
+						<certificatefilelocation>certs/cert.CER</certificatefilelocation>
+					</base64keystore>
+				</keystore>
+				<keystore>
+					<pkcs12keystore>
+						<storealias>KeyStore</storealias >
+						<storelocation>certs/keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</pkcs12keystore>
+				</keystore>
+
+				<truststore>
+					<jkstruststore>
+						<storealias>TestCA1</storealias >
+						<storelocation>certs/TestTS.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkstruststore>
+				</truststore>		
+										
+				<truststore>
+				    <trustsource>internal</trustsource>
+					<jkstruststore>
+						<storealias>Test2</storealias >
+						<storelocation>certs/TestFull.JKS</storelocation>
+						<storepassword>changeit</storepassword>
+					</jkstruststore>
+				</truststore>	
+				
+				<truststore>
+					<trustsource>external</trustsource>
+					<jkstruststore>
+						<storealias>Test3</storealias >
+						<storelocation>certs/TestFull.JKS</storelocation>
+						<storepassword>changeit</storepassword>
+					</jkstruststore>
+				</truststore>	
+				<truststore>
+					<base64truststore>
+						<storealias>test</storealias>
+						<storelocation>certs/truststore.pem</storelocation>
+						<storepassword></storepassword>
+					</base64truststore>
+				</truststore>
+				<truststore>
+					<base64truststore>
+						<storealias>test</storealias>
+						<storefolder>certs/pemFolder</storefolder>
+						<storepassword></storepassword>
+					</base64truststore>
+				</truststore>
+												
+				<crlstore>
+					<base64crlstore>
+						<storealias>test</storealias>
+						<storefolder>certs/crlFolder</storefolder>
+						<storepassword></storepassword>
+					</base64crlstore>
+				</crlstore>
+				<crlstore>
+					<base64crlstore>
+						<storealias>test</storealias>
+						<storelocation>certs/crlstore.pem</storelocation>
+						<storepassword></storepassword>
+					</base64crlstore>
+				</crlstore>
+																		
+				<!-- <connectormanaged>httpsConnector</connectormanaged> -->
+
+			</certificate>
+			
+			<certificate>
+			
+				<tbscertificate>
+					<subject>
+						<entityname>atclvm400##HOSTNAME##</entityname>
+					</subject>
+				</tbscertificate>
+				
+				<endentityprofilename>CMPRA_FCTP_EP</endentityprofilename>
+				
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+				
+				<keystore>
+					<jkskeystore>
+						<storealias>moreteste</storealias >
+						<storelocation>certs/TestChain.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkskeystore>					
+				</keystore>
+							
+				<truststore>
+					<jkstruststore>
+						<storealias>TestMore</storealias >
+						<storelocation>certs/TestFull.JKS</storelocation>
+						<storepassword>changeit</storepassword>
+					</jkstruststore>
+				</truststore>	
+
+				<truststore>
+					<jkstruststore>
+						<storealias>TestFolder</storealias >
+						<storefolder>certs/jksFolder</storefolder>
+						<storepassword></storepassword>
+					</jkstruststore>
+				</truststore>	
+								
+				<crlstore>
+					<base64crlstore>
+						<storealias>more</storealias>
+						<storefolder>certs/crlFolder</storefolder>
+						<storepassword></storepassword>
+					</base64crlstore>
+				</crlstore>		
+				
+				<crlstore>
+					<crlsource>internal</crlsource>
+					<base64crlstore>
+						<storealias>internal</storealias>
+						<storefolder>certs/crlInternal</storefolder>
+						<storepassword></storepassword>
+					</base64crlstore>
+				</crlstore>	
+								
+				<crlstore>
+					<crlsource>external</crlsource>
+					<base64crlstore>
+						<storealias>external</storealias>
+						<storefolder>certs/crlExternal</storefolder>
+						<storepassword></storepassword>
+					</base64crlstore>
+				</crlstore>		
+												
+				<!-- <connectormanaged>httpsConnector</connectormanaged> -->
+
+			</certificate>
+			
+			<certificate>
+				<tbscertificate>
+					<subject>
+						<entityname>atclvm500##HOSTNAME##</entityname>
+					</subject>
+
+					<!-- 
+					<certificateextension>
+						<subjectalternativename>
+							<ipaddress>1.1.1.1</ipaddress>
+						</subjectalternativename>
+				    </certificateextension>
+					-->
+				</tbscertificate>
+				
+				<!-- <endentityprofilename>TOREndEntityProfile</endentityprofilename>  -->
+				<endentityprofilename>ENM_System_Man_EP</endentityprofilename>
+				
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+
+				<keystore>
+					<pkcs12keystore>
+						<storealias>morestore</storealias >
+						<storelocation>certs/keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</pkcs12keystore>
+				</keystore>
+				
+				<truststore>
+					<pkcs12truststore>
+						<storealias>otherstore</storealias >
+						<storelocation>certs/truststore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</pkcs12truststore>
+				</truststore>
+
+				<truststore>
+					<pkcs12truststore>
+						<storealias>otherstore</storealias >
+						<storelocation>certs/keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</pkcs12truststore>
+				</truststore>
+				
+				<truststore>
+					<pkcs12truststore>
+						<storealias>TestFolder</storealias >
+						<storefolder>certs/pkcs12Folder</storefolder>
+						<storepassword>changeit</storepassword>
+					</pkcs12truststore>
+				</truststore>
+																						
+				<!-- <connectormanaged>httpsConnector</connectormanaged>  -->
+
+			</certificate>	
+			
+		</certificates>
+		
+			<crlupdatemode>CrlSelfManaged</crlupdatemode>
+			
+		<keyrequests>
+		
+			<secretkeyrequest>
+				<keysize>64</keysize>
+				<keyalgorithm>DES</keyalgorithm>
+				<keystore>
+					<jcekssecretstore>
+						<storealias>secretalias</storealias>
+						<storelocation>keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</jcekssecretstore>
+				</keystore>	
+			</secretkeyrequest>
+			
+			<keypairrequest>
+				<keysize>64</keysize>
+				<keyalgorithm>DES</keyalgorithm>
+				<keystore>
+					<jkskeypairstore>
+						<storealias>secretalias</storealias>
+						<storelocation>keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</jkskeypairstore>
+				</keystore>		
+			</keypairrequest>
+			
+		</keyrequests>
+			
+			
+	</application>
+	<user>
+		<!-- keep in the same line to allow grep researches -->
+		<username>myUser</username>
+		<usergroup>myGroup</usergroup>
+	</user>
+</applications>

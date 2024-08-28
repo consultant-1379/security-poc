@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ template "stateless-integration.broServiceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook-weight": "98"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook": post-delete,post-install
+  labels:
+    app.kubernetes.io/name: {{ template "stateless-integration.name" . }}
+    helm.sh/chart: {{ template "stateless-integration.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "stateless-integration.name" . }}-uninstall
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook-weight": "98"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook": post-delete,post-install
+  labels:
+    app.kubernetes.io/name: {{ template "stateless-integration.name" . }}
+    helm.sh/chart: {{ template "stateless-integration.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "stateless-integration.broServiceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ template "stateless-integration.name" . }}-uninstall
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ template "stateless-integration.name" . }}-uninstall
+  annotations:
+    "helm.sh/hook-weight": "98"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook": post-delete,post-install
+  labels:
+    app.kubernetes.io/name: {{ template "stateless-integration.name" . }}
+    helm.sh/chart: {{ template "stateless-integration.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+rules:
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["list", "delete"]
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "stateless-integration.name" . }}-uninstall
+  labels:
+    app.kubernetes.io/name: {{ template "stateless-integration.name" . }}
+    helm.sh/chart: {{ template "stateless-integration.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  annotations:
+    "helm.sh/hook": "post-delete"
+    "helm.sh/hook-weight": "99"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      name: {{ template "stateless-integration.name" . }}-uninstall
+      labels:
+        app.kubernetes.io/name: {{ template "stateless-integration.name" . }}
+        helm.sh/chart: {{ template "stateless-integration.chart" . }}
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    spec:
+      restartPolicy: Never
+      {{- if include "stateless-integration.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "stateless-integration.pullSecrets" . }}
+      {{- end }}
+      serviceAccountName: {{ template "stateless-integration.broServiceAccountName" . }}
+      containers:
+        - name: executor
+          image: {{ .Values.global.registry.url }}/{{ template "stateless-integration.hookImageRepoPath" . }}/{{ index .Values "images" "eric-enm-chart-hooks" "name" }}:{{ index .Values "images" "eric-enm-chart-hooks" "tag" }}
+          imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - exec_hook delete_hook_jobs.py -j {{ template "stateless-integration.broRestorePostInstallName" . }}
+

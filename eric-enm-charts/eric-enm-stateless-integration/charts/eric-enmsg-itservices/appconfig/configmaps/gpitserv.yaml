@@ -1,0 +1,51 @@
+global.properties: |
+  #CM_GROUP=msap,mscm,mscmce,mscmip,mscmapg,mssnmpcm,nodecli,secserv,smrsserv
+  COM_INF_LDAP_ADMIN_ACCESS=U2FsdGVkX1+Th331ViwStKrs91kgAE88zyFbqQDBjN0=
+  COM_INF_LDAP_ADMIN_CN={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_CN }}
+  COM_INF_LDAP_PORT=1636
+  COM_INF_LDAP_ROOT_SUFFIX={{ .Values.global.enmProperties.COM_INF_LDAP_ROOT_SUFFIX }}
+  DDC_ON_CLOUD=TRUE
+  LDAP_ADMIN_CN="cn=directory manager"
+  LDAP_ADMIN_PASSWORD=U2FsdGVkX1+KJ3KtE2zpudi9Vqko/a4vRDzruu3lk0E=
+  PKI_EntityProfile_DN_COUNTRY_NAME=IE
+  PKI_EntityProfile_DN_ORGANIZATION=Ericsson
+  PKI_EntityProfile_DN_ORGANIZATION_UNIT=Athlone
+  certificatesRevListDistributionPointServiceDnsEnable=false
+  certificatesRevListDistributionPointServiceIpv4Enable=false
+  certificatesRevListDistributionPointServiceIpv6Enable=false
+  default_security_admin_password=U2FsdGVkX18E0yK+cT5A6t0/tWFhT2MW48C279fNStA=
+  dps_persistence_provider=neo4j
+  host_internal_bind_nic=eth0
+  host_system_identifier={{ .Values.global.enmProperties.host_system_identifier }}
+  internal_bind_nic=eth0
+  itservices={{ .Values.service.name}}-0,{{ .Values.service.name}}-1
+  itservices_service_IPs={{ .Values.global.vips.itservices_0_vip_address }},{{ .Values.global.vips.itservices_1_vip_address }}
+  itservices_service_IPv6_IPs=2001:1b70:6207:0026:0000:0864:1008:0008,2001:1b70:6207:0026:0000:0864:1008:0009
+  jbossModulesPath=/opt/ericsson/jboss/modules
+  modcluster_listenport=8666
+  neo4j_cluster=causal
+  new_enm_config=True
+  openidm_admin_password=U2FsdGVkX18r9kbj2r7seCPeAI7tNRjeXOgxCuHksgc=
+  pmicNfsShareList=/ericsson/pmic1/,/ericsson/pmic2/
+  pmrouterpolicy=pmrouterpolicy
+  postgresql01_admin_password=U2FsdGVkX19uWU+/kfu7jHGmy9BQdkr1Wz7pcHG56M8=
+  public_bind_nic=eth0
+  svc_CM_vip_ipaddress={{ .Values.global.vips.cm_vip_address }}
+  svc_FM_vip_ipaddress={{ .Values.global.vips.fm_vip_address }}
+  svc_PM_vip_ipaddress={{ .Values.global.vips.pm_vip_address }}
+  # svc_CM_vip_ipaddress={{ .Values.global.vips.svc_CM_vip_ipaddress }}
+  # svc_FM_vip_ipaddress={{ .Values.global.vips.svc_FM_vip_ipaddress }}
+  # svc_PM_vip_ipaddress={{ .Values.global.vips.svc_PM_vip_ipaddress }}
+  itservices_0_vip_address={{ .Values.global.vips.itservices_0_vip_address }}
+  itservices_1_vip_address={{ .Values.global.vips.itservices_1_vip_address }}
+  web_ports_appServer=8080
+  web_ports_default=443
+  web_ports_securePort=443
+  web_ports_unsecurePort=80
+  web_protocols_default=https
+  web_protocols_secure=https
+  web_protocols_unsecure=http
+  gossiprouters_for_caches=gossiprouter-cache[12002]
+  gossiprouters_for_remoting=gossiprouter-remoting[12001]
+  jgroups_protocol_stack=tcp-gossip
+  vaultserv=vault-service

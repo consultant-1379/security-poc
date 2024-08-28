@@ -1,0 +1,191 @@
+# Default values for ingressnginx.
+# Declare variables to be passed into your templates.
+#global:
+#  pullSecret:
+#  registry:
+#    url: armdocker.rnd.ericsson.se
+#    imagePullPolicy: IfNotPresent
+#    pullSecret:
+#  timezone: UTC
+#  nodeSelector: {}
+
+
+ingressClass: ingress-nginx
+ingressClassResource:
+  enabled: true
+
+replicaCount: 2
+
+affinity:
+  podAntiAffinity: "hard"
+
+rbac:
+  create: true
+
+nameOverride: ""
+
+imageCredentials:
+  repoPath:
+  pullPolicy: IfNotPresent
+  registry:
+    url:
+  pullSecret:
+
+tolerations: []
+
+#Added as part of DR-D1121-068
+annotations: {}
+
+labels: {}
+
+nodeSelector: {}
+
+service:
+  enabled: true
+  loadBalancerIP:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  annotations: {}
+  ports:
+    http: 80
+    https: 443
+    metrics: 10254
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  controller:
+    limits:
+      cpu: 2000m
+      memory: 2048Mi
+    requests:
+      cpu: 600m
+      memory: 2048Mi
+  logshipper:
+    limits:
+      memory: "200Mi"
+      cpu: "200m"
+    requests:
+      memory: "100Mi"
+      cpu: "100m"
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  automountServiceAccountToken: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+  # Annotations to add to the service account
+  annotations: {}
+
+
+# Not being used now
+
+securityContext: {}
+
+config:
+  proxyconnecttimeout: 10
+  keepalivetimeout: 10
+  proxybodysize: 0
+  workerprocesses: 3
+
+# Not being used now
+extraEnv: {}
+
+
+  ## Additional ingressnginx container arguments
+extraArgs: {}
+#  data.retention: 120h
+#  log.format: logfmt
+
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+startupProbe:
+  controller:
+    httpGet:
+      path: "/healthz"
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 2
+    successThreshold: 1
+    failureThreshold: 5
+livenessProbe:
+  controller:
+    httpGet:
+      path: "/healthz"
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 5
+readinessProbe:
+  controller:
+    httpGet:
+      path: "/healthz"
+      port: 10254
+      scheme: HTTP
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 3
+controller:
+  useHostPorts: false # The controller would use hostPorts where the pod gets scheduled i.e 443 for https & 80 http
+  dnsConfig: {}
+  hostname: {}
+  PriorityClassName: ""
+  sysctls: {}
+  domain: k8s.io/ingress-nginx
+  electionID: ingress-controller-leader
+  terminationGracePeriodSeconds : 300
+  containerPort:
+    http:
+      port: 8080
+      hostPort: 80
+    https:
+      port: 8443
+      hostPort: 443
+  lifecycle:
+    preStop:
+      exec:
+        command:
+          - /wait-shutdown
+## Additional configmap required for ingresscontroller
+  extraConfig: {}
+#    proxy-read-timeout: 60
+#    proxy-send-timeout: 60
+
+log:
+  # Creates LogShipper sidecar container to stream container logs to LogTransformer which stores the received logs in Elastic Search.
+  # Supported values "stream" for LogShipper sidecar to be created in eric-enm-kvstore-hc.
+  # If LogShipper sidecar container is not required, then set the "outputs" attribute value as empty or with any string except "stream".
+  outputs:
+    - "stream"
+  logshipper:
+    level: "info"
+
+# Configuration for LogShipper sidecar.
+logshipper:
+  storageAllocation: "300Mi"
+  harvester:
+    closeTimeout: "5m"
+    logData:
+      - subPaths:
+          - "ingress.log*"
+        logplane:
+  # Kubernetes service name for accessing the Logstash host.
+  logtransformer:
+    host: eric-log-transformer

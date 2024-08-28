@@ -1,0 +1,42 @@
+{{- if .Values.consulagent.enabled }}
+name:  consulagent
+image: {{ template "eric-enm-common-helmchart-library.registryUrl" . }}/{{ .Values.imageCredentials.repoPath }}/{{ index .Values "images" "consulagent" "name" }}:{{ index .Values "images" "consulagent" "tag" }}
+imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+args: {{ index .Values "images" "consulagent" "args" }}
+{{- if or .Values.resources.consulagent.enabled }}
+resources:
+  requests:
+    memory: {{ .Values.resources.consulagent.requests.memory | quote }}
+    cpu: {{ .Values.resources.consulagent.requests.cpu | quote }}
+  limits:
+    memory: {{ .Values.resources.consulagent.limits.memory | quote }}
+    cpu: {{ .Values.resources.consulagent.limits.cpu | quote }}
+{{- end }}
+env:
+  - name: UI_PRES_SERVER
+    value: {{ template "eric-enm-common-helmchart-library.enmHost" . }}
+  - name: web_host_default
+    value: {{ template "eric-enm-common-helmchart-library.enmHost" . }}
+  - name: TZ
+    value: {{ .Values.global.timezone }}
+  - name: POD_IP
+    valueFrom:
+      fieldRef:
+        fieldPath: status.podIP
+startupProbe:
+  exec:
+    command:
+      - /usr/local/bin/kvstore-health-check.sh
+  initialDelaySeconds: 10
+  timeoutSeconds: 15
+  periodSeconds: 30
+  failureThreshold: 20
+readinessProbe:
+  exec:
+    command:
+      - /usr/local/bin/kvstore-health-check.sh
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 15
+  failureThreshold: 2
+{{- end }}

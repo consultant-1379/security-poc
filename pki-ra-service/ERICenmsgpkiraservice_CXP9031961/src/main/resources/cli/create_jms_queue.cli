@@ -1,0 +1,30 @@
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredScepRequestChannel:add(entries=[queue/ClusteredScepRequestChannel-amq java:jboss/exported/jms/queue/ClusteredScepRequestChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredScepResponseChannel:add(entries=[queue/ClusteredScepResponseChannel-amq java:jboss/exported/jms/queue/ClusteredScepResponseChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredCMPServiceRequestChannel:add(entries=[queue/ClusteredCMPServiceRequestChannel-amq java:jboss/exported/jms/queue/ClusteredCMPServiceRequestChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredCMPServiceResponseChannel:add(entries=[queue/ClusteredCMPServiceResponseChannel-amq java:jboss/exported/jms/queue/ClusteredCMPServiceResponseChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=CMPSupportedAlgorithmRequestChannel:add(entries=[queue/CMPSupportedAlgorithmRequestChannel-amq java:jboss/exported/jms/queue/CMPSupportedAlgorithmRequestChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=CMPSupportedAlgorithmResponseChannel:add(entries=[queue/CMPSupportedAlgorithmResponseChannel-amq java:jboss/exported/jms/queue/CMPSupportedAlgorithmResponseChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredCRLNotificationChannel:add(entries=[queue/ClusteredCRLNotificationChannel-amq java:jboss/exported/jms/queue/ClusteredCRLNotificationChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredCRLRequestChannel:add(entries=[queue/ClusteredCRLRequestChannel-amq java:jboss/exported/jms/queue/ClusteredCRLRequestChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredCRLResponseChannel:add(entries=[queue/ClusteredCRLResponseChannel-amq java:jboss/exported/jms/queue/ClusteredCRLResponseChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredCRLResponseAckChannel:add(entries=[queue/ClusteredCRLResponseAckChannel-amq java:jboss/exported/jms/queue/ClusteredCRLResponseAckChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredTDPServiceRequestChannel:add(entries=[queue/ClusteredTDPServiceRequestChannel-amq java:jboss/exported/jms/queue/ClusteredTDPServiceRequestChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredTDPServiceResponseChannel:add(entries=[queue/ClusteredTDPServiceResponseChannel-amq java:jboss/exported/jms/queue/ClusteredTDPServiceResponseChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredTDPSAcknowledgementChannel:add(entries=[queue/ClusteredTDPSAcknowledgementChannel-amq java:jboss/exported/jms/queue/ClusteredTDPSAcknowledgementChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-queue=ClusteredTDPSCertificateEventChannel:add(entries=[queue/ClusteredTDPSCertificateEventChannel-amq java:jboss/exported/jms/queue/ClusteredTDPSCertificateEventChannel-amq])
+end-if
+if (outcome == success) of /subsystem=messaging-activemq/server=default/jms-topic=ClusteredCertificateEnrollmentStatusTopic:add(entries=[topic/ClusteredCertificateEnrollmentStatusTopic-amq])
+end-if

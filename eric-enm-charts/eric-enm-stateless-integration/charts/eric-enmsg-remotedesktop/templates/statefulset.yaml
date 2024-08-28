@@ -1,0 +1,15 @@
+{{- template "eric-enm-common-helmchart-library.statefulset" (list . "eric-enmsg-remotedesktop.statefulset") -}}
+  {{- define "eric-enmsg-remotedesktop.statefulset" -}}
+spec:
+  updateStrategy:
+    type: {{ .Values.updateStrategy.type }}
+    {{- if .Values.updateStrategy.rollingUpdate }}
+    rollingUpdate:
+      partition: {{ .Values.updateStrategy.rollingUpdate.partition }}
+    {{- end }}
+  template:
+    spec:
+    {{- if .Values.terminationGracePeriod.enabled }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriod.seconds }}
+    {{- end }}
+{{- end -}}

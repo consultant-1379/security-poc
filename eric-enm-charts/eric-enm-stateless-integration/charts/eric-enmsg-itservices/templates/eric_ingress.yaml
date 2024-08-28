@@ -1,0 +1,58 @@
+{{- if .Values.global.ericIngress.enabled }}
+---
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: itserv-0
+spec:
+  virtualServiceIP: {{ .Values.global.vips.itservices_0_vip_address }}
+  backends:
+    name: itservices-0
+    config:
+      - ports:
+          vipPort: 53
+          svcPort: 53
+        protocol: udp
+        algo: sh
+        mode: nat
+      - ports:
+          vipPort: 67
+          svcPort: 67
+        protocol: udp
+        algo: sh
+        mode: nat
+      - ports:
+          vipPort: 123
+          svcPort: 123
+        protocol: udp
+        algo: sh
+        mode: nat
+---
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: itserv-1
+spec:
+  virtualServiceIP: {{ .Values.global.vips.itservices_1_vip_address }}
+  backends:
+    name: itservices-1
+    config:
+      - ports:
+          vipPort: 53
+          svcPort: 53
+        protocol: udp
+        algo: sh
+        mode: nat
+      - ports:
+          vipPort: 67
+          svcPort: 67
+        protocol: udp
+        algo: sh
+        mode: nat
+      - ports:
+          vipPort: 123
+          svcPort: 123
+        protocol: udp
+        algo: sh
+        mode: nat
+{{- end }}

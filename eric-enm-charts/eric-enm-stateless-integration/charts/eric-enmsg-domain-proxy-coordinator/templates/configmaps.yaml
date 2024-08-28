@@ -1,0 +1,3 @@
+{{- include "eric-enm-common-helmchart-library.configmaps.tpl" . -}}
+{{- define "eric-enmsg.deployment" -}}
+{{- end -}}

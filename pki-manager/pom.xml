@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+  		<groupId>com.ericsson.nms</groupId>
+		<artifactId>integration</artifactId>
+		<version>15.2.0.35</version> 
+	</parent>
+
+	<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+	<artifactId>pki-manager</artifactId>
+	<version>1.0.5-SNAPSHOT</version>
+	<packaging>pom</packaging> 
+	<url>http://www.ericsson.com</url>
+
+	<organization>
+		<name>Ericsson</name>
+	</organization>
+
+	<prerequisites>
+		<maven>3.0.3</maven>
+	</prerequisites>
+
+	<name>[${project.artifactId}] JEE8 Project</name>
+
+	<properties>
+	
+		<version.jboss.as>7.2.5</version.jboss.as>
+		<version.jee>8</version.jee>
+		<version.ejb>3.2</version.ejb>
+		<version.javax.ejb.api>3.2</version.javax.ejb.api>
+		<version.jboss.javaee>1.0.0.Final</version.jboss.javaee>
+		<version.weld>1.1.13.Final</version.weld>
+		<!-- common utils version -->
+                <version.common.utils.jar>1.2.1</version.common.utils.jar>
+		<!-- Do not use JBoss   community version use EAP 6. As JBoss version 7.1.1.Final 
+			is being used by maven plugin(version.jboss-as-maven-plugin ) -->
+		<version.jboss-as-maven-plugin>${version.jboss.as}</version.jboss-as-maven-plugin>
+
+		<!-- Arquillian versions -->
+		<version.jboss.jee.spec>1.1.0.Final-redhat-4</version.jboss.jee.spec>
+		<version.jboss.as.arquillian>7.2.0.Final</version.jboss.as.arquillian>
+		<version.arquillian.bom>1.1.15.Final</version.arquillian.bom>
+		<version.arquillian.suite>1.2.2</version.arquillian.suite>
+		<version.arquillian.persistence>1.0.0.Alpha7</version.arquillian.persistence>
+		<version.arquillian-weld-se-embedded>1.0.0.CR8</version.arquillian-weld-se-embedded>
+		<version.shrinkwrap.resolver.bom>2.2.6</version.shrinkwrap.resolver.bom>
+		<version.arquillian-junit-container>1.0.0.Final</version.arquillian-junit-container>
+		<version.wildfly-arquillian-container-managed>2.1.1.Final</version.wildfly-arquillian-container-managed>
+
+		<!-- 3pp Software versions -->
+		<version.org.bouncycastle.bcprov>1.67</version.org.bouncycastle.bcprov>
+		<version.org.bouncycastle.bcpkix>1.67</version.org.bouncycastle.bcpkix>
+
+		<version.jackson.core>2.4.2</version.jackson.core>
+		<version.jackson.annotations>2.4.3</version.jackson.annotations>
+		<version.jackson.databind>2.4.2</version.jackson.databind>
+
+		<version.resteasy>2.3.6.Final</version.resteasy>
+		<version.resteasy.client>3.0.6.Final</version.resteasy.client>
+
+		<version.httpcore>4.0.1</version.httpcore>
+		<version.httpclient>4.0.3</version.httpclient>
+
+		<version.java.json>20140107</version.java.json>
+
+
+		<version.mockito>1.9.5</version.mockito>
+		<version.easymock>3.1</version.easymock>
+		<version.power.mockito>1.6.1</version.power.mockito>
+		<version.internal.alarm.service.api>1.16.4</version.internal.alarm.service.api>
+		<version.jackson.mapper>1.9.13</version.jackson.mapper>
+
+		<!-- Sprint version  baseline changes - When you want  to switch to new Service 
+			Framework version only change value below -->
+		<version.service.framework>4.10.6</version.service.framework>
+		<version.modeling.bom>21.12.12</version.modeling.bom>
+
+		<version.pib>4.0.1</version.pib>
+		<version.pib.model>2.4.6</version.pib.model>
+
+		<version.model-deployment-jar>7.18.1</version.model-deployment-jar>
+		<version.default-mdt-plugins-jar>7.18.1</version.default-mdt-plugins-jar>
+		<version.modeling.annotation.processor>3.20.2</version.modeling.annotation.processor>
+
+		<!-- JBoss modules your service will automatically add to classpath -->
+		<project.ear.Dependencies>org.slf4j</project.ear.Dependencies>
+		<project.ear.defaultLibBundleDir>lib</project.ear.defaultLibBundleDir>
+
+		<!-- PKI version in dependencies -->
+
+		<version.pki.common>1.0.1-SNAPSHOT</version.pki.common>
+		<version.pki.core.api>1.0.1-SNAPSHOT</version.pki.core.api>
+
+		<version.pki.core>1.0.1-SNAPSHOT</version.pki.core>
+		<version.pki.manager.api>1.0.1-SNAPSHOT</version.pki.manager.api>
+		<version.kaps.ear>1.0.1-SNAPSHOT</version.kaps.ear>
+		<!-- PKI-Modelling BOM dependency -->
+		<version.pki.modeling.bom>1.0.1-SNAPSHOT</version.pki.modeling.bom>
+
+		<!-- Junits explicit dependencies -->
+		<version.persistence.api>2.2</version.persistence.api>
+		<version.powermock>1.6.1</version.powermock>
+		<!-- ENM Check Style version dependencies -->
+		 <version.maven.checkstyle>2.15</version.maven.checkstyle>
+		 <version.checkstyle>6.2</version.checkstyle>
+		 <version.checkstyle.module>1.1.74</version.checkstyle.module>
+                 <cdi.test.support.version>RELEASE</cdi.test.support.version>
+		 <version.javassist>3.20.0-GA</version.javassist>
+
+		 <!-- Sonar Configuration  -->
+<!-- 		 <sonar.sources>src</sonar.sources> -->
+		 <version.jacoco-maven-plugin>0.8.4</version.jacoco-maven-plugin>
+		 <sonar.coverage.jacoco.xmlReportPaths>target/coverage-reports/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		 <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+		 <version.maven-ear-plugin>3.0.2</version.maven-ear-plugin>
+         <version.org.slf4j.api>1.7.15</version.org.slf4j.api>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<!-- here we specify what version of Service Framework we want to use. 
+				All modules will be imported -->
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.sdk</groupId>
+				<artifactId>ServiceFrameworkJBossBOM</artifactId>
+				<version>${version.service.framework}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<!-- Model Service BOM. It is required by Service Framework, and for anyone 
+				who is using Model Service. Do not remove it. -->
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.modeling</groupId>
+				<artifactId>Modeling-BOM</artifactId>
+				<version>${version.modeling.bom}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.shrinkwrap.resolver</groupId>
+				<artifactId>shrinkwrap-resolver-bom</artifactId>
+				<version>${version.shrinkwrap.resolver.bom}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.arquillian</groupId>
+				<artifactId>arquillian-bom</artifactId>
+				<version>${version.arquillian.bom}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+				<artifactId>pki-modeling-bom</artifactId>
+				<version>${version.pki.modeling.bom}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+        				<groupId>org.apache.maven.plugins</groupId>
+                			<artifactId>maven-compiler-plugin</artifactId>
+                			<version>3.6.1</version>
+                			<configuration>
+                				<source>1.8</source>
+                				<target>1.8</target>
+                			</configuration>
+            			</plugin>
+            			<plugin>
+                			<groupId>org.apache.maven.plugins</groupId>
+                			<artifactId>maven-site-plugin</artifactId>
+                			<version>3.7.1</version>
+                		</plugin>
+				<plugin>
+				    <groupId>org.apache.maven.plugins</groupId>
+				    <artifactId>maven-surefire-plugin</artifactId>
+  					<version>3.0.0-M3</version>
+  					<configuration>
+                        			<systemPropertyVariables>
+                        			<jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                        			</systemPropertyVariables>
+                			</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${version.jacoco-maven-plugin}</version>
+					<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-instrument</id>
+						<goals>
+							<goal>instrument</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>default-restore-instrumented-classes</id>
+						<goals>
+							<goal>restore-instrumented-classes</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outputDirectory>${project.build.directory}/coverage-reports/jacoco</outputDirectory>
+				</configuration>
+				</plugin>
+				<plugin>
+				     <groupId>org.jacoco</groupId>
+				     <artifactId>jacoco-maven-plugin</artifactId>
+				     <version>${version.jacoco-maven-plugin}</version>
+				     <configuration>
+				     	<destFile>${consolidated.jacoco.path}</destFile>
+				     	<dataFile>${consolidated.jacoco.path}</dataFile>
+				     	<outputDirectory>${project.build.directory}/coverage-reports/jacoco</outputDirectory>
+						<excludes>
+							<exclude>*</exclude>
+						</excludes>
+				     </configuration>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[2.4,)</versionRange>
+										<goals>
+											<goal>analyze-dep-mgt</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-ear-plugin</artifactId>
+										<versionRange>[3.0,)</versionRange>
+										<goals>
+											<goal>generate-application-xml</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>com.ericsson.maven.plugins</groupId>
+										<artifactId>rstate-maven-plugin</artifactId>
+										<versionRange>[1.0,)</versionRange>
+										<goals>
+											<goal>rstate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											build-helper-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.7,)
+										</versionRange>
+										<goals>
+											<goal>regex-property</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.maven.plugins
+										</groupId>
+										<artifactId>
+											cifwk-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0.17,)
+										</versionRange>
+										<goals>
+											<goal>
+												preBuildProjectCheck
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>${version.jboss-as-maven-plugin}</version>
+				<configuration>
+					<filename>${project.parent.artifactId}.${project.packaging}</filename>
+					<skip>false</skip>
+				</configuration>
+			</plugin>
+		       <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${version.maven.checkstyle}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${version.checkstyle}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.ericsson.cds</groupId>
+                        <artifactId>checkstyle-module</artifactId>
+                       <version>${version.checkstyle.module}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <consoleOutput>false</consoleOutput>
+                    <logViolationsToConsole>false</logViolationsToConsole>
+                    <configLocation>/cds/cds-checkstyle.xml</configLocation>
+                    <violationSeverity>warning</violationSeverity>
+                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <!-- change this to true if you want the build to fail if there's warnings -->
+                            <failOnViolation>false</failOnViolation>
+                        </configuration>
+                        <id>check-style</id>
+                        <goals>
+                            <goal>check</goal>
+                            <goal>checkstyle-aggregate</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+            </plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-6.0</artifactId>
+			<version>${version.jboss.javaee}</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<version>${version.easymock}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.6.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.6.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${version.mockito}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-core-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-instrumentation-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-tracing-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-recording-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-context-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-security-accesscontrol-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>${version.org.bouncycastle.bcprov}</version>
+			<scope>provided</scope>
+		</dependency> 
+	</dependencies>
+
+
+	<modules>
+		<module>pki-manager-jar</module>
+		<module>pki-manager-ejb</module>
+		<module>pki-manager-war</module>
+		<module>pki-manager-ear</module>
+		<module>ERICpkimanager_CXP9031873</module>
+		<module>event-notification</module>
+		<module>persistence</module>
+		<module>pki-credentialsmanagement-jar</module>
+		<module>validation-service</module>
+		<module>pki-manager-common-jar</module>
+		<module>pki-manager-configurationmanagement-jar</module>
+		<module>pki-manager-configurationmanagement-ejb</module>
+		<module>pki-manager-certificatemanagement-ejb</module>
+		<module>pki-manager-certificatemanagement-jar</module>
+		<module>pki-manager-profilemanagement-ejb</module>
+		<module>pki-manager-profilemanagement-jar</module>
+		<module>pki-manager-crlmanagement-ejb</module>
+		<module>pki-manager-crlmanagement-jar</module>
+		<module>pki-manager-local-service-api</module>
+		<module>pki-manager-local-service-ejb</module>
+		<module>pki-manager-scheduler-ejb</module>
+		<module>pki-manager-configuration-listener-jar</module>
+		<module>pki-manager-rest-service-api</module>
+		<module>pki-manager-rest-service-ejb</module>
+		<module>pki-manager-access-control-jar</module>
+		<module>pki-manager-instrumentation-jar</module>
+	</modules>
+
+	<scm>
+		<tag>pki-manager-1.46.2</tag>
+	</scm>
+</project>

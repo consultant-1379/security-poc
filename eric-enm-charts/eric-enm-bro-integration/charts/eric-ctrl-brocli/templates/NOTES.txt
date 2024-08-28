@@ -1,0 +1,9 @@
+Backup Restore Orchestrator CLI deployed.
+
+To check its state, run:
+
+  $ helm status {{ .Release.Name }}
+
+To connect to BRO CLI pod run the following command
+
+  $ kubectl exec -it deploy/eric-ctrl-brocli -n {{ .Release.Namespace }} -- bash

@@ -1,0 +1,18 @@
+global.properties: |
+  COM_INF_LDAP_ROOT_SUFFIX={{ .Values.global.enmProperties.COM_INF_LDAP_ROOT_SUFFIX }}
+  COM_INF_LDAP_ADMIN_ACCESS={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_ACCESS }}
+  COM_INF_LDAP_ADMIN_CN={{ .Values.global.enmProperties.COM_INF_LDAP_ADMIN_CN }}
+  COM_INF_LDAP_PORT={{ .Values.global.enmProperties.COM_INF_LDAP_PORT }}
+  LDAP_ADMIN_CN={{ .Values.global.enmProperties.LDAP_ADMIN_CN }}
+  LDAP_ADMIN_PASSWORD={{ .Values.global.enmProperties.LDAP_ADMIN_PASSWORD }}
+  DDC_ON_CLOUD=TRUE
+  PKI_EntityProfile_DN_COUNTRY_NAME:{{ .Values.global.enmProperties.PKI_EntityProfile_DN_COUNTRY_NAME }}
+  PKI_EntityProfile_DN_ORGANIZATION:{{ .Values.global.enmProperties.PKI_EntityProfile_DN_ORGANIZATION }}
+  PKI_EntityProfile_DN_ORGANIZATION_UNIT:{{ .Values.global.enmProperties.PKI_EntityProfile_DN_ORGANIZATION_UNIT }}
+  certificatesRevListDistributionPointServiceDnsEnable={{ .Values.global.enmProperties.certificatesRevListDistributionPointServiceDnsEnable }}
+  certificatesRevListDistributionPointServiceIpv4Enable={{ .Values.global.enmProperties.certificatesRevListDistributionPointServiceIpv4Enable }}
+  certificatesRevListDistributionPointServiceIpv6Enable={{ .Values.global.enmProperties.certificatesRevListDistributionPointServiceIpv6Enable }}
+  haproxysb={{ .Values.global.vips.cm_vip_address }}
+  haproxysb_ipv6={{ .Values.global.enmProperties.haproxysb_ipv6 }}
+  publicKeyInfraRegAutorithyPublicServerName={{ .Values.global.enmProperties.publicKeyInfraRegAutorithyPublicServerName }}
+  postgresql01_admin_password={{ .Values.global.enmProperties.postgresql01_admin_password }}

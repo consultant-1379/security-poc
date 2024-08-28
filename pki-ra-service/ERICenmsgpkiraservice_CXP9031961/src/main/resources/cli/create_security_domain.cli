@@ -1,0 +1,84 @@
+#VaultPkirascep
+if (outcome == success) of /subsystem=security/security-domain=VaultPkirascep/:add
+end-if
+
+if (outcome == success) of /subsystem=security/security-domain=VaultPkirascep/authentication=classic:add(login-modules=[{"code"=>"com.ericsson.oss.itpf.security.vaultservice.VaultLoginModuleAuthorize", "flag"=>"required", "module"=>"com.ericsson.oss.itpf.security.vaultservice", "module-options"=>[("username"=>"pkirascep"),("dbname"=>"pkirascepdb")]}])
+end-if
+
+#VaultPkiracmp
+if (outcome == success) of /subsystem=security/security-domain=VaultPkiracmp/:add
+end-if
+
+if (outcome == success) of /subsystem=security/security-domain=VaultPkiracmp/authentication=classic:add(login-modules=[{"code"=>"com.ericsson.oss.itpf.security.vaultservice.VaultLoginModuleAuthorize", "flag"=>"required", "module"=>"com.ericsson.oss.itpf.security.vaultservice", "module-options"=>[("username"=>"pkiracmp"),("dbname"=>"pkiracmpdb")]}])
+end-if
+
+#VaultPkiratdps
+if (outcome == success) of /subsystem=security/security-domain=VaultPkiratdps/:add
+end-if
+
+if (outcome == success) of /subsystem=security/security-domain=VaultPkiratdps/authentication=classic:add(login-modules=[{"code"=>"com.ericsson.oss.itpf.security.vaultservice.VaultLoginModuleAuthorize", "flag"=>"required", "module"=>"com.ericsson.oss.itpf.security.vaultservice", "module-options"=>[("username"=>"pkiratdps"),("dbname"=>"pkiratdpsdb")]}])
+end-if
+
+#VaultPkicdps
+if (outcome == success) of /subsystem=security/security-domain=VaultPkicdps/:add
+end-if
+
+if (outcome == success) of /subsystem=security/security-domain=VaultPkicdps/authentication=classic:add(login-modules=[{"code"=>"com.ericsson.oss.itpf.security.vaultservice.VaultLoginModuleAuthorize", "flag"=>"required", "module"=>"com.ericsson.oss.itpf.security.vaultservice", "module-options"=>[("username"=>"pkicdps"),("dbname"=>"pkicdpsdb")]}])
+end-if
+
+######################
+
+#DATASOURCE
+if (outcome == success) of /subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,driver-module-name=org.postgres.jdbc.jboss.postgres-jboss-subsystem,driver-xa-datasource-class-name=org.postgresql.xa.PGXADataSource)
+end-if
+#pkirascepdb
+if (outcome != "success") of  /subsystem=datasources/xa-data-source=pkirascepdb:read-resource
+  xa-data-source add --name = pkirascepdb --jndi-name = java:jboss/datasources/pkirascepdb --enabled = true --use-java-context = true --use-ccm = true \
+  --xa-datasource-properties = ServerName=${env.POSTGRES_SERVICE:postgresql01},PortNumber=5432,DatabaseName=pkirascepdb \
+  --driver-name=postgresql \
+  --min-pool-size = 3 --max-pool-size = 11 --pool-prefill = false --flush-strategy = IdleConnections --same-rm-override = false --interleaving = false --pad-xid = false --wrap-xa-resource = false \
+  --security-domain = VaultPkirascep \
+  --valid-connection-checker-class-name = "org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker" \
+  --validate-on-match = true --background-validation = false --background-validation-millis = 1 \
+  --blocking-timeout-wait-millis = 30000 --idle-timeout-minutes = 1 --allocation-retry = 6 --allocation-retry-wait-millis = 10000 \
+  --prepared-statements-cache-size =0 --share-prepared-statements =false
+end-if
+
+#pkiracmpdb
+if (outcome != "success") of  /subsystem=datasources/xa-data-source=pkiracmpdb:read-resource
+   xa-data-source add --name = pkiracmpdb --jndi-name = java:jboss/datasources/pkiracmpdb --enabled = true --use-java-context = true --use-ccm = true \
+   --xa-datasource-properties = ServerName=${env.POSTGRES_SERVICE:postgresql01},PortNumber=5432,DatabaseName=pkiracmpdb \
+   --driver-name = postgresql \
+   --min-pool-size = 3 --max-pool-size = 11 --pool-prefill = false --flush-strategy = IdleConnections --same-rm-override = false --interleaving = false --pad-xid = false --wrap-xa-resource = false \   --security-domain = VaultPkiracmp \
+   --valid-connection-checker-class-name = "org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker" \
+   --validate-on-match = true --background-validation = false --background-validation-millis = 1 \
+   --blocking-timeout-wait-millis = 30000 --idle-timeout-minutes = 1 --allocation-retry = 6 --allocation-retry-wait-millis = 10000 \
+   --prepared-statements-cache-size = 0 --share-prepared-statements = false
+end-if
+
+#pkiratdpsdb
+if (outcome != "success") of  /subsystem=datasources/xa-data-source=pkiratdpsdb:read-resource
+   xa-data-source add --name = pkiratdpsdb --jndi-name = java:jboss/datasources/pkiratdpsdb --enabled = true --use-java-context = true --use-ccm = true \
+   --xa-datasource-properties = ServerName=${env.POSTGRES_SERVICE:postgresql01},PortNumber=5432,DatabaseName=pkiratdpsdb \
+   --driver-name=postgresql \
+   --min-pool-size = 3 --max-pool-size = 11 --pool-prefill = false --flush-strategy = IdleConnections --same-rm-override = false --interleaving = false --pad-xid = false --wrap-xa-resource = false \   --security-domain = VaultPkiracmp \
+   --security-domain = VaultPkiratdps \
+   --valid-connection-checker-class-name = "org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker" \
+   --validate-on-match = true --background-validation = false --background-validation-millis = 1 \
+   --blocking-timeout-wait-millis = 30000 --idle-timeout-minutes = 1 --allocation-retry = 6 --allocation-retry-wait-millis = 10000 \ 
+   --prepared-statements-cache-size = 0 --share-prepared-statements = false
+end-if
+
+#pkicdpsdb
+if (outcome != "success") of  /subsystem=datasources/xa-data-source=pkicdpsdb:read-resource
+   xa-data-source add --name = pkicdpsdb --jndi-name = java:jboss/datasources/pkicdpsdb  --enabled = true --use-java-context = true --use-ccm = true  \
+   --xa-datasource-properties = ServerName=${env.POSTGRES_SERVICE:postgresql01},PortNumber=5432,DatabaseName=pkicdpsdb \
+   --driver-name = postgresql \
+   --min-pool-size = 3 --max-pool-size = 11 --pool-prefill = false --flush-strategy = IdleConnections --same-rm-override = false --interleaving = false --pad-xid = false --wrap-xa-resource = false \   --security-domain = VaultPkiracmp \
+   --security-domain = VaultPkicdps \
+   --valid-connection-checker-class-name = "org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker" \
+   --validate-on-match = true --background-validation = false --background-validation-millis = 1 \
+   --blocking-timeout-wait-millis = 30000 --idle-timeout-minutes = 1 --allocation-retry = 6 --allocation-retry-wait-millis = 10000 \
+   --prepared-statements-cache-size = 0 --share-prepared-statements = false
+end-if
+

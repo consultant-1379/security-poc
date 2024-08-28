@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+	<persistence-unit name="PKIManager" transaction-type="JTA">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>java:jboss/datasources/pkimanagerdb</jta-data-source>
+		<jar-file>pki-manager-persistence-entities-${project.version}.jar</jar-file>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.AbstractEntityData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.AbstractProfileData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.AlgorithmData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CAEntityData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CRLData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CRLInfoData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CertificateAuthorityData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CertificateData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CertificateExpiryNotificationDetailsData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CertificateGenerationInfoData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CertificateProfileData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CertificateRequestData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CrlGenerationInfoData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.CustomConfigurationData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.EntityCategoryData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.EntityData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.EntityInfoData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.EntityProfileData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.ExternalCRLInfoData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.RevocationRequestData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.SubjectIdentificationData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.TrustCAChainData</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.TrustCAChainId</class>
+        <class>com.ericsson.oss.itpf.security.pki.manager.persistence.entities.TrustProfileData</class>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
+		</properties>
+	</persistence-unit>	
+</persistence>

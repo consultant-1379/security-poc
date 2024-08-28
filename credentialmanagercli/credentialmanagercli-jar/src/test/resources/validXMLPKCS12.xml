@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+	<application>
+		<certificates>
+			<certificate>
+				<tbscertificate>
+					<subject>
+						<!--  <entityname>atclvm387</entityname> -->
+						<entityname>atclvm387</entityname>
+					</subject>
+				</tbscertificate>
+				
+				<!--  <endentityprofilename>ENM_System_Man_EP</endentityprofilename> -->
+				<endentityprofilename>CMPRA_EP</endentityprofilename>
+				
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+		
+				<keystore>
+					<pkcs12keystore>
+						<storealias>keystore</storealias >
+						<storelocation>certs/keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</pkcs12keystore>
+				</keystore>
+				
+				<keystore>
+					<pkcs12keystore>
+						<storealias>morekey</storealias >
+						<storelocation>certs/keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</pkcs12keystore>
+				</keystore>
+
+				<truststore>
+					<pkcs12truststore>
+						<storealias>truststore</storealias >
+						<storelocation>certs/keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</pkcs12truststore>
+				</truststore>
+												
+				<!-- <connectormanaged>httpsConnector</connectormanaged> -->
+				
+			</certificate>
+		</certificates>
+		
+			<crlupdatemode>CrlSelfManaged</crlupdatemode>
+			
+		<keyrequests>
+		
+			<secretkeyrequest>
+				<keysize>64</keysize>
+				<keyalgorithm>DES</keyalgorithm>
+				<keystore>
+					<pkcs12secretstore>
+						<storealias>secretalias</storealias>
+						<storelocation>keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</pkcs12secretstore>
+				</keystore>	
+			</secretkeyrequest>
+			
+			<keypairrequest>
+				<keysize>64</keysize>
+				<keyalgorithm>DES</keyalgorithm>
+				<keystore>
+					<pkcs12keypairstore>
+						<storealias>secretalias</storealias>
+						<storelocation>keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</pkcs12keypairstore>
+				</keystore>		
+			</keypairrequest>
+			
+		</keyrequests>
+			
+	</application>
+	
+	<user>
+		<!-- keep in the same line to allow grep researches -->
+		<username>myUser</username>
+		<usergroup>myGroup</usergroup>
+	</user>
+
+</applications>
+

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+<!--Please Use the latest version of integration pom.xml or the one you want to reference to -->
+	<parent>
+		<groupId>com.ericsson.nms</groupId>
+		<artifactId>integration</artifactId>
+		<version>15.2.0.35</version>
+	</parent>
+
+	<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+	<artifactId>credential-manager-config-model</artifactId>
+	<version>1.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>[${project.artifactId}] JEE8 Project</name>
+	
+
+	<properties>
+	   <ericsson.scm.url>scm:git:[fetch=]ssh://gerritmirror-ha.lmera.ericsson.se:29418/OSS/com.ericsson.oss.itpf.security/credential-manager-config-model[push=]ssh://gerrit.ericsson.se:29418/OSS/com.ericsson.oss.itpf.security/credential-manager-config-model</ericsson.scm.url>
+        <version.modeling.bom>21.0.9</version.modeling.bom>
+        <version.service.framework>4.10.6</version.service.framework>
+        
+
+        <!-- There is a problem in Maven in relation to plugin-execution: When 
+            a plugin execution is specified in a Maven POM, the version of the plugin 
+            must be explicitly specified. It is not possible to take the version from 
+            a BOM. Since Annotation Processor and Model Processing make use of plugins, 
+            their versions must be specified here as well. In effect, this is double 
+            information, as the BOM contains the very same information. There is a danger 
+            that there is a version mismatch between what the BOM says and the versions 
+            explicitly specified here. Great care must be taken to make sure that they 
+            align, otherwise strange things will happen during the build. -->
+
+        <modeling-sdk.annoproc.version>3.22.2</modeling-sdk.annoproc.version>
+        <modeling-sdk.modelproc.version>1.23.2</modeling-sdk.modelproc.version>
+	</properties>
+
+	<!--Profiles for site documentation-->
+
+	 <!--Profile to deploy latest site-->
+	 <profiles>
+	  <profile>
+	     <id>site_latest</id>
+	        <distributionManagement>
+		       <site>
+		         <id>site</id>
+		         <name>Site</name>
+	                 <url>${site.url}/credential-manager-config-model/latest</url>
+		       </site>
+		</distributionManagement>
+	  </profile>
+
+	 <!--Profile to stage site for review-->
+	 
+	   <profile>
+	      <id>site_review</id>
+	         <distributionManagement>
+		        <site>
+			  <id>site</id>
+			  <name>Site</name>
+		          <url>${site.url}</url>
+			</site>	
+                 </distributionManagement>
+           </profile>
+	   </profiles>
+	   <!--Deployment of versioned documentation-->	
+		<distributionManagement>
+		   <site>		
+		     <id>site</id>
+		     <name>Site</name>								      
+		     <url>${site.url}/credential-manager-config-model/${project.version}</url>
+		   </site>
+		  </distributionManagement>
+
+  
+  	
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.sdk</groupId>
+				<artifactId>ServiceFrameworkJBossBOM</artifactId>
+				<version>${version.service.framework}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+    <modules>
+        <module>credential-manager-config-model-jar</module>
+        <module>credential-manager-config-model-xml</module>
+	    <module>ERICcredentialmanagerconfigmodel_CXP9032685</module>
+    </modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+					<artifactId>model-processing-jar</artifactId>
+					<version>${modeling-sdk.modelproc.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+					<artifactId>modeling-annotation-processor-jar</artifactId>
+					<version>${modeling-sdk.annoproc.version}</version>
+				</plugin>
+		<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.maven.plugins
+										</groupId>
+										<artifactId>
+											rstate-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0,)
+										</versionRange>
+										<goals>
+											<goal>rstate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											build-helper-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0,)
+										</versionRange>
+										<goals>
+											<goal>add-resource</goal>
+											<goal>regex-property</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.oss.itpf.modeling.tools
+										</groupId>
+										<artifactId>
+											model-processing-jar
+										</artifactId>
+										<versionRange>[${version.model-processing},)</versionRange>
+										<goals>
+											<goal>modelproc</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.oss.itpf.modeling.tools
+										</groupId>
+										<artifactId>
+											modeling-annotation-processor-jar
+										</artifactId>
+										<versionRange>[${version.annotation-processor},)</versionRange>
+										<goals>
+											<goal>annoproc</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+  <scm>
+    <connection>scm:git:ssh://gerrit.ericsson.se:29418/OSS/com.ericsson.oss.itpf.security/credential-manager-config-model</connection>
+    <developerConnection>scm:git:ssh://gerrit.ericsson.se:29418/OSS/com.ericsson.oss.itpf.security/credential-manager-config-model</developerConnection>
+    <tag>credential-manager-config-model-1.0.1</tag>
+  </scm>
+</project>

@@ -1,0 +1,27 @@
+- name: http
+  port: 80
+  targetPort: 80
+- name: https
+  port: 443
+  targetPort: 443
+- name: jboss
+  port: 8080
+  targetPort: 8080
+- name: ejb
+  port: 4447
+  targetPort: 4447
+- name: metrics
+  port: 9600
+  targetPort: 9600
+- name: nb-alarm-irp-agent-corba3
+  port: 9951
+  targetPort: 9951
+- name: nb-alarm-irp-agent-corba
+  port: 9953
+  targetPort: 9953
+- name: nb-alarm-irp-agent-corba1
+  port: {{ .Values.service.port }}
+  targetPort: {{ .Values.service.port }}
+- name: nb-alarm-irp-agent-corba2
+  port: 9955
+  targetPort: 9955

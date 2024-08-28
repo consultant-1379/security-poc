@@ -1,0 +1,3 @@
+- containerPort: 10389
+- containerPort: 10636
+- containerPort: 4445

@@ -1,0 +1,222 @@
+## eric-net-ingress-l4 image version
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  replicas-eric-net-ingress-l4: 2
+  vips: {}
+  ingress:
+    enmHost:
+  ip_version:
+
+labels: {}
+
+topologySpreadConstraints: {}
+
+# R-State of the product. R State should match helm chart version (3.1.0 -> R2A)
+# To automate it when packaging the helm chart rstate can be generated
+# and below value replaced with correct R-State
+productRevision: R2A
+labels: {}
+
+# Number of replicas(pods) to deploy
+replicas-eric-net-ingress-l4: 2
+
+images:
+  eric-net-ingress-l4:
+    name: eric-net-ingress-l4
+    tag: 1.1.0-111
+  logshipper:
+    name: "eric-log-shipper"
+    tag: "9.1.0-33"
+
+dev: false
+
+imageCredentials:
+  devRepoPath: proj_oss_releases/enm
+  repoPath: proj-enm
+  pullPolicy: Always
+  pullSecret:
+  registry:
+    url:
+  logshipper:
+    registry:
+      url:
+      imagePullPolicy:
+    repoPath: "proj-adp-log-released"
+
+fullnameOverride: {}
+
+interfaces:
+  internal: "eth0"
+  external: "eth0"
+
+virtualRouterId: 103
+# this parameter indicates if the VIP management, using keepalived is required as part of the ericingress solution
+# true, means the VIPS will be managed by keepalived on the node's interface, running the ericingress pod.
+# false, means the keepalived won't run in the pod to manage the VIPs and that would require a separate solution to manage them incase of public cloud's. e.g LBs in GCP.
+vipManagement: true
+
+cniMode: "ipip"
+
+# Configure tunnel interface if CNIMode is in ipip mode
+tunnelInterfaceName: "tunl0"
+
+metricsPort: 8084
+
+# These ports will be excluded from IPTABLES NAT rule
+excludedPortsFromNAT:
+  - 162
+  - 10162
+  - 10163
+  - 35161
+
+# These ports are not allowed to be used as they are reserved as hostPorts
+disallowedVipPorts:
+  - 443
+  - 80
+
+natAllTrafficOriginatingFromPodNet: false
+
+podNetworkCIDR:
+ipv6podNetworkCIDR:
+
+logLevel: "INFO"
+
+logSchemaVersion: "1.1.0"
+
+lifecycle:
+  postStart:
+    exec:
+      command: [ "/bin/bash", "/scripts/wrapper.sh", "/bin/bash", "/poststart.sh" ]
+
+# Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    memory: 128Mi
+    cpu: 250m
+  limits:
+    enabled: true
+    memory: 2Gi
+    cpu: 2000m
+  logshipper:
+    limits:
+      memory: "200Mi"
+      cpu: "200m"
+    requests:
+      memory: "100Mi"
+      cpu: "100m"
+
+startupProbe:
+  enabled: true
+  httpGet:
+    path: /keepalived
+    port: 8085
+    httpHeaders:
+      name: Keepalived-Healthcheck
+      value: Keepalived
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 15
+  failureThreshold: 12
+
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /keepalived
+    port: 8085
+    httpHeaders:
+      name: Keepalived-Healthcheck
+      value: Keepalived
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+probes:
+  logshipper:
+    livenessProbe:
+      initialDelaySeconds: 1
+      timeoutSeconds: 10
+      periodSeconds: 10
+      successThreshold: 1
+      failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /keepalived
+    port: 8085
+    httpHeaders:
+      name: Keepalived-Healthcheck
+      value: Keepalived
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# Tolerations for pod assignment
+tolerations:
+  - key: node
+    operator: Equal
+    effect: NoSchedule
+    value: routing
+
+# Affinity for pod assignment
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+
+nodeSelector: {}
+
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+
+# Maximum Period allowed for graceful shutdown of pod.
+terminationGracePeriodSeconds: 30
+
+# Used to configure RBAC resources.
+rbac:
+  # Controls the creation of RBAC resources.
+  # Boolean set to true to create RBAC resources. When they are externally defined, set it to false.
+  create: true
+  # Name of the ServiceAccount to be used. Leave empty to use <Chart.name>.
+  # If the ServiceAccount is externally defined, the Role MUST have
+  # at least get, list, watch, update, patch authorization for endpoints, services and pods resources
+  # at least get, list, watch, create, update, patch, delete for routing.ericingress.ericsson.com/ericingresses and
+  # at least get, update, patch for routing.ericingress.ericsson.com/ericingresses/status
+  serviceAccountName:
+  # Controls the creation of Namespace or Cluster specific roles
+  scope: namespace
+
+log:
+  # Creates LogShipper sidecar container to stream container logs to LogTransformer which stores the received logs in Elastic Search.
+  # Supported values "stream" for LogShipper sidecar to be created in eric-net-ingress-l4.
+  # If LogShipper sidecar container is not required, then set the "outputs" attribute value as empty or with any string except "stream".
+  outputs:
+    - "stream"
+  logshipper:
+    level: "info"
+
+# Configuration for LogShipper sidecar.
+logshipper:
+  # Share volume name where logs are written.
+  storagePath: "/logs"
+  storageAllocation: "300Mi"
+  harvester:
+    closeTimeout: "5m"
+    logData:
+      - subPaths:
+          - "ingressl4.log*"
+          - "shutdown.log"
+          - "poststart.log"
+        logplane:
+  # Kubernetes service name for accessing the Logstash host.
+  logtransformer:
+    host: eric-log-transformer
+

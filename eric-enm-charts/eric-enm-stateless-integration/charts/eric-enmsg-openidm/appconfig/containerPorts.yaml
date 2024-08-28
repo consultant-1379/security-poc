@@ -1,0 +1,4 @@
+- containerPort: 8085
+- containerPort: 8445
+- containerPort: 8446
+- containerPort: 9600

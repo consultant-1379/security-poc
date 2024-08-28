@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PKIEntities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="EntitiesSchema.xsd">
+	<Entities>
+		<Entity Name="Entity_5">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>Entity_1</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			<SubjectAltNameValues>
+				<SubjectAltNameValue>
+					<Type>EDI_PARTY_NAME</Type>
+					<Value xsi:type="EdiPartyName">
+						<NameAssigner>TCS</NameAssigner>
+						<PartyName>adksl</PartyName>
+					</Value>
+				</SubjectAltNameValue>
+			</SubjectAltNameValues>
+
+			<EntityProfileName>RootCA_Entity_Profile</EntityProfileName>
+			<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+		</Entity>
+		<Entity Name="Entity_6">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>Entity_1</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			<EntityProfileName>RootCA_Entity_Profile</EntityProfileName>
+		</Entity>
+	</Entities>
+</PKIEntities>

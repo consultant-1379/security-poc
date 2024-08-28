@@ -1,0 +1,42 @@
+- backend:
+    service:
+      name: fmhistory
+      port:
+        number: 443
+  path: /alarm-change-listener/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmhistory
+      port:
+        number: 443
+  path: /alarmstatisticalserviceeps/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmhistory
+      port:
+        number: 443
+  path: /alarmstatisticalservice/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmhistory
+      port:
+        number: 443
+  path: /alarmchangelistener/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmhistory
+      port:
+        number: 443
+  path: /AlarmRoutingService/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: fmhistory
+      port:
+        number: 443
+  path: /eps-jee-war/
+  pathType: ImplementationSpecific

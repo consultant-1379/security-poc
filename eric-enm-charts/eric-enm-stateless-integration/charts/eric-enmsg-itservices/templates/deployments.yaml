@@ -1,0 +1,27 @@
+{{- template "eric-enm-common-helmchart-library.deployment" (list . "eric-enmsg.deployment-0") -}}
+{{- define "eric-enmsg.deployment-0" -}}
+metadata:
+  name: {{ .Values.service.name }}-0
+spec:
+  selector:
+    matchLabels:
+      role: {{ .Values.service.name }}-0
+  template:
+    metadata:
+      labels:
+        role: {{ .Values.service.name }}-0
+{{- end}}
+---
+{{- template "eric-enm-common-helmchart-library.deployment" (list . "eric-enmsg.deployment-1") -}}
+{{- define "eric-enmsg.deployment-1" -}}
+metadata:
+  name: {{ .Values.service.name }}-1
+spec:
+  selector:
+    matchLabels:
+      role: {{ .Values.service.name }}-1
+  template:
+    metadata:
+      labels:
+        role: {{ .Values.service.name }}-1
+{{- end -}}

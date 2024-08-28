@@ -1,0 +1,13 @@
+
+to build in local
+=================
+
+docker rmi armdocker.rnd.ericsson.se/proj-enm/enm-wait-for-certificates-container 
+docker build -t armdocker.rnd.ericsson.se/proj-enm/enm-wait-for-certificates-container  .
+
+to build for push
+=================
+
+docker rmi rmdocker.rnd.ericsson.se/proj_oss_releases/enm/enm-wait-for-certificates-container 
+docker build -t rmdocker.rnd.ericsson.se/proj_oss_releases/enm/enm-wait-for-certificates-container  .
+docker push armdocker.rnd.ericsson.se/proj_oss_releases/enm/enm-wait-for-certificates-container:latest

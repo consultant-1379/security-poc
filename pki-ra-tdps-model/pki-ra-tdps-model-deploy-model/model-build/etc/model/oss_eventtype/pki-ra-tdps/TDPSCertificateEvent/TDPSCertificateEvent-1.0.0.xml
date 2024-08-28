@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+*******************************************************************************
+* COPYRIGHT Ericsson LMI 2022. All rights reserved.
+*
+* No part of this document may be reproduced in any form without the
+* written permission of the copyright owner.The contents of this document
+* are subject to revision without notice due to continued progress in
+* methodology, design and manufacturing. Ericsson shall have no liability
+* for any error or damage of any kind resulting from the use of this document.
+*
+*******************************************************************************
+
+
+--><ns2:EventTypeDefinition xmlns:ns1="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:ns2="urn:com:ericsson:schema:xml:oss:oss_eventtype" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" defaultChannelUrn="//global/ClusteredTDPSCertificateEventChannel" eventPersistence="NON_PERSISTENT" ns1:lifeCycle="CURRENT" ns1:name="TDPSCertificateEvent" ns1:ns="pki-ra-tdps" ns1:version="1.0.0" priority="4" timeToLive="0">
+  <ns1:modelCreationInfo author="egiator" creationDate="Tue Jun 07 16:16:46 CEST 2022">
+    <ns1:designedModel className="com.ericsson.oss.itpf.security.pki.ra.tdps.model.events.TDPSCertificateEvent" componentId="pki-ra-tdps-model-jar"/>
+  </ns1:modelCreationInfo>
+  <ns1:desc>This event is used to send certificateInfo which needs to be either published to Trust distribution or un-prublished from trust distribution</ns1:desc>
+  <ns2:attribute filterable="true" immutable="false" key="false" mandatory="false" ns1:lifeCycle="CURRENT" ns1:name="tdpsOperationType" sensitive="false">
+    <ns1:desc>This attribute is used to define whether 'TDPSCertificateInfo' is to be published to Trust distribution point or not.</ns1:desc>
+    <ns1:type modelUrn="//pki-ra-tdps/TDPSOperationType/1.0.0" xsi:type="ns1:enumRefType"/>
+  </ns2:attribute>
+  <ns2:attribute filterable="true" immutable="false" key="false" mandatory="false" ns1:lifeCycle="CURRENT" ns1:name="tdpsCertificateInfos" sensitive="false">
+    <ns1:desc>This attribute consists of all attributes related to Certificate like, entityName, entityType, certificateSerialNo, encoded certificate.</ns1:desc>
+    <ns1:type xsi:type="ns1:listType">
+      <ns1:collectionValuesType modelUrn="//pki-ra-tdps/TDPSCertificateInfo/1.0.0" xsi:type="ns1:complexRefType"/>
+    </ns1:type>
+  </ns2:attribute>
+</ns2:EventTypeDefinition>

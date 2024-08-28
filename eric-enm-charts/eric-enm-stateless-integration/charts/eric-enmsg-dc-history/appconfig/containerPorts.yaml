@@ -1,0 +1,3 @@
+- containerPort: 4447
+- containerPort: 8080
+- containerPort: 9600

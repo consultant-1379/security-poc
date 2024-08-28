@@ -1,0 +1,28 @@
+- backend:
+    service:
+      name: pkiraserv
+      port:
+        number: 443
+  path: /pki-ra-tdps/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pkiraserv
+      port:
+        number: 443
+  path: /pki-cdps/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pkiraserv
+      port:
+        number: 443
+  path: /pkira-scep/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pkiraserv
+      port:
+        number: 443
+  path: /pkira-cmp/
+  pathType: ImplementationSpecific

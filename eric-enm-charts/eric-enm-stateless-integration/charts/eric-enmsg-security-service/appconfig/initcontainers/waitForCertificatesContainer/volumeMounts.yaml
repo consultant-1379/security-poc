@@ -1,0 +1,18 @@
+- name: certreq-secret-1
+  mountPath: {{ .Values.service.xmlMountPath }}/xml1
+  readOnly: true
+- name: certreq-secret-2
+  mountPath: {{ .Values.service.xmlMountPath }}/xml2
+  readOnly: true
+- name: certreq-secret-3
+  mountPath: {{ .Values.service.xmlMountPath }}/xml3
+  readOnly: true
+- name: certreq-secret-4
+  mountPath: {{ .Values.service.xmlMountPath }}/xml4
+  readOnly: true
+- name: certreq-secret-5
+  mountPath: {{ .Values.service.xmlMountPath }}/xml5
+  readOnly: true
+- name: httpd-certreq-secret-1
+  mountPath: {{ .Values.service.xmlMountPath }}/xmlhttpd1
+  readOnly: true

@@ -1,0 +1,71 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg.service") -}}
+{{- define "eric-enmsg.service" -}}
+metadata:
+  labels:
+    service: {{ .Values.service.name }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9600"
+{{- end}}
+---
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg.service2") -}}
+{{- define "eric-enmsg.service2" -}}
+metadata:
+  name: {{ index .Values.service.additionalServiceNames  0 }}
+{{- end}}
+---
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg.service-0") -}}
+{{- define "eric-enmsg.service-0" -}}
+metadata:
+  labels:
+    service: {{ .Values.service.name }}-0
+  name: {{ .Values.service.name }}-0
+spec:
+  type: ClusterIP
+  ports:
+    - name: ssh
+      port: 22
+      targetPort: 22
+    - name: dhcp
+      protocol: UDP
+      port: 67
+      targetPort: 67
+    - name: dns
+      protocol: UDP
+      port: 53
+      targetPort: 53
+    - name: ntp
+      protocol: UDP
+      port: 123
+      targetPort: 123
+  selector:
+    role: {{ .Values.service.name }}-0
+{{- end}}
+---
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg.service-1") -}}
+{{- define "eric-enmsg.service-1" -}}
+metadata:
+  labels:
+    service: {{ .Values.service.name }}-1
+  name: {{ .Values.service.name }}-1
+spec:
+  type: ClusterIP
+  ports:
+    - name: ssh
+      port: 22
+      targetPort: 22
+    - name: dhcp
+      protocol: UDP
+      port: 67
+      targetPort: 67
+    - name: dns
+      protocol: UDP
+      port: 53
+      targetPort: 53
+    - name: ntp
+      protocol: UDP
+      port: 123
+      targetPort: 123
+  selector:
+    role: {{ .Values.service.name }}-1
+{{- end}}

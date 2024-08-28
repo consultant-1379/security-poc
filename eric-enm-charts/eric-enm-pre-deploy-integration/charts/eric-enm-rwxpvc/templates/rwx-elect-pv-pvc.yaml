@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: eric-enm-rwxpvc-elect
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.global.rwx.electSize }}
+  storageClassName: {{ .Values.global.rwx.storageClass | quote }}
+

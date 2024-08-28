@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+<Entity-Profiles>
+
+	<EntityProfile Name="ADP_PKI_Root_CA_EP" >
+		<Category>
+			<Name></Name>
+		</Category>
+		<Subject>
+			<SubjectDN>
+				<SubjectEntry>
+					<Type>COMMON_NAME</Type>
+					<Value>?</Value>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>ORGANIZATION_UNIT</Type>
+					<Value>BUCI_DUAC_NAM</Value>
+				</SubjectEntry>			
+				<SubjectEntry>
+					<Type>ORGANIZATION</Type>
+					<Value>ERICSSON</Value>
+				</SubjectEntry>	
+				<SubjectEntry>
+					<Type>COUNTRY_NAME</Type>
+					<Value>SE</Value>
+				</SubjectEntry>	
+			</SubjectDN>				
+		</Subject>
+					
+		<CertificateProfileName>ADP_PKI_Root_CA_CP</CertificateProfileName>
+		
+			<CertificateExtensions>
+
+				<CertificateExtension xsi:type="KeyUsage">
+					<Critical>true</Critical>
+					<KeyUsageType>KEY_CERT_SIGN</KeyUsageType>
+					<KeyUsageType>CRL_SIGN</KeyUsageType>
+				</CertificateExtension>
+
+			</CertificateExtensions>		
+		
+	</EntityProfile>
+
+</Entity-Profiles>	
+</Profiles>

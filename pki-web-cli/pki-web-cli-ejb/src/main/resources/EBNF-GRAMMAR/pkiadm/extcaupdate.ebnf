@@ -1,0 +1,5 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "extcaupdatecrl" (* slogan = "Add or update a CRL file related to an existing external CA" *) ( EXTCAUPDATE_CRL_URL | EXTCAUPDATE_CRL_FILE ) EXTCAUPDATE_NAME
+
+EXTCAUPDATE_CRL_URL ::= WS "-url" (* slogan = "Directly download the CRL file from an Internet public URL" *)  WS <url> (* inputType = "wrapDoubleQuotes" slogan = "Specify the URL of the CRL file to be downloaded" *)
+EXTCAUPDATE_CRL_FILE ::=  WS ( "-fn" (* hide = "true" *) | "--filename" (* slogan = "Directly upload the CRL file from a local machine. Tip: -fn for short" *) ) WS "file:" <filename> (* inputType = "fileName" slogan = "Specify the name of the CRL file to be uploaded" *)
+EXTCAUPDATE_NAME ::= WS ( "-n" (* hide = "true" *) | "--name" (* slogan = "Name the external CA. Tip: -n for short" *) ) WS <ca_name_value> (* inputType = "wrapDoubleQuotes" slogan = "Specify the name of the external CA" *)

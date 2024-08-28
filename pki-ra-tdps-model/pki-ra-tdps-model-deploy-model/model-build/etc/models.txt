@@ -1,0 +1,14 @@
+/oss_cdt/pki-ra-tdps/TDPSCertificateInfo/1.0.0
+/oss_cdt/pki-ra-tdps/TDPSErrorInfo/1.0.0
+/oss_channel/global/ClusteredTDPSAcknowledgementChannel
+/oss_channel/global/ClusteredTDPSCertificateEventChannel
+/oss_channel/global/ClusteredTDPServiceRequestChannel
+/oss_channel/global/ClusteredTDPServiceResponseChannel
+/oss_edt/pki-ra-tdps/EntityType/1.0.0
+/oss_edt/pki-ra-tdps/TDPSCertificateStatusType/1.0.0
+/oss_edt/pki-ra-tdps/TDPSOperationType/1.0.0
+/oss_edt/pki-ra-tdps/TDPSResponseType/1.0.0
+/oss_eventtype/pki-ra-tdps/TDPSAcknowledgementEvent/1.0.0
+/oss_eventtype/pki-ra-tdps/TDPSCertificateEvent/1.0.0
+/oss_eventtype/pki-ra-tdps/TDPServiceRequest/1.0.0
+/oss_eventtype/pki-ra-tdps/TDPServiceResponse/1.0.0

@@ -1,0 +1,10 @@
+"axemml" (* slogan = "Command set to send MML commands toward nodes" *) WS "execute" (* slogan = "Send MML commands to a single node" *) WS NODE_TARGET WS MML_COMMAND { MML_OPTIONS }
+
+NODE_TARGET ::= ( "-n" (* hide = "true" *) | "--node" (* slogan = "Option to specify the Network Element name to execute command on, e.g. 'BSC123'. TIP : -n is the shorthand option for --node" *)  ) WS <node_name>
+
+MML_COMMAND ::= ( "-cmd" (* hide = "true" *) | "--command" (* slogan = "Option to specify the MML Command to be executed, e.g. 'CACLP'. TIP : -cmd is the shorthand option for --command" *)  ) WS """ COMMAND """
+COMMAND ::= <command> (* regex = "^[a-zA-Z0-9\\.,;:?%&@#^|\/ *=()\[\]<>!_$-+]+[a-zA-Z0-9\\.,;:?%&#@^|\/ *=()\[\]<>!_$-+]*$" *)
+
+MML_OPTIONS ::= ( WS MML_SESSION_TIMEOUT_ARG | WS MML_WAIT_PRINTOUT_OPTION ) (* unique = "true" *)
+MML_SESSION_TIMEOUT_ARG ::= ( "-st" (* hide = "true" *) | "--sessiontimeout" (* slogan = "Option to specify the timeout for the session, e.g. '120'. TIP : -st is the shorthand option for --sessiontimeout" *)  ) WS <session_timeout>
+MML_WAIT_PRINTOUT_OPTION ::= ( "-wfp" (* hide = "true" *) | "--waitforresultprintouts" (* slogan = "Option to be specified in order to wait for result printouts until the session timeout expires. TIP : -wfp is the shorthand option for --waitforresultprintouts" *)  )

@@ -1,0 +1,6 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg-nb-fm-snmp.service") -}}
+{{- define "eric-enmsg-nb-fm-snmp.service" -}}
+spec:
+  selector:
+    snmp: active
+{{- end -}}

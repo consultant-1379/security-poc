@@ -1,0 +1,140 @@
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /ap-workflow-erbs-war/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /ap-workflow-ecim-vnf-war/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /ap-workflow-ecim-msrbs_v1-war/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /camunda/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /ap-workflow-ecim-default-war/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /auto-provisioning/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /export-tasks/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /autoprovisioning/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /autoprovisioning-help/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /locales/en-us/autoprovisioning-help/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /help/en-us/autoprovisioning-help/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /locales/en-us/autoprovisioning/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /help/en-us/autoprovisioning/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /autoprovisioninglib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /locales/en-us/autoprovisioninglib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /help/en-us/autoprovisioninglib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /apaddnode/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /locales/en-us/apaddnode/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /apexpandnode/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: apserv
+      port:
+        number: 443
+  path: /locales/en-us/apexpandnode/
+  pathType: ImplementationSpecific

@@ -1,0 +1,10 @@
+
+
+    # manual run logrotate
+    if [ "$warningCheckDate" == "$WARNING_CHECK_VALUE" ] ; then
+       cred_cli_log "$INFO" "Run logrotate"
+       logrotate -f /etc/logrotate.d/CredManagerCliShell
+       cred_cli_log "$INFO" "Run logrotate done"	
+    fi
+
+

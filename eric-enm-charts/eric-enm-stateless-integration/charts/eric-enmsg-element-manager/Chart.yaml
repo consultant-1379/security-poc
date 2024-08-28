@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: "1.0"
+dependencies:
+- condition: eric-enm-common-helmchart-library.enabled
+  name: eric-enm-common-helmchart-library
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.18.0-5
+description: A Helm chart for Element Manager SG
+name: eric-enmsg-element-manager
+version: 1.15.9-1

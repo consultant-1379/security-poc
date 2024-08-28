@@ -1,0 +1,7 @@
+{{- if .Values.podDisruptionBudget -}}
+{{- template "eric-enm-common-helmchart-library.poddisruptionbudget" (list . "eric-enmsg-ebs-flow.poddisruptionbudget") -}}
+{{- end -}}
+{{- define "eric-enmsg-ebs-flow.poddisruptionbudget" -}}
+spec:
+  maxUnavailable: {{ template "eric-enmsg-ebs-flow.maxunavailable" . }}
+{{- end -}}

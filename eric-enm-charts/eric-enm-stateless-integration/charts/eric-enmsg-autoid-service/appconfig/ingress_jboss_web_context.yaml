@@ -1,0 +1,98 @@
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /autocellid-services/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /autoidmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /locales/en-us/autoidmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /help/en-us/autoidmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /autocellid-executions/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /autocellid-settings/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /autocellid-openloop/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /autocellid-schedules/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /autocellid-commonlib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /locales/en-us/autocellid-executions/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /locales/en-us/autocellid-settings/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /locales/en-us/autocellid-openloop/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /locales/en-us/autocellid-schedules/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: autoidservice
+      port:
+        number: 443
+  path: /locales/en-us/autocellid-commonlib/
+  pathType: ImplementationSpecific

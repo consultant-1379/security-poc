@@ -1,0 +1,3 @@
+{{- if has "stream" .Values.log.outputs }}
+  {{- include "eric-enm-kvstore-hc.logshipper-tls-cert-lt-client" . }}
+{{- end }}

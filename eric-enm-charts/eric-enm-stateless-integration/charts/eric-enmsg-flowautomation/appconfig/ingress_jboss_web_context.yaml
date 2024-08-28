@@ -1,0 +1,112 @@
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /camunda-flowautomation/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /flowautomation/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /flow-automation/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /locales/en-us/flow-automation/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /help/en-us/flow-automation/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /flow-automation-lib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /locales/en-us/flow-automation-lib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /help/en-us/flow-automation-lib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /flow-instance-details/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /locales/en-us/flow-instance-details/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /help/en-us/flow-instance-details/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /flow-catalog/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /locales/en-us/flow-catalog/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /help/en-us/flow-catalog/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /flow-3pps/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: flowautomation
+      port:
+        number: 443
+  path: /fa-engine-rest/
+  pathType: ImplementationSpecific

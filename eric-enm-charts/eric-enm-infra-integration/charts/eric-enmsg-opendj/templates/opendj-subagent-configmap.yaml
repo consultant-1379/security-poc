@@ -1,0 +1,33 @@
+{{- if and .Values.brAgent.enabled (eq (include "{{.Chart.Name}}.restore.state" .) "ongoing") }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.service.name }}-subagent-config
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    chart: {{ template "{{.Chart.Name}}.chart" . }}
+    app.kubernetes.io/name: {{ template "{{.Chart.Name}}.name" . }}
+    app.kubernetes.io/version: {{ template "{{.Chart.Name}}.version" . }}
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+data:
+  config.yaml: |
+    agent:
+      registration:
+        name: {{ .Values.service.name }}-bragent
+        grpcServerPort: "10000"
+    restore:
+      preCmd: "/ericsson/opendj/opendj/preRestore.sh"
+      postCmd: "/ericsson/opendj/opendj/postRestore.sh"
+    backup:
+      paths:
+        - path: "/backup/opendj"
+    softwareVersion:
+      description: "OpenDj (ldap) database"
+      productName: {{ template "{{.Chart.Name}}.name" . }}
+      productNumber: "CXC Placeholder"
+      productionDate: {{ .Values.productionDate | quote }}
+      revision: {{ .Values.revision | quote }}
+      type: "opendj"
+    bro:
+      host: {{ .Values.brAgent.broServiceName | quote }}
+{{- end }}

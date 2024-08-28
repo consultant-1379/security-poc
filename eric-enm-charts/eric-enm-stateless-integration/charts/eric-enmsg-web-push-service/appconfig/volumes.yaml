@@ -1,0 +1,45 @@
+- name: gp
+  configMap:
+    name: gpwpserv
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: shared
+  persistentVolumeClaim:
+    claimName: home
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: smrs
+  persistentVolumeClaim:
+    claimName: smrs
+- name: norollback
+  persistentVolumeClaim:
+    claimName: norollback
+- name: cron
+  persistentVolumeClaim:
+    claimName: cron
+- name: pm1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pm2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks
+- name: batch
+  persistentVolumeClaim:
+    claimName: batch
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: upgind
+  persistentVolumeClaim:
+    claimName: upgind

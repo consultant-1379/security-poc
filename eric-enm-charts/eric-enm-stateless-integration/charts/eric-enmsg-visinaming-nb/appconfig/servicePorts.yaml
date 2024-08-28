@@ -1,0 +1,6 @@
+- name: visinaming-nb
+  port: 9951
+  targetPort: 9951
+- name: metrics
+  port: 9600
+  targetPort: 9600

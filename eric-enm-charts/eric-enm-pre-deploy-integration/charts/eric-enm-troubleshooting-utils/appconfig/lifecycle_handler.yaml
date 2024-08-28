@@ -1,0 +1,8 @@
+postStart:
+  exec:
+    command:
+      - "/bin/sh"
+      - "-c"
+      - |
+        bash /opt/ericsson/eric-enm-troubleshooting-utils/set_kubectl.sh
+        mkdir -p $FCAPS_HEALTHCHECK_BASE_REPORT_DIR

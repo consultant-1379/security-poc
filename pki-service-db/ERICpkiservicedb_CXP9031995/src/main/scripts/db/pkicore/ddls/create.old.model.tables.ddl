@@ -1,0 +1,284 @@
+CREATE OR REPLACE function create_sequence_if_not_exists (
+    s_name text, sequence_sql text
+) 
+RETURNS void AS
+$BODY$
+BEGIN
+    IF NOT EXISTS (SELECT 0 
+                   FROM pg_class WHERE relname = s_name) THEN
+        EXECUTE sequence_sql;
+    END IF;
+END;
+$BODY$
+LANGUAGE plpgsql
+;
+
+SELECT create_sequence_if_not_exists('seq_algorithm_id','CREATE SEQUENCE SEQ_ALGORITHM_ID START 1');
+ALTER SEQUENCE IF EXISTS SEQ_ALGORITHM_ID OWNER TO pkicore;
+
+CREATE TABLE IF NOT EXISTS Algorithm
+(
+  Id INTEGER NOT NULL DEFAULT NEXTVAL('SEQ_ALGORITHM_ID'),
+  Key_Size INTEGER,
+  Name CHARACTER VARYING(255) NOT NULL,
+  Oid CHARACTER VARYING(255),
+  Is_Supported BOOLEAN NOT NULL,
+  Type CHARACTER VARYING(255) NOT NULL,
+  CONSTRAINT pk_Algorithm_Id PRIMARY KEY (id),
+  CONSTRAINT uk_Algorithm_Name_Key_Size UNIQUE (Name, Key_Size)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS Algorithm
+  OWNER TO pkicore;
+
+SELECT create_sequence_if_not_exists('seq_ca_id','CREATE SEQUENCE SEQ_CA_ID START 1');
+ALTER SEQUENCE IF EXISTS SEQ_CA_ID OWNER TO pkicore;
+
+CREATE TABLE IF NOT EXISTS CA_Data
+(
+  Id INTEGER NOT NULL DEFAULT NEXTVAL('SEQ_CA_ID'),
+  Issuer_Name CHARACTER VARYING(255) NOT NULL,
+  Keys BYTEA NOT NULL,
+  Name CHARACTER VARYING(255) NOT NULL,
+  PublishCertificateToTDPS BOOLEAN NOT NULL,
+  Is_Root_CA BOOLEAN NOT NULL,
+  Status CHARACTER VARYING(255) NOT NULL,
+  Subject_Alt_Name TEXT,
+  Subject_DN TEXT,
+  CONSTRAINT pk_CA_Data_Id PRIMARY KEY (Id),
+  CONSTRAINT uk_CA_Data_Name UNIQUE (name)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS CA_Data
+  OWNER TO pkicore;
+
+
+SELECT create_sequence_if_not_exists('seq_entity_id','CREATE SEQUENCE SEQ_ENTITY_ID START 1');
+ALTER SEQUENCE IF EXISTS SEQ_ENTITY_ID OWNER TO pkicore;
+
+CREATE TABLE IF NOT EXISTS Entity_Data
+(
+  Id INTEGER NOT NULL DEFAULT NEXTVAL('SEQ_ENTITY_ID'),
+  Name CHARACTER VARYING(255) NOT NULL,
+  Subject_Alt_Name TEXT,
+  Subject_DN TEXT,
+  CONSTRAINT pk_Entity_Data_Id PRIMARY KEY (Id),
+  CONSTRAINT uk_Entity_Data_Name UNIQUE (Name)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS Entity_Data
+  OWNER TO pkicore;
+
+
+CREATE TABLE IF NOT EXISTS Certificate_Status
+(
+  Id INTEGER NOT NULL,
+  Status_Name CHARACTER VARYING(255) NOT NULL,
+  CONSTRAINT pk_Certificate_Status_Id PRIMARY KEY (Id),
+  CONSTRAINT uk_Certificate_Status_Name UNIQUE (Status_Name)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS Certificate_Status
+  OWNER TO pkicore;
+
+
+
+
+CREATE TABLE IF NOT EXISTS Certificate_Request_Status
+(
+  Id INTEGER NOT NULL,
+  Status_Name CHARACTER VARYING(255) NOT NULL,
+  CONSTRAINT pk_Certificate_Request_Status_Id PRIMARY KEY (Id),
+  CONSTRAINT uk_Certificate_Request_Status_Name UNIQUE (Status_Name)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS Certificate_Request_Status
+  OWNER TO pkicore;
+
+
+
+
+SELECT create_sequence_if_not_exists('seq_csr_id','CREATE SEQUENCE SEQ_CSR_ID START 1');
+ALTER SEQUENCE IF EXISTS SEQ_CSR_ID OWNER TO pkicore;
+
+CREATE TABLE IF NOT EXISTS Certificate_Request
+(
+  Id INTEGER NOT NULL DEFAULT NEXTVAL('SEQ_CSR_ID'),
+  CSR BYTEA NOT NULL,
+  Status_Id INTEGER NOT NULL,
+  CONSTRAINT pk_Certificate_Request_Id PRIMARY KEY (Id),
+  CONSTRAINT fk_Certificate_Request_Status_Id FOREIGN KEY (Status_Id)
+      REFERENCES Certificate_Request_Status (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS Certificate_Request
+  OWNER TO pkicore;
+
+
+SELECT create_sequence_if_not_exists('seq_certificate_id','CREATE SEQUENCE SEQ_CERTIFICATE_ID START 1');
+ALTER SEQUENCE IF EXISTS SEQ_CERTIFICATE_ID OWNER TO pkicore;
+
+CREATE TABLE IF NOT EXISTS Certificate_Data
+(
+  Id INTEGER NOT NULL DEFAULT NEXTVAL('SEQ_CERTIFICATE_ID'),
+  Certificate BYTEA NOT NULL,
+  Issued_Time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  Not_After TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  Not_Before TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+  Serial_Number CHARACTER VARYING(255) NOT NULL,
+  Status_Id INTEGER NOT NULL,
+  CSR_Id INTEGER,
+  Issuer_Name CHARACTER VARYING(255),
+  CONSTRAINT pk_Certificate_Data_Id PRIMARY KEY (Id),
+  CONSTRAINT fk_Certificate_Data_CSR_ID FOREIGN KEY (CSR_Id)
+      REFERENCES Certificate_Request (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_Certificate_Data_Status_Id FOREIGN KEY (Status_Id)
+      REFERENCES Certificate_Status (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS Certificate_Data
+  OWNER TO pkicore;
+
+
+CREATE TABLE IF NOT EXISTS CA_Certificate
+(
+  CA_Id INTEGER NOT NULL,
+  Certificate_Id BIGINT NOT NULL,
+  CONSTRAINT pk_CA_Id_Certificate_Id PRIMARY KEY (CA_Id, Certificate_Id),
+  CONSTRAINT fk_CA_Certificate_CA_Id FOREIGN KEY (CA_Id)
+      REFERENCES CA_Data (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_CA_Certificate_Certificate_Id FOREIGN KEY (Certificate_Id)
+      REFERENCES Certificate_Data (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT uk_CA_Certificate_Certificate_Id UNIQUE (Certificate_Id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS CA_Certificate
+  OWNER TO pkicore;
+
+
+CREATE TABLE IF NOT EXISTS Entity_Certificate
+(
+  Entity_Id INTEGER NOT NULL,
+  Certificate_Id BIGINT NOT NULL,
+  CONSTRAINT pk_Entity_Id_Certificate_Id PRIMARY KEY (Entity_Id, Certificate_Id),
+  CONSTRAINT fk_Entity_Certificate_Certificate_id FOREIGN KEY (Certificate_Id)
+      REFERENCES Certificate_Data (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_Entity_Certificate_Entity_Id FOREIGN KEY (Entity_Id)
+      REFERENCES Entity_Data (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT uk_Entity_Certificate_Certificate_Id UNIQUE (Certificate_Id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS Entity_Certificate
+  OWNER TO pkicore;
+
+
+SELECT create_sequence_if_not_exists('seq_certificate_generation_info_id','CREATE SEQUENCE SEQ_CERTIFICATE_GENERATION_INFO_ID START 1');
+ALTER SEQUENCE IF EXISTS SEQ_CERTIFICATE_GENERATION_INFO_ID OWNER TO pkicore;
+
+CREATE TABLE IF NOT EXISTS Certificate_Generation_Info
+(
+  Id BIGINT NOT NULL DEFAULT NEXTVAL('SEQ_CERTIFICATE_GENERATION_INFO_ID'),
+  Certificate_Extensions TEXT,
+  Certificate_Version INTEGER NOT NULL,
+  Issuer_Unique_Identifier BOOLEAN NOT NULL,
+  Skew_Certificate_Time CHARACTER VARYING(10),
+  Subject_Unique_Identifier BOOLEAN NOT NULL,
+  Update_Type CHARACTER VARYING(255) NOT NULL,
+  Validity CHARACTER VARYING(10) NOT NULL,
+  CA_Entity_Info INTEGER,
+  CSR INTEGER,
+  Entity_Info INTEGER,
+  Issuer_CA INTEGER,
+  Key_Generation_Algorithm INTEGER NOT NULL,
+  Signature_Algorithm INTEGER NOT NULL,
+  CONSTRAINT pk_Certificate_Generation_Info_Id PRIMARY KEY (Id),
+  CONSTRAINT fk_Signature_Algorithm_Id FOREIGN KEY (Signature_Algorithm)
+      REFERENCES Algorithm (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_Certificate_Request_CSR FOREIGN KEY (CSR)
+      REFERENCES Certificate_Request (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_CA_Data_CA_Entity_Info FOREIGN KEY (CA_Entity_Info)
+      REFERENCES CA_Data (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_Entity_Data_Entity_Info FOREIGN KEY (Entity_Info)
+      REFERENCES Entity_Data (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_CA_Data_Issuer_CA FOREIGN KEY (Issuer_CA)
+      REFERENCES CA_Data (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_Key_Generation_Algorithm_Id FOREIGN KEY (Key_Generation_Algorithm)
+      REFERENCES Algorithm (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS Certificate_Generation_Info
+  OWNER TO pkicore;
+
+
+CREATE TABLE IF NOT EXISTS CA_CSR
+(
+  CA_Id INTEGER NOT NULL,
+  CSR_Id INTEGER NOT NULL,
+  CONSTRAINT pk_CA_Id_CSR_Id PRIMARY KEY (CA_Id, CSR_Id),
+  CONSTRAINT fk_Certificate_Request_CSR_Id FOREIGN KEY (CSR_Id)
+      REFERENCES Certificate_Request (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_CA_Data_CA_Id FOREIGN KEY (CA_Id)
+      REFERENCES CA_Data (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT uk_CA_CSR_CSR_Id UNIQUE (CSR_Id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS CA_CSR
+  OWNER TO pkicore;
+
+
+
+CREATE TABLE IF NOT EXISTS Entity_CSR
+(
+  Entity_Id INTEGER NOT NULL,
+  CSR_Id INTEGER NOT NULL,
+  CONSTRAINT pk_Entity_Id_CSR_Id PRIMARY KEY (Entity_Id, CSR_Id),
+  CONSTRAINT fk_Entity_CSR_CSR_Id FOREIGN KEY (CSR_Id)
+      REFERENCES Certificate_Request (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_Entity_Data_Entity_Id FOREIGN KEY (Entity_Id)
+      REFERENCES Entity_Data (Id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT uk_Entity_CSR_CSR_Id UNIQUE (CSR_Id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE IF EXISTS Entity_CSR
+  OWNER TO pkicore;

@@ -1,0 +1,124 @@
+/*------------------------------------------------------------------------------
+ *******************************************************************************
+ * COPYRIGHT Ericsson 2015
+ *
+ * The copyright to the computer program(s) herein is the property of
+ * Ericsson Inc. The programs may be used and/or copied only with written
+ * permission from Ericsson Inc. or in accordance with the terms and
+ * conditions stipulated in the agreement/contract under which the
+ * program(s) have been supplied.
+ *******************************************************************************
+ *----------------------------------------------------------------------------*/
+package com.ericsson.oss.itpf.security.pki.ra.scep.processor;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.CMSSignedData;
+import org.bouncycastle.util.encoders.Base64;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.*;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
+
+import com.ericsson.oss.itpf.sdk.recording.SystemRecorder;
+import com.ericsson.oss.itpf.security.pki.common.util.StringUtility;
+import com.ericsson.oss.itpf.security.pki.ra.scep.constants.JUnitConstants;
+import com.ericsson.oss.itpf.security.pki.ra.scep.data.Pkcs7ScepRequestData;
+import com.ericsson.oss.itpf.security.pki.ra.scep.exception.*;
+
+@RunWith(MockitoJUnitRunner.class)
+public class SignerInfoProcessorTest {
+
+    private String successPkcs = "MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAaCAJIAEggMVMIAGCSqGSIb3DQEHA6CAMIACAQAxggFVMIIBUQIBADA5MDExETAPBgNVBAoMCEVyaWNzc29uMRwwGgYDVQQDDBNMVEVJUFNlY05FY3VzUm9vdENBAgQkbbUQMA0GCSqGSIb3DQEBAQUABIIBAB1rD15aTAflnBf+P6qnh8xrwr3Sgo79oAdTirs1+tx6qb5NQTdLMp83kQnLtlEI/HUdH6KmrLojNWQIXqE+16TJ3FRyqLSMAWX+XDehpMaC1FXRc7/Eg0hhTvUj1fmADSx7lB9laXYYl9gs4SIeorFhPnh8sv7cdN+ZFKXYKfXolL+ydtGTD13BA6iNrCYTfRG4OKU9bOkNxQD2lPzro2nqISv3pPqCJzZDRXEfTUsjnYe6AOG0yVwS+KeD3YBEx896H206w2uzmsxLQz27E7XAVPk07H2itiAT5OmXNC4LvcDh/9/Uaul8IQdeRK7z+jTLlXCqlB3cuVeJF9kUnOEwgAYJKoZIhvcNAQcBMBEGBSsOAwIHBAgp/6zRvK+MSaCABIIBeDZgWnak/d2hb281TwFvS/jCOA+GT0Da+0NKdcAqEi09TLJ93lAZAOx6u5Jm/0636Ne1bnfwRWuGEmm3GWjqf5+6cDs0KnJ1UQIvwXftdZzGBn+02/clCgy9SF2BqZSyubBN1pwju5DgCbigEhBk8nh4iIJN0k0dtY0UN6fQcc2kYe5/OjB7oE0kAeI8obgWmNu+YG9j2lWNfBdEOA+JUG/ti7yMtgBFdiqX8hArGfOErpzBEyKDL5o4e+naDOYXCac6ZHUvyOvP74EHjPBSdrc1CuhrLCv5v1MyNo1hLutmLhsB2CBicKWdytUmbhCHD2i8GFQc8pAbHUzNpllL+tZezlXqn8QaYy1F5EKRHzzS8mWyZrVAHkhynPCPlgeWsQPuMv4oQJEhgHGdo3DlUTMCpbeOIdBiNIY8pD77/5jUmlFqaAu1QiqtoMJzIEEmhOXvjtFIMX2VZIXLV5Uw1Xh8CGvALoglPE1iwOF2mIJzXnXXSKSXUlQAAAAAAAAAAAAAAAAAAAAAoIAwggP5MIIC4aADAgECAgQkbbUQMA0GCSqGSIb3DQEBBQUAMDExETAPBgNVBAoMCEVyaWNzc29uMRwwGgYDVQQDDBNMVEVJUFNlY05FY3VzUm9vdENBMB4XDTE0MTEwNTA2MjkyN1oXDTE5MTEwMzEyMjkyMVowLjEsMCoGA1UEAwwjTFRFSVBTZWNORWN1c2F0Y2x2bTEwMjRTY2VwUmFTZXJ2ZXIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCm64AZma+xX1m+VfKbILo5P+D/HL+ctQM4s2Dz7lo/PpVL8bIc5qVtb6GvHBFB/ZFIM0+uFnUuq+aG3Uk4ZXIAQYYDispbznBoCqX7qQTwjpcXn9dvEr3He3vVvOlZUVSgExroLUDgts4MvqekvrxGK5AH6vwrZ6ncdZLqfp55bpDZi5TiYr8NCLFSy2O2akhkZCZ6N8YegeQpr28OPElfLO0T10+9F4UtNS8yqismmwMZbc4MT8RoxwCQXSDJH+t0Q9JNgoPBKkZbCb3HVbVEM0mCRy/zDPoJfFrCIehqJlsBQaAyCY541cUvnpPSfOy9vqjpj0vjP13S+BwlE6jTAgMBAAGjggEaMIIBFjAdBgNVHQ4EFgQU+JIv/d5j3ms9oAjo5igxj0C0Vp4wDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBSS544k8jDdLz91h+J5ZyyERYoPODCBtQYDVR0fBIGtMIGqMFOgUaBPhk1odHRwOi8vY2RwMS5jZHBzLmF0aHRlbS5lZWkuZXJpY3Nzb24uc2U6MjM3Ny9pbnRlcm5hbC9MVEVJUFNlY05FY3VzUm9vdENBLmNybDBToFGgT4ZNaHR0cDovL2NkcDIuY2Rwcy5hdGh0ZW0uZWVpLmVyaWNzc29uLnNlOjIzNzcvaW50ZXJuYWwvTFRFSVBTZWNORWN1c1Jvb3RDQS5jcmwwDgYDVR0PAQH/BAQDAgOoMA0GCSqGSIb3DQEBBQUAA4IBAQA7jRzkFMlkv19BeqBuNYZ830pqRX5P5aNqhytQbpwrThke2PfHVyS10j/vsuawj3Gm44pB9WYx7QmCFj2oGVKjRbYzotTKmwNqkABhIV+Hzx23AY4aSWRKgYoME4Pd2q4zTb++qN99rsLdi7/MEfnanMb6HxLIRGCZWi0rqk6X/JHqrEXaoHG6T6LeFKyMFS4DVEpx6FBCe7UCDRFykbOcAfgGjzalfxiY/DhdfBWKym3sucvp9Xcn3a0YPgjNGyf0kQJcSMUaYVGSxsHwTARyoRckgIc5zZw/VEo1XClBkK0tlRwsX0xc0IQk6Pg+Wnr8gfi9q3F1Vikwaj4EXoGBAAAxggIXMIICEwIBATA5MDExETAPBgNVBAoMCEVyaWNzc29uMRwwGgYDVQQDDBNMVEVJUFNlY05FY3VzUm9vdENBAgQkbbUQMAkGBSsOAwIaBQCggbQwEgYKYIZIAYb4RQEJAjEEEwIxOTAXBgpghkgBhvhFAQkHMQkTBzEuMi4zLjQwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTUwNzA4MDY1MjA5WjAgBgpghkgBhvhFAQkFMRIEEA8wJj93snn/MmapmaYgEVQwKwYJKoZIhvcNAQkEMR4EHO6JvVp4YwIU+ODwZB8JZZCvJu/6UDHba67VhkgwDQYJKoZIhvcNAQEBBQAEggEAexnqAsKEvx13JyAuksXzRrFi4m+DY26FDPvD0FpKZ49QdxMILy4QyCHt3+QkRZprgJ8JpRTtXTCbGaQo+Y/61Tmd30UfhCGWaPvcLi16+2MzRct7MB0i7lNBD/nYpgja70lsqcm3W93cTcil4Uf8RFrVVJ5AL1L5obiaQ9tDxb+olWYokSAMX0cqBPhVH5QhXPDSqgwj051dKyzRn+0dxmsDtJ8Zl7MuHVz+M5yUHpgEVEL0AXu2EBvu/Pic2jmEWKlizfeHRmn8UMS2NPGcLYdOWhDG0juDo3FI3eV4kUlHSUleZ82Q79qPKPIkI3wBJiZwtKG91UHMz4ozxdsocAAAAAAAAA==";
+
+    private String invalidMsgType = "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";
+
+    private String withOutMsgType = "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";
+
+    private String withOutSignerInfo = "MIAGCSqGSIb3DQEHAqCAMIACAQExADCABgkqhkiG9w0BBwGggCSABIIDFTCABgkqhkiG9w0BBwOggDCAAgEAMYIBVTCCAVECAQAwOTAxMREwDwYDVQQKDAhFcmljc3NvbjEcMBoGA1UEAwwTTFRFSVBTZWNORWN1c1Jvb3RDQQIEJG21EDANBgkqhkiG9w0BAQEFAASCAQBOGQ6Y/1BwvFHVNDivHHjIUUqDAKe5OwaT3efCPbH2tPz7P2SNbX49EI76Zp2e3R+fOl/a7llfvUHPtiBrk1Q4hO/FaTJCQZhaNxs3v91IhShB5702G36nYZrnJI1oUl6zyVJHkmL86//PVnUCOaMQuTD+Ld3OLHFVqrJwQF9FTnkkgPJgJ/FG+fxdlrojjJI5pYhe2NiOLuG0VmPuHlCnWogB5cZ7tNAqIoiSx2+VTo0M5tXw8CSvjz85OG+Wd7+7QcYjRBB5Yi+W94d1E3loXoRwZ04iUca0KStEcm+GTla0QRRTRmwe4e2pubHOr+GnfEQX1UdIRX7Psb2YGmVSMIAGCSqGSIb3DQEHATARBgUrDgMCBwQIuef/oLmcfX2ggASCAXidDeViddi9d7wkL5CGnuTQx6dDPo63M8MiSWBSrpuJFxu5JJHhDcotPgYGhafhLJp0XM/o83CpB/6hkuXouQVqQOkxioBZ6i2xAnWokWs5tyTgyVpMD1J6m3lGjIQNIeWDJvKeAqGPZZ3kjGJrH6MLKJ4bAOTpME238R8KNF95B46r800vYve/QIu0mDD6DNQNccGwtEmPlhcio71lF8BxovVBaeIXTQiDDc/5b4GPhFWbapVkiI/CTJ1qErOEGTHaqpWPf2EzBSuObKyLeM9V1iWyND3l0gore2AulhDy6Ax0qx1c7Ttuw38fQTX93rxtp3QBUDHGYTo3YfwuOgdd8EqwfMBM6/oPDBm3//ghFp9hQRHYTtvEl928UcCx4/J5o6gKlBluMyHs3QSlyNPvTjod0gCns1VbGk/DPz5Tz3sblV/KfuAaGVHOL8cSDWDXk/NQBo1l6Ms7eyeeVXAVWagV/qJsfjivS1NnEJ6zkkKIdyLGH9pxAAAAAAAAAAAAAAAAAAAAAKCAMIID+TCCAuGgAwIBAgIEJG21EDANBgkqhkiG9w0BAQUFADAxMREwDwYDVQQKDAhFcmljc3NvbjEcMBoGA1UEAwwTTFRFSVBTZWNORWN1c1Jvb3RDQTAeFw0xNDExMDUwNjI5MjdaFw0xOTExMDMxMjI5MjFaMC4xLDAqBgNVBAMMI0xURUlQU2VjTkVjdXNhdGNsdm0xMDI0U2NlcFJhU2VydmVyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApuuAGZmvsV9ZvlXymyC6OT/g/xy/nLUDOLNg8+5aPz6VS/GyHOalbW+hrxwRQf2RSDNPrhZ1Lqvmht1JOGVyAEGGA4rKW85waAql+6kE8I6XF5/XbxK9x3t71bzpWVFUoBMa6C1A4LbODL6npL68RiuQB+r8K2ep3HWS6n6eeW6Q2YuU4mK/DQixUstjtmpIZGQmejfGHoHkKa9vDjxJXyztE9dPvReFLTUvMqorJpsDGW3ODE/EaMcAkF0gyR/rdEPSTYKDwSpGWwm9x1W1RDNJgkcv8wz6CXxawiHoaiZbAUGgMgmOeNXFL56T0nzsvb6o6Y9L4z9d0vgcJROo0wIDAQABo4IBGjCCARYwHQYDVR0OBBYEFPiSL/3eY95rPaAI6OYoMY9AtFaeMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUkueOJPIw3S8/dYfieWcshEWKDzgwgbUGA1UdHwSBrTCBqjBToFGgT4ZNaHR0cDovL2NkcDEuY2Rwcy5hdGh0ZW0uZWVpLmVyaWNzc29uLnNlOjIzNzcvaW50ZXJuYWwvTFRFSVBTZWNORWN1c1Jvb3RDQS5jcmwwU6BRoE+GTWh0dHA6Ly9jZHAyLmNkcHMuYXRodGVtLmVlaS5lcmljc3Nvbi5zZToyMzc3L2ludGVybmFsL0xURUlQU2VjTkVjdXNSb290Q0EuY3JsMA4GA1UdDwEB/wQEAwIDqDANBgkqhkiG9w0BAQUFAAOCAQEAO40c5BTJZL9fQXqgbjWGfN9KakV+T+WjaocrUG6cK04ZHtj3x1cktdI/77LmsI9xpuOKQfVmMe0JghY9qBlSo0W2M6LUypsDapAAYSFfh88dtwGOGklkSoGKDBOD3dquM02/vqjffa7C3Yu/zBH52pzG+h8SyERgmVotK6pOl/yR6qxF2qBxuk+i3hSsjBUuA1RKcehQQnu1Ag0RcpGznAH4Bo82pX8YmPw4XXwVispt7LnL6fV3J92tGD4IzRsn9JECXEjFGmFRksbB8EwEcqEXJICHOc2cP1RKNVwpQZCtLZUcLF9MXNCEJOj4Plp6/IH4vatxdVYpMGo+BF6BgQAAMQAAAAAAAAA=";
+
+    @InjectMocks
+    private SignerInfoProcessor signerInfoProcessor;
+
+    @Mock
+    private Logger logger;
+
+    @Mock
+    private SystemRecorder systemRecorder;
+
+    private Pkcs7ScepRequestData pkcs7ScepRequestData = null;
+
+    final String DigestalgOid = "1.3.14.3.2.26";
+    final String EncryptAlgOid = "1.2.840.113549.1.1.1";
+
+    /**
+     * This method tests Request with InvalidMsgType.
+     */
+    @Test(expected = InvalidMessageTypeException.class)
+    public void testInvalidMsgType() {
+        final CMSSignedData cmsSigned = getCmsSignedData(invalidMsgType);
+        signerInfoProcessor.extractSignerInformation(cmsSigned, pkcs7ScepRequestData);
+
+    }
+
+    /**
+     * This Method tests request without msg type.
+     */
+    @Test(expected = AttributeNotFoundException.class)
+    public void testWithOutMsgType() {
+        final CMSSignedData cmsSigned = getCmsSignedData(withOutMsgType);
+        signerInfoProcessor.extractSignerInformation(cmsSigned, pkcs7ScepRequestData);
+
+    }
+
+    /**
+     * This Method tests request with out signerInfo
+     */
+    @Test(expected = BadRequestException.class)
+    public void testWithOutSignerInfo() {
+        final CMSSignedData cmsSigned = getCmsSignedData(withOutSignerInfo);
+        signerInfoProcessor.extractSignerInformation(cmsSigned, pkcs7ScepRequestData);
+    }
+
+    /**
+     * This method tests the success scenario for CMS signed data
+     */
+    @Test
+    public void testSignerInfoSuccess() {
+        final CMSSignedData cmsSigned = getCmsSignedData(successPkcs);
+        signerInfoProcessor.extractSignerInformation(cmsSigned, pkcs7ScepRequestData);
+        Mockito.verify(logger).debug("End of extractSignerInformation method of PkiOperationReqProcessor;");
+        assertNotNull(pkcs7ScepRequestData.getSignerInformation());
+        assertNotNull(pkcs7ScepRequestData.getSenderNonce());
+        assertEquals(pkcs7ScepRequestData.getMessageType(), JUnitConstants.messageType);
+        assertEquals(pkcs7ScepRequestData.getTransactionId(), JUnitConstants.transactionId);
+
+    }
+
+    /**
+     * getCmsSignedData will generated the CMS signed data for a given PKCS request message
+     * 
+     * @param msg
+     *            is the message data
+     * @return CMSSignedData returns the CMS signed data
+     */
+    private CMSSignedData getCmsSignedData(final String msg) {
+        CMSSignedData cmsSigned = null;
+        byte[] message = msg.getBytes();
+        pkcs7ScepRequestData = new Pkcs7ScepRequestData();
+        if (StringUtility.isBase64(new String(message))) {
+            message = Base64.decode(message);
+        }
+        try {
+            cmsSigned = new CMSSignedData(message);
+        } catch (final CMSException e) {
+            Assert.fail(e.getMessage());
+        }
+        return cmsSigned;
+    }
+
+}

@@ -1,0 +1,37 @@
+{{- if .Values.brAgent.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.service.name }}-bragent-config
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    chart: {{ template "eric-enm-common-helmchart-library.chart" . }}
+    app.kubernetes.io/name: {{ template "eric-enm-common-helmchart-library.name" . }}
+    app.kubernetes.io/version: {{ template "{{.Chart.Name}}.version" . }}
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+data:
+  config.yaml: |
+    agent:
+      registration:
+        name: {{ .Values.service.name }}-bragent
+        {{- if .Values.brAgent.backupTypeList }}
+        scopes: {{- template "{{.Chart.Name}}.backupTypes" . }}
+        {{- end }}
+    backup:
+      paths:
+        - path: "/ericsson/sentinel_lic/lservrc"
+    restore:
+      postCmd: "touch /ericsson/sentinel_lic/restore_flag"
+
+    softwareVersion:
+      description: "ENM License Manager"
+      productName: {{ template "eric-enm-common-helmchart-library.name" . }}
+      productNumber: "CXC 174 1990"
+      productionDate: {{ .Values.productionDate | quote }}
+      revision: {{ .Values.revision | quote }}
+      type: "license_server"
+
+    bro:
+      host: {{ .Values.brAgent.broServiceName | quote }}
+      connectRetryCount: {{ .Values.brAgent.connectRetryCount }}
+{{- end }}

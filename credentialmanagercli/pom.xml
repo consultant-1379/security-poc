@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ericsson.nms</groupId>
+        <artifactId>integration</artifactId>
+        <version>15.2.0.35</version>
+    </parent>
+
+
+    <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+    <artifactId>credentialmanagercli</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>[${project.artifactId}] JSE8 Project</name>
+
+    <properties>
+        <!--<user.language>en_US</user.language>
+        <argLine>-Duser.language=${user.language}</argLine>-->
+        <!-- verify  api jar version and library version as well in order to mantain up to date with api-->
+        <version.credentialserviceapi>1.0.1-SNAPSHOT</version.credentialserviceapi>
+        <!-- TODO use -v option in scripts to remove this line-->
+        <version.credential.manager.service.interface>1.1.2</version.credential.manager.service.interface>
+        <version.bouncycastle>1.67</version.bouncycastle>
+        <version.mockito>1.9.5</version.mockito>
+        <version.powermock>2.0.2</version.powermock> <!-- was 1.6.6 -->
+        <version.jacoco>0.8.5</version.jacoco>
+        <munge.symbols>NO_MUNGE_SYMBOLS</munge.symbols>
+        <!--FOSS Activities -->
+        <!-- TORF-562254 update log4j -->
+        <version.log4j>2.17.1</version.log4j>
+        <version.commons-cli>1.2</version.commons-cli>
+        <version.jackson-annotations>2.13.0</version.jackson-annotations> <!-- was 2.9.6 -->
+        <aggregate.report.dir>credentialmanagercli-test-coverage/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
+        <sonar.java.binaries>target</sonar.java.binaries>
+        <sonar.exclusions>pom.xml</sonar.exclusions>
+        <!-- remove these lines when coverage is fixed -->
+<!--         <sonar.cpd.exclusions>src/**</sonar.cpd.exclusions> -->
+<!--         <sonar.coverage.exclusions>**/com/ericsson/oss/itpf/security/credentialmanager/cli/CLI.java</sonar.coverage.exclusions> -->
+        <sonar.coverage.exclusions>**/com/ericsson/oss/itpf/security/credentialmanager/cli/service/business/CredMaServiceApiControllerImpl.java, **/com/ericsson/oss/itpf/security/credentialmanager/cli/CLI.java</sonar.coverage.exclusions>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <!-- TORF-562254 update log4j -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${version.log4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${version.log4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${version.log4j}</version>
+                <!-- <scope>test</scope> -->
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${version.jackson-annotations}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>munge-maven-plugin</artifactId>
+                <version>1.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- Dependency for mocking in Unit tests -->
+    <dependencies>
+                <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${version.mockito}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-core</artifactId>
+            <version>${version.powermock}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${version.powermock}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <version>${version.powermock}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>${version.jacoco}</version>
+            <classifier>runtime</classifier>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <!--Profile to deploy latest site -->
+        <profile>
+            <id>site_latest</id>
+            <distributionManagement>
+                <site>
+                    <id>site</id>
+                    <name>Site</name>
+                    <url>${site.url}/credentialmanagercli/latest</url>
+                </site>
+            </distributionManagement>
+        </profile>
+        <!--Profile to stage site for review -->
+        <profile>
+            <id>site_review</id>
+            <distributionManagement>
+                <site>
+                    <id>site</id>
+                    <name>Site</name>
+                    <url>${site.url}</url>
+                </site>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>test_command</id>
+            <properties>
+                <munge.symbols>TEST_COMMAND</munge.symbols>
+            </properties>
+        </profile>
+    </profiles>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${version.jacoco}</version>
+                <executions>
+                    <execution>
+                        <id>default-instrument</id>
+                        <goals>
+                            <goal>instrument</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-restore-instrumented-classes</id>
+                        <goals>
+                            <goal>restore-instrumented-classes</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/coverage.exec</dataFile>
+                            <excludes>
+                                <exclude>**/com/ericsson/oss/itpf/security/credentialmanager/cli/CLI.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+        </plugin>
+    </plugins>
+</build>
+
+    <!--Deployment of versioned documentation -->
+    <distributionManagement>
+        <site>
+            <id>site</id>
+            <name>Site</name>
+            <url>${site.url}/credentialmanagercli/${project.version}</url>
+        </site>
+    </distributionManagement>
+
+    <modules>
+        <module>ERICcredentialmanagercli_CXP9031389</module>
+        <module>credentialmanagercli-jar</module>
+        <module>credentialmanagercli-commands-jar</module>
+        <module>credentialmanagercli-xmlbeans</module>
+        <module>credentialmanagercli-service-jar</module>
+        <module>credentialmanagercli-test-coverage</module>
+    </modules>
+
+    <scm>
+        <tag>credentialmanagercli-1.4.5</tag>
+    </scm>
+    <!--
+    <scm>
+    <developerConnection>${ericsson.scm.url}</developerConnection>
+    <connection>${ericsson.scm.url}</connection>
+    <tag>HEAD</tag>
+    </scm> -->
+</project>

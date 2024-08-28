@@ -1,0 +1,19 @@
+---
+apiVersion: v2
+appVersion: "1.0"
+dependencies:
+- condition: eric-ctrl-bro.enabled
+  name: eric-ctrl-bro
+  repository: https://arm.rnd.ki.sw.ericsson.se/artifactory/proj-adp-gs-all-helm/
+  version: 5.5.0+49
+- condition: eric-enm-version-configmap.enabled
+  name: eric-enm-version-configmap
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.16.0-1
+- condition: eric-ctrl-brocli.enabled
+  name: eric-ctrl-brocli
+  repository: https://arm.epk.ericsson.se/artifactory/proj-enm-helm/
+  version: 1.0.30-1
+description: A Helm chart for bro-integration
+name: eric-enm-bro-integration
+version: 1.23.8-0

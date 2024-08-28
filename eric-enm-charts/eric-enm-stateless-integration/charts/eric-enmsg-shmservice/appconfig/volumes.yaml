@@ -1,0 +1,42 @@
+- name: gp
+  configMap:
+    name: gpshmserv
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: smrs
+  persistentVolumeClaim:
+    claimName: smrs
+- name: mdt
+  persistentVolumeClaim:
+    claimName: mdt
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: norollback
+  persistentVolumeClaim:
+    claimName: norollback
+- name: configmgt
+  persistentVolumeClaim:
+    claimName: configmgt
+- name: pm1
+  persistentVolumeClaim:
+    claimName: pm1
+- name: pm2
+  persistentVolumeClaim:
+    claimName: pm2
+- name: batch
+  persistentVolumeClaim:
+    claimName: batch
+- name: upgind
+  persistentVolumeClaim:
+    claimName: upgind
+- name: pmlinks
+  persistentVolumeClaim:
+    claimName: pmlinks
+- name: autoprovisioning
+  persistentVolumeClaim:
+    claimName: autoprovisioning

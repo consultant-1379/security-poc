@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PKIEntities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="EntitiesSchema.xsd">
+	<CA-Entities>
+	
+		<CAEntity Name="NE External CA">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>NE External CA</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			
+			<EntityProfileName>NE CA EP</EntityProfileName>
+						
+			<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+			
+			<RootCA>false</RootCA>
+				
+				<CACRL>
+				<PublishCRLToCDPS>true</PublishCRLToCDPS>
+				<CRLGenerationInfo>
+				<Version>V2</Version>
+				<SignatureAlgorithm>
+					<Name>SHA256withRSA</Name>
+					<KeySize>2048</KeySize>
+				</SignatureAlgorithm>
+				<ValidityPeriod>P15D</ValidityPeriod>
+				<SkewCrlTime>PT30M</SkewCrlTime>
+				<OverlapPeriod>P1D</OverlapPeriod>
+				<CrlExtensions>
+					<CRLNumber>
+						<Critical>false</Critical>
+					</CRLNumber>
+					<AuthorityKeyIdentifier>
+						<Critical>false</Critical>
+						<ByAuthorityCertIssuerAndSerialNumber>true</ByAuthorityCertIssuerAndSerialNumber>
+					</AuthorityKeyIdentifier>
+				</CrlExtensions>
+				</CRLGenerationInfo>
+			</CACRL>
+		</CAEntity>
+		<CAEntity Name="NE IPsec CA">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>NE IPsec CA</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			
+			<EntityProfileName>NE CA EP</EntityProfileName>
+						
+			<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+			
+			<RootCA>false</RootCA>
+				
+				<CACRL>
+				<PublishCRLToCDPS>true</PublishCRLToCDPS>
+				<CRLGenerationInfo>
+				<Version>V2</Version>
+				<SignatureAlgorithm>
+					<Name>SHA256withRSA</Name>
+					<KeySize>2048</KeySize>
+				</SignatureAlgorithm>
+				<ValidityPeriod>P15D</ValidityPeriod>
+				<SkewCrlTime>P30M</SkewCrlTime>
+				<OverlapPeriod>P1D</OverlapPeriod>
+				<CrlExtensions>
+					<CRLNumber>
+						<Critical>false</Critical>
+					</CRLNumber>
+					<AuthorityKeyIdentifier>
+						<Critical>false</Critical>
+						<ByAuthorityCertIssuerAndSerialNumber>true</ByAuthorityCertIssuerAndSerialNumber>
+					</AuthorityKeyIdentifier>
+				</CrlExtensions>
+				</CRLGenerationInfo>
+			</CACRL>
+		</CAEntity>		
+		<CAEntity Name="NE OAM CA">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>NE OAM CA</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			
+			<EntityProfileName>NE CA EP</EntityProfileName>
+						
+			<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+			
+			<RootCA>false</RootCA>
+				
+			<CACRL>
+				<PublishCRLToCDPS>true</PublishCRLToCDPS>
+				<CRLGenerationInfo>
+				<Version>V2</Version>
+				<SignatureAlgorithm>
+					<Name>SHA256withRSA</Name>
+					<KeySize>2048</KeySize>
+				</SignatureAlgorithm>
+				<ValidityPeriod>P15D</ValidityPeriod>
+				<SkewCrlTime>P30M</SkewCrlTime>
+				<OverlapPeriod>P1D</OverlapPeriod>
+				<CrlExtensions>
+					<CRLNumber>
+						<Critical>false</Critical>
+					</CRLNumber>
+					<AuthorityKeyIdentifier>
+						<Critical>false</Critical>
+						<ByAuthorityCertIssuerAndSerialNumber>true</ByAuthorityCertIssuerAndSerialNumber>
+					</AuthorityKeyIdentifier>
+				</CrlExtensions>
+				</CRLGenerationInfo>
+			</CACRL>
+		</CAEntity>				
+
+		<CAEntity Name="ENM Infrastructure CA">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>ENM Infrastructure CA</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			
+			<EntityProfileName>ENM CA EP</EntityProfileName>
+						
+			<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+			
+			<RootCA>false</RootCA>
+				
+						<CACRL>
+				<PublishCRLToCDPS>true</PublishCRLToCDPS>
+				<CRLGenerationInfo>
+				<Version>V2</Version>
+				<SignatureAlgorithm>
+					<Name>SHA256withRSA</Name>
+					<KeySize>2048</KeySize>
+				</SignatureAlgorithm>
+				<ValidityPeriod>P15D</ValidityPeriod>
+				<SkewCrlTime>P30M</SkewCrlTime>
+				<OverlapPeriod>P1D</OverlapPeriod>
+				<CrlExtensions>
+					<CRLNumber>
+						<Critical>false</Critical>
+					</CRLNumber>
+					<AuthorityKeyIdentifier>
+						<Critical>false</Critical>
+						<ByAuthorityCertIssuerAndSerialNumber>true</ByAuthorityCertIssuerAndSerialNumber>
+					</AuthorityKeyIdentifier>
+				</CrlExtensions>
+				</CRLGenerationInfo>
+			</CACRL>
+		</CAEntity>				
+		<CAEntity Name="ENM E-mail CA">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>ENM E-mail CA</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			
+			<EntityProfileName>ENM CA EP</EntityProfileName>
+						
+			<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+			
+			<RootCA>false</RootCA>
+				
+					<CACRL>
+				<PublishCRLToCDPS>true</PublishCRLToCDPS>
+				<CRLGenerationInfo>
+				<Version>V2</Version>
+				<SignatureAlgorithm>
+					<Name>SHA256withRSA</Name>
+					<KeySize>2048</KeySize>
+				</SignatureAlgorithm>
+				<ValidityPeriod>P15D</ValidityPeriod>
+				<SkewCrlTime>P30M</SkewCrlTime>
+				<OverlapPeriod>P1D</OverlapPeriod>
+				<CrlExtensions>
+					<CRLNumber>
+						<Critical>false</Critical>
+					</CRLNumber>
+					<AuthorityKeyIdentifier>
+						<Critical>false</Critical>
+						<ByAuthorityCertIssuerAndSerialNumber>true</ByAuthorityCertIssuerAndSerialNumber>
+					</AuthorityKeyIdentifier>
+				</CrlExtensions>
+				</CRLGenerationInfo>
+			</CACRL>
+		</CAEntity>				
+		<CAEntity Name="ENM External Entity CA">
+			<Subject>
+				<SubjectDN>
+					<SubjectEntry>
+						<Type>COMMON_NAME</Type>
+						<Value>ENM External Entity CA</Value>
+					</SubjectEntry>
+				</SubjectDN>
+			</Subject>
+			
+			<EntityProfileName>ENM CA EP</EntityProfileName>
+						
+			<PublishCertificatetoTDPS>true</PublishCertificatetoTDPS>
+			
+			<RootCA>false</RootCA>
+				
+			<CACRL>
+				<PublishCRLToCDPS>true</PublishCRLToCDPS>
+				<CRLGenerationInfo>
+				<Version>V2</Version>
+				<SignatureAlgorithm>
+					<Name>SHA256withRSA</Name>
+					<KeySize>2048</KeySize>
+				</SignatureAlgorithm>
+				<ValidityPeriod>P15D</ValidityPeriod>
+				<SkewCrlTime>P30M</SkewCrlTime>
+				<OverlapPeriod>P1D</OverlapPeriod>
+				<CrlExtensions>
+					<CRLNumber>
+						<Critical>false</Critical>
+					</CRLNumber>
+					<AuthorityKeyIdentifier>
+						<Critical>false</Critical>
+						<ByAuthorityCertIssuerAndSerialNumber>true</ByAuthorityCertIssuerAndSerialNumber>
+					</AuthorityKeyIdentifier>
+				</CrlExtensions>			
+				</CRLGenerationInfo>
+			</CACRL>
+		</CAEntity>						
+		
+	</CA-Entities>
+	
+</PKIEntities>

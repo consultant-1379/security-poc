@@ -1,0 +1,322 @@
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pm-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmiclistsubscription/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmiclistsubscription/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicasrcelltrace/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicasrcelltrace/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicbscrecordings/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicbscrecordings/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmiccellinstance/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmiccellinstance/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmiccelltrace/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmiccelltrace/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmiccelltracenran/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmiccelltracenran/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmiccelltraffic/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmiccelltraffic/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmiccommon/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmiccommon/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmiccontinuouscelltrace/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmiccontinuouscelltrace/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicctum/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicctum/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicebm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicebm/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicesn/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicesn/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicgpeh/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicgpeh/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicmoinstance/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicmoinstance/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicmtr/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicmtr/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicnodereport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicnodereport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicres/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicres/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicstatistical/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicstatistical/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmictests/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmictests/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicuetr/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicuetr/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicuetrace/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicuetrace/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /pmicrtt/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /locales/en-us/pmicrtt/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: pmserv
+      port:
+        number: 443
+  path: /help/en-us/pmiclistsubscription/
+  pathType: ImplementationSpecific

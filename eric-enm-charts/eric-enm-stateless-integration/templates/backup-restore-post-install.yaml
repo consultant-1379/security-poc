@@ -1,0 +1,36 @@
+{{- if .Values.global.restore.backupName -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ template "stateless-integration.broRestorePostInstallName" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "stateless-integration.name" . }}
+    helm.sh/chart: {{ template "stateless-integration.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": {{ index .Values "images" "eric-enm-chart-hooks" "hook-post-weight" | quote }}
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      name: {{ template "stateless-integration.broRestorePostInstallName" . }}
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ template "stateless-integration.broRestorePostInstallName" . }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      {{- if include "stateless-integration.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "stateless-integration.pullSecrets" . }}
+      {{- end }}
+      serviceAccountName: {{ template "stateless-integration.broServiceAccountName" . }}
+      containers:
+        - name: post-install-executor
+          image: {{ .Values.global.registry.url }}/{{ template "stateless-integration.hookImageRepoPath" . }}/{{ index .Values "images" "eric-enm-chart-hooks" "name" }}:{{ index .Values "images" "eric-enm-chart-hooks" "tag" }}
+          imagePullPolicy: {{ .Values.imageCredentials.pullPolicy }}
+          command: [ "/bin/sh", "-c", "exec_hook reset_bro_config_map.py -c {{ .Values.global.restore.configMap.name }}" ]
+{{- end}}

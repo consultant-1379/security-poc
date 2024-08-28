@@ -1,0 +1,11 @@
+productName: "Credm Controller HELM"
+productNumber: CXC Placeholder
+images:
+  eric-enm-credm-controller:
+    productName: "Credm Controller IMAGE"
+    productNumber: CXC Placeholder
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "proj-enm"
+    name: eric-enm-credm-controller
+    tag: VERSION
+

@@ -1,0 +1,114 @@
+## eric-enmsg-ebs-controller image version
+
+global:
+  registry:
+    url: armdocker.rnd.ericsson.se
+    pullSecret:
+  ingress:
+    enmHost:
+  enmProperties:
+    COM_INF_LDAP_ADMIN_ACCESS:
+    COM_INF_LDAP_ADMIN_CN:
+    COM_INF_LDAP_PORT:
+    COM_INF_LDAP_ROOT_SUFFIX:
+    LDAP_ADMIN_CN:
+    LDAP_ADMIN_PASSWORD:
+    modcluster_listenport:
+    new_enm_config:
+    postgresql01_admin_password:
+    postgres_service:
+  timezone:
+productInfo:
+  number: CXC Placeholder
+  rstate: R13K
+# Number of replicas(pods) to deploy
+replicas-eric-enmsg-ebs-controller: 2
+images:
+  eric-enmsg-ebs-controller:
+    name: eric-enmsg-ebs-controller
+    tag: 1.12.9-1
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s gossiprouter-cache,gossiprouter-remoting,postgres,pmserv,jms01'
+      ]"
+  eric-enm-httpd:
+    name: eric-enmsg-counter-management-httpd
+    tag: 1.12.9-1
+  eric-enm-monitoring:
+    enabled: true
+    name: eric-enm-monitoring-eap6
+    tag: 1.27.9-1
+imageCredentials:
+  repoPath: proj-enm
+  pullPolicy: Always
+  registry:
+    url:
+    pullSecret:
+## Configure the service
+service:
+  name: ebscontroller
+ingress: {}
+## Configure resource requests and limits
+resources:
+  requests:
+    enabled: true
+    cpu: "600m"
+    memory: "3296Mi"
+  limits:
+    enabled: true
+    cpu: "2000m"
+    memory: "3596Mi"
+  httpd:
+    enabled: true
+    requests:
+      memory: "400Mi"
+      cpu: "250m"
+    limits:
+      memory: "1000Mi"
+      cpu: "500m"
+  monitoring:
+    enabled: true
+    requests:
+      memory: "200Mi"
+      cpu: "50m"
+    limits:
+      memory: "300Mi"
+      cpu: "200m"
+# StartupProbe Health Check configuration.
+startupProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 20
+# LivenessProbe Health Check configuration.
+livenessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 30
+  timeoutSeconds: 30
+  periodSeconds: 30
+  failureThreshold: 2
+readinessProbe:
+  enabled: true
+  command: /ericsson/enm_healthcheck/bin/enm_healthcheck.py
+  arguments: --exec_agents
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 30
+  failureThreshold: 2
+## Affinity for pod assignment
+affinity: requiredDuringSchedulingIgnoredDuringExecution
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+## Pod Disruption Budget is an indicator of the number of disruptions that can be tolerated at a given time.
+podDisruptionBudget:
+  maxUnavailable: 1

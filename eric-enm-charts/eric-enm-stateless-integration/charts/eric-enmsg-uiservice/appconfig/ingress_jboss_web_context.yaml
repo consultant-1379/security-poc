@@ -1,0 +1,63 @@
+- backend:
+    service:
+      name: uiserv
+      port:
+        number: 443
+  path: /
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: uiserv
+      port:
+        number: 443
+  path: /rest
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: uiserv
+      port:
+        number: 443
+  path: /help-search
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: uiserv
+      port:
+        number: 443
+  path: /logviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: uiserv
+      port:
+        number: 443
+  path: /locales/en-us/logviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: uiserv
+      port:
+        number: 443
+  path: /help/en-us/logviewer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: uiserv
+      port:
+        number: 443
+  path: /logviewerexport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: uiserv
+      port:
+        number: 443
+  path: /locales/en-us/logviewerexport/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: uiserv
+      port:
+        number: 443
+  path: /help/en-us/logviewerexport/
+  pathType: ImplementationSpecific

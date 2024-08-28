@@ -1,0 +1,2 @@
+UPDATE db_version SET status='old' WHERE status='current' and version='2.11.0';
+INSERT INTO db_version(id,version,comments,updated_date,status) SELECT 15,'2.12.0','populated default expiry notification details of newly created CAs from dbversion 2.7.0 in certificate_expiry_notification_details table in pkimanagerdb',CURRENT_DATE,'current' WHERE NOT EXISTS (SELECT * FROM db_version WHERE id = 15);

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!--Please Use the latest version of integration pom.xml or the one you 
+		want to reference to -->
+	<parent>
+		<groupId>com.ericsson.nms</groupId>
+		<artifactId>integration</artifactId>
+		<version>15.2.0.35</version>
+	</parent>
+
+	<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+	<artifactId>pki-common-ext-model</artifactId>
+	<version>1.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>[${project.artifactId}] JEE8 Project</name>
+
+	<properties>
+		<version.service.framework>4.10.6</version.service.framework>
+		<version.modeling.bom>21.0.9</version.modeling.bom>
+		<modeling-sdk.annoproc.version>3.22.2</modeling-sdk.annoproc.version>
+		<modeling-sdk.modelproc.version>1.23.2</modeling-sdk.modelproc.version>
+		<!-- ENM Check Style version dependencies -->
+		<version.maven.checkstyle>2.15</version.maven.checkstyle>
+		<version.checkstyle>6.2</version.checkstyle>
+		<version.checkstyle.module>1.1.74</version.checkstyle.module>
+		<version.model-deployment-tool>7.28.2</version.model-deployment-tool>
+		<version.model-processing>1.34.3</version.model-processing>
+	</properties>
+
+
+
+	<modules>
+		<module>pki-common-model-jar</module>
+		<module>pki-common-model-deploy-model</module>
+		<module>ERICpkicommonmodel_CXP9035977</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.sdk</groupId>
+				<artifactId>ServiceFrameworkJBossBOM</artifactId>
+				<version>${version.service.framework}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											build-helper-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.7,)
+										</versionRange>
+										<goals>
+											<goal>add-resource</goal>
+											<goal>regex-property</goal>
+											<goal>add-source</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.maven.plugins
+										</groupId>
+										<artifactId>
+											rstate-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0,)
+										</versionRange>
+										<goals>
+											<goal>rstate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.oss.itpf.modeling.tools
+										</groupId>
+										<artifactId>
+											modeling-annotation-processor-jar
+										</artifactId>
+										<versionRange>
+											[1.7.4,)
+										</versionRange>
+										<goals>
+											<goal>annoproc</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.oss.itpf.modeling.tools
+										</groupId>
+										<artifactId>
+											model-processing-jar
+										</artifactId>
+										<versionRange>
+											[1.8.4,)
+										</versionRange>
+										<goals>
+											<goal>modelproc</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${version.maven.checkstyle}</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.puppycrawl.tools</groupId>
+						<artifactId>checkstyle</artifactId>
+						<version>${version.checkstyle}</version>
+					</dependency>
+					<dependency>
+						<groupId>com.ericsson.cds</groupId>
+						<artifactId>checkstyle-module</artifactId>
+						<version>${version.checkstyle.module}</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<consoleOutput>false</consoleOutput>
+					<logViolationsToConsole>false</logViolationsToConsole>
+					<configLocation>/cds/cds-checkstyle.xml</configLocation>
+					<violationSeverity>warning</violationSeverity>
+					<includeTestSourceDirectory>false</includeTestSourceDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<configuration>
+							<!-- change this to true if you want the build to fail if there's 
+								warnings -->
+							<failOnViolation>false</failOnViolation>
+						</configuration>
+						<id>check-style</id>
+						<goals>
+							<goal>check</goal>
+							<goal>checkstyle-aggregate</goal>
+						</goals>
+						<phase>validate</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+  <scm>
+    <tag>pki-common-model-2.1.1</tag>
+  </scm>
+</project>

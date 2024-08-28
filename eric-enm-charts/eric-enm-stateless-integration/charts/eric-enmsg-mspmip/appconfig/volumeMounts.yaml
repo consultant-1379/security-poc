@@ -1,0 +1,48 @@
+- name: gp
+  mountPath: /gp
+- name: mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment
+- name: configmgt
+  mountPath: /ericsson/config_mgt
+- name: upgind
+  mountPath: /ericsson/configuration_management/UpgradeIndependence
+- name: custom
+  mountPath: /ericsson/custom
+- name: dlms
+  mountPath: /ericsson/enm/dlms/history/data
+- name: dumps
+  mountPath: /ericsson/enm/dumps
+- name: data
+  mountPath: /ericsson/tor/data
+- name: pmic1
+  mountPath: /ericsson/pmic1
+- name: pmic2
+  mountPath: /ericsson/pmic2
+- name: pmlinks
+  mountPath: /ericsson/symvol
+- name: smrs
+  mountPath: /ericsson/tor/smrs
+- name: smrs
+  mountPath: /home/smrs
+- name: pmic1
+  mountPath: /home/smrs/smrsroot/pm_push_1
+  subPath: tmp_push
+- name: pmic1
+  mountPath: /home/smrs/MINI-LINK/pm_push_1
+  subPath: tmp_push_ml
+- name: pmic2
+  mountPath: /home/smrs/smrsroot/pm_push_2
+  subPath: tmp_push
+- name: pmic2
+  mountPath: /home/smrs/MINI-LINK/pm_push_2
+  subPath: tmp_push_ml
+- name: tls-secret-1
+  mountPath: {{ .Values.service.tlsMountPath }}/tls1
+- name: tls-secret-2
+  mountPath: {{ .Values.service.tlsMountPath }}/tls2
+- name: tls-secret-3
+  mountPath: {{ .Values.service.tlsMountPath }}/tls3
+- name: tls-secret-4
+  mountPath: {{ .Values.service.tlsMountPath }}/tls4
+- name: tls-secret-5
+  mountPath: {{ .Values.service.tlsMountPath }}/tls5

@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<artifactId>pki-cdps-model</artifactId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>pki-cdps-model-api</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+			<artifactId>modeling-annotation-processor-jar</artifactId>
+			<version>${modeling-sdk.annoproc.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+				<artifactId>modeling-annotation-processor-jar</artifactId>
+				<version>${modeling-sdk.annoproc.version}</version>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>annoproc</goal>
+						</goals>
+						<configuration>
+							<modelBuildDir>../pki-cdps-model-deploy-model/model-build</modelBuildDir>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-all-models-to-model-processing</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<includeEmptyDirs>false</includeEmptyDirs>
+							<outputDirectory>model-build/etc/model</outputDirectory>
+							<resources>
+								<resource>
+									<directory>/etc/model</directory>
+									<includes>
+										<include>**/*.xml</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

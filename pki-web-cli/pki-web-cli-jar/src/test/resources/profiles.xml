@@ -1,0 +1,114 @@
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfilesSchema.xsd">
+	
+	
+	<CertificateProfile Name="RootCA_Cert_Profile">
+		<ProfileValidity>2022-05-30</ProfileValidity>
+		<ForCAEntity>true</ForCAEntity>
+		<Version>V3</Version>
+		<SignatureAlgorithm>
+			<Name>RSA</Name>
+		</SignatureAlgorithm>
+		<KeyGenerationAlgorithm>
+			<Name>DES</Name>
+			<KeySize>1024</KeySize>
+		</KeyGenerationAlgorithm>
+		<KeyGenerationAlgorithm>
+			<Name>DES</Name>
+			<KeySize>2048</KeySize>
+		</KeyGenerationAlgorithm>
+		<CertificateValidity>P2Y</CertificateValidity>
+		<SubjectUniqueIdentifier>true</SubjectUniqueIdentifier>
+		<IssuerUniqueIdentifier>false</IssuerUniqueIdentifier>
+		<SkewCertificateTime>PT50M</SkewCertificateTime>
+		<CertificateExtensions>
+			<CertificateExtension xsi:type="AuthorityInformationAccess">
+				<Critical>false</Critical>
+				<AccessDescription>
+					<AccessMethod>CA_ISSUER</AccessMethod>
+					<AccessLocation>ldap://ldap.example.com/dc=example,dc=com?postalAddress</AccessLocation>
+				</AccessDescription>
+				<AccessDescription>
+					<AccessMethod>OCSP</AccessMethod>
+				</AccessDescription>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="ExtendedKeyUsage">
+				<Critical>false</Critical>
+				<SupportedKeyPurposeId>ID_KP_EMAIL_PROTECTION</SupportedKeyPurposeId>
+				<SupportedKeyPurposeId>ID_KP_TIME_STAMPING</SupportedKeyPurposeId>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="AuthorityKeyIdentifier">
+				<ByKeyIdentifier>true</ByKeyIdentifier>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="CRLDistributionPoints">
+				<Critical>false</Critical>
+				<CRLDistributionPoint>
+					<DistributionPointName>
+						<FullName>ldap://ldap.example.com/cn=exampleCA,dc=example,dc=com?certificateRevocationList;binary</FullName>
+					</DistributionPointName>
+					<ReasonFlag>CA_COMPROMISE</ReasonFlag>
+				</CRLDistributionPoint>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="BasicConstraints">
+				<Critical>true</Critical>
+				<Enabled>true</Enabled>
+				<IsCA>true</IsCA>
+				<PathLenConstraint>3</PathLenConstraint>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="SubjectKeyIdentifier">
+				<Critical>false</Critical>
+				<Enabled>true</Enabled>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="KeyUsage">
+				<Critical>true</Critical>
+				<SupportedKeyUsageType>CRL_SIGN</SupportedKeyUsageType>
+				<SupportedKeyUsageType>KEY_CERT_SIGN</SupportedKeyUsageType>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="SubjectAltName">
+				<Critical>true</Critical>
+				<SupportedSubjectAltNameField>DIRECTORY_NAME</SupportedSubjectAltNameField>
+				<SupportedSubjectAltNameField>IP_ADDRESS</SupportedSubjectAltNameField>
+			</CertificateExtension>
+		</CertificateExtensions>
+	</CertificateProfile>
+	<EntityProfile Name="RootCA_Entity_Profile">
+		<ProfileValidity>2022-05-30</ProfileValidity>
+		<Subject>
+			<SubjectDN>
+				<SubjectEntry>
+					<Type>COMMON_NAME</Type>
+					<Value>ARJ_ROOT_CA</Value>
+				</SubjectEntry>
+				<SubjectEntry>
+					<Type>COUNTRY_NAME</Type>
+					<Value>IN</Value>
+				</SubjectEntry>
+			</SubjectDN>
+		</Subject>
+		<SubjectAltNameValues>
+			<SubjectAltNameValue>
+				<Type>DIRECTORY_NAME</Type>
+				<Value xsi:type="SubjectAltNameString">
+					<StringValue>Email = arj@ar.com</StringValue>
+				</Value>
+			</SubjectAltNameValue>
+			
+		</SubjectAltNameValues>
+		<KeyGenerationAlgorithm>
+			<Name>DES</Name>
+			<KeySize>2048</KeySize>
+		</KeyGenerationAlgorithm>
+		<CertificateProfileName>RootCA_Cert_Profile</CertificateProfileName>
+		<CertificateExtensions>
+			<CertificateExtension xsi:type="KeyUsage">
+				<Critical>true</Critical>
+				<SupportedKeyUsageType>CRL_SIGN</SupportedKeyUsageType>
+			</CertificateExtension>
+			<CertificateExtension xsi:type="ExtendedKeyUsage">
+				<Critical>false</Critical>
+				<SupportedKeyPurposeId>ID_KP_CODE_SIGNING</SupportedKeyPurposeId>
+			</CertificateExtension>
+		</CertificateExtensions>
+	</EntityProfile>
+</Profiles>
+  

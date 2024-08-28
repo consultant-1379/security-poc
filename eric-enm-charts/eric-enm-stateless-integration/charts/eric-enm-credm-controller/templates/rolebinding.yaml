@@ -1,0 +1,20 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: "{{ .Values.service.name }}"
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/version: {{ template "eric-enm-credm-controller.chart" . }}
+  name: {{ template "eric-enm-credm-controller.name" . }}-rolebinding
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "eric-enm-credm-controller.labels" . | indent 4 }}
+  annotations:
+{{- include "eric-enm-credm-controller.product-info" . | indent 4 }}
+subjects:
+- kind: ServiceAccount
+  name: {{ template "eric-enm-credm-controller.serviceAccountName" . }}
+roleRef:
+  kind: Role
+  name: {{ template "eric-enm-credm-controller.name" . }}-role
+  apiGroup: rbac.authorization.k8s.io

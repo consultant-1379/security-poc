@@ -1,0 +1,238 @@
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /managedObjects/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /modelInfo/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /topologyCollections/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /object-configuration/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /persistentObject/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /network-explorer-import/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /network-visualization/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /networkexplorer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /locales/en-us/networkexplorer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /help/en-us/networkexplorer/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /networkexplorercollections/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /locales/en-us/networkexplorercollections/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /help/en-us/networkexplorercollections/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /savedsearchmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /locales/en-us/savedsearchmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /help/en-us/savedsearchmanagement/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /grammarparsinglibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /locales/en-us/grammarparsinglibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /help/en-us/grammarparsinglibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /applib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /locales/en-us/applib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /help/en-us/applib/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /actionlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /locales/en-us/actionlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /help/en-us/actionlibrary/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /addnode/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /locales/en-us/addnode/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /help/en-us/addnode/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /topologybrowser/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /locales/en-us/topologybrowser/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /help/en-us/topologybrowser/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /confirmationdialog/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /locales/en-us/confirmationdialog/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: netex
+      port:
+        number: 443
+  path: /help/en-us/confirmationdialog/
+  pathType: ImplementationSpecific

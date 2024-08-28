@@ -1,0 +1,33 @@
+{{- if .Values.global.ericIngress.enabled }}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: msap
+spec:
+  virtualServiceIP: {{ .Values.global.vips.cm_vip_address }}
+  backends:
+    name: msap
+    config:
+      - portRange:
+          vipPortRange:
+            start: 50340
+            end: 50341
+          svcPortRange:
+            start: 50340
+            end: 50341
+        protocol: tcp
+        algo: lc
+        mode: nat
+      - ports:
+          vipPort: 2497
+          svcPort: 8443
+        protocol: tcp
+        algo: lc
+        mode: nat
+      - ports:
+          vipPort: 162
+          svcPort: 10150
+        protocol: udp
+        algo: lc
+        mode: nat
+{{- end }}

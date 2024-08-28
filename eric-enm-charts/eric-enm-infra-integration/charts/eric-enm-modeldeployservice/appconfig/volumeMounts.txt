@@ -1,0 +1,8 @@
+- name: gp
+  mountPath: /ericsson/tor/data
+- name: mdt
+  mountPath: /etc/opt/ericsson/ERICmodeldeployment
+- name: dumps
+  mountPath: /ericsson/enm/dumps
+- name: configmgtupgind
+  mountPath: /ericsson/configuration_management/UpgradeIndependence

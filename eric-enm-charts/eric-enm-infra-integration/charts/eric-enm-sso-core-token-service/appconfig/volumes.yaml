@@ -1,0 +1,12 @@
+- name: gp
+  configMap:
+    name: gpcts
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: custom
+  persistentVolumeClaim:
+    claimName: custom
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps

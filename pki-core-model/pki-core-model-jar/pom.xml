@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>pki-core-model</artifactId>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>pki-core-model-jar</artifactId>
+	<packaging>jar</packaging>
+	<name>[${project.parent.artifactId}] JAR module</name>
+	<dependencies>
+		<dependency>
+			<groupId>com.ericsson.oss.itpf.sdk</groupId>
+			<artifactId>sdk-config-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+</dependencies>
+	<build>
+		<plugins>
+			<!-- This invokes the Annotation Processor. It runs against all the compiled 
+				classes part of this jar module. -->
+			<plugin>
+				<groupId>com.ericsson.oss.itpf.modeling.tools</groupId>
+				<artifactId>modeling-annotation-processor-jar</artifactId>
+				<!-- Inside plugin element, the version of the AP must be explicitly 
+					specified. Be sure it is the same as denoted by the BOM. -->
+				<version>${modeling-sdk.annoproc.version}</version>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>annoproc</goal>
+						</goals>
+						<configuration>
+							<modelBuildDir>../pki-core-model-deploy-model/model-build</modelBuildDir>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.oss.itpf.modeling.tools
+										</groupId>
+										<artifactId>
+											modeling-annotation-processor-jar
+										</artifactId>
+										<versionRange>
+											[2.0.12,)
+										</versionRange>
+										<goals>
+											<goal>annoproc</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											build-helper-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.7,)
+										</versionRange>
+										<goals>
+											<goal>regex-property</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

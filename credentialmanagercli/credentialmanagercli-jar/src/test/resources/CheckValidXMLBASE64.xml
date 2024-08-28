@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+	<application>
+		<certificates>
+		
+			<certificate>
+			
+				<tbscertificate>
+					<subject>
+						<entityname>atclvm387</entityname>
+						<distinguishname>CN=atclvm387</distinguishname>
+					</subject>
+					<certificateextension>
+						<subjectalternativename>
+							<ipaddress>1.1.1.1</ipaddress>
+						</subjectalternativename>
+					</certificateextension>
+				</tbscertificate>
+				
+				<endentityprofilename>TOREndEntityProfile</endentityprofilename>
+				
+				<keypair>
+					<keypairsize>2048</keypairsize>
+					<keypairalgorithm>RSA</keypairalgorithm>
+				</keypair>
+				
+				<keystore>
+					<base64keystore>
+						<storealias>teste</storealias>
+						<keyfilelocation>private.KEY</keyfilelocation>
+						<certificatefilelocation>cert.CER</certificatefilelocation>
+					</base64keystore>
+				</keystore>
+
+				<truststore>
+					<base64truststore>
+						<storealias>teste</storealias>
+						<storelocation>TestTS.pem</storelocation>
+						<storepassword></storepassword>
+					</base64truststore>
+				</truststore>
+				
+				<crlstore>
+					<base64crlstore>
+						<storealias>teste</storealias>
+						<storelocation>TestTS.pem</storelocation>
+						<storepassword></storepassword>
+					</base64crlstore>
+				</crlstore>
+				
+				<postscript>
+					<pathname>/otp/ericsson/credMcli/postinstall.sh</pathname>
+					<parameter>
+						<name>port</name>
+						<value>1024</value>
+					</parameter>
+				</postscript>
+
+                <oncheckresult>
+                    <actionlist>
+                        <checkcause>certificateUpdate</checkcause>
+                        <checkcause>trustUpdate</checkcause>
+                        <action>RunScript</action>
+                        <command>
+                            <pathname>/bin/echo</pathname>
+                            <parameter>
+                                <name>value</name>
+                                <value>restart</value>
+                            </parameter>
+                        </command>
+                    </actionlist>
+                </oncheckresult>
+                
+				
+				<!-- <connectormanaged>httpsConnector</connectormanaged> -->
+
+			</certificate>
+			
+		</certificates>
+		
+			<crlupdatemode>CrlSelfManaged</crlupdatemode>
+			
+		<keyrequests>
+		
+			<secretkeyrequest>
+				<keysize>64</keysize>
+				<keyalgorithm>DES</keyalgorithm>
+				<keystore>
+					<base64secretstore>
+						<storealias>secretalias</storealias>
+						<storelocation>keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</base64secretstore>
+				</keystore>	
+			</secretkeyrequest>
+			
+			<keypairrequest>
+				<keysize>64</keysize>
+				<keyalgorithm>DES</keyalgorithm>
+				<keystore>
+					<base64keypairstore>
+						<storealias>secretalias</storealias>
+						<storelocation>keystore.p12</storelocation>
+						<storepassword>changeit</storepassword>
+					</base64keypairstore>
+				</keystore>		
+			</keypairrequest>
+			
+		</keyrequests>
+			
+			
+	</application>
+	<user>
+		<!-- keep in the same line to allow grep researches -->
+		<username>myUser</username>
+		<usergroup>myGroup</usergroup>
+	</user>
+</applications>

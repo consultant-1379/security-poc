@@ -1,0 +1,11 @@
+NAME=eric-enmsg-opendj
+STS=true
+PERSIST=true
+PERSIST_LIST=ReadWriteOnce,100Mi,/ericsson/opendj/opendj/db
+SVC=opendj
+EXTRASVC=true
+ESVC_LIST=ldap-local,ldap-remote
+REQUESTS=false
+REQUESTS_LIST=3072Mi
+LIMITS=false
+LIMITS_LIST=3072Mi

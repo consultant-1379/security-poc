@@ -1,0 +1,15 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "trustmgmt" (* slogan = "Enter Trust Management. Tip: -tsm for short" *) WS ( PUBLISH | UNPUBLISH | TRUST_LIST | TRUST_LIST_STATUS )
+
+PUBLISH ::= PUBLISH_OPTIONS TRUST_MGMT_ENTITY_TYPE TRUST_MGMT_ENTITY_NAME
+UNPUBLISH ::= UNPUBLISH_OPTIONS ENTITY_TYPE TRUST_MGMT_ENTITY_NAME
+TRUST_LIST ::= TRUST_LIST_OPTIONS TRUST_MGMT_ENTITY_TYPE [ TRUST_MGMT_ENTITY_NAME ]
+TRUST_LIST_STATUS ::= TRUST_LIST_OPTIONS WS TRUST_STATUS TRUST_MGMT_ENTITY_TYPE  TRUST_MGMT_CERT_STATUS
+
+TRUST_STATUS ::= "status" (* slogan = "Option to include status as part of list" *)
+PUBLISH_OPTIONS ::= ( "--publish" (* slogan = "Publish CA Entity and End Entity Certificates to TDPS. Tip: -pub for short" *) | "-pub" (* hide = "true" *) )
+UNPUBLISH_OPTIONS ::= ( "--unpublish" (* slogan = "UnPublish CA Entity and End Entity certificates from TDPS. Tip: -up for short" *) | "-up" (* hide = "true" *) )
+TRUST_LIST_OPTIONS ::= ( "--list" (* slogan = "List all CA and End Entity certificates published to TDPS. Tip: -l for short" *) | "-l" (* hide = "true" *) )
+
+TRUST_MGMT_ENTITY_TYPE ::= WS ( "--entitytype" (* slogan = "Designate the entity type. Tip: -type for short" *) | "-type" (* hide = "true" *) ) WS ( "ca" (* slogan = "Set type of entity to CA" *) | "ee" (* slogan = "Set type of entity to EE" *) )
+TRUST_MGMT_ENTITY_NAME ::= WS ( "--entityname" (* slogan = "Designate the entity name. Tip: -en for short" *) | "-en" (* hide = "true" *) ) WS <entity_name> (* slogan = "Specify the name of the entity" *)
+TRUST_MGMT_CERT_STATUS ::= WS ( "--certstatus" (* slogan = "Set the Certificate status. Tip: -cs for short" *) | "-cs" (* hide = "true" *) ) WS ( "active" (* slogan = "Set Certificate status to active" *) | "inactive" (* slogan = "Set Certificate status to inactive" *) )

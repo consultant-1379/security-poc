@@ -1,0 +1,110 @@
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+    pullSecret:
+  timezone: UTC
+  rwx:
+    storageClass:
+    amosSize: 35Gi
+    autoProvisioningSize: 5Gi
+    batchSize: 140Gi
+    configmgtSize: 100Gi
+    cronSize: 1Gi
+    customSize: 70Gi
+    dataSize: 20Gi
+    ddcdataSize: 50Gi
+    dlmsSize: 15Gi
+    hcdumpsSize: 100Gi
+    homeSize: 120Gi
+    mdtSize: 22Gi
+    netlogSize: 700Gi
+    norollbackSize: 20Gi
+    pm1Size: 598Gi
+    pm2Size: 598Gi
+    pmlinksSize: 70Gi
+    pmulSize: 74Gi
+    smrsSize: 621Gi
+    tfdSize: 100Gi
+    upgindSize: 4Gi
+    trutilsSize: 1Gi
+    jmsSize: 60Gi
+  tags:
+    value_pack_ebs_ln:
+    value_pack_ebs_m:
+images:
+  repoPath: proj-enm
+  pre-deploy-integration:
+    name:
+    tag:
+    command:
+  eric-enm-sles:
+    name: eric-enm-sles-base
+    tag: 1.27.11-1
+    command: "[ '/bin/sh', '-c','if [ ! -L /ericsson/tor/data/global.properties ]; then /bin/ln -s /gp/global.properties /ericsson/tor/data/global.properties; fi']"
+
+imageCredentials:
+  pullSecret:
+  repoPath: proj-enm
+  pullPolicy: IfNotPresent
+  registry:
+    url:
+    pullSecret:
+
+symLinkCreationJob:
+  name: eric-enm-symlink-creation
+  restartPolicy: OnFailure
+  resources:
+    requests:
+      memory: "25Mi"
+      cpu: "50m"
+    limits:
+      memory: "25Mi"
+      cpu: "50m"
+
+hcDumpsCleanupJob:
+  name: eric-enm-hcdumpscleanup
+  schedule: " 0 0 * * *"
+  restartPolicy: OnFailure
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+  concurrencyPolicy: Forbid
+  pvcName: eric-enm-rwxpvc-hcdumps
+  resources:
+    requests:
+      memory: "100Mi"
+      cpu: "100m"
+    limits:
+      memory: "100Mi"
+      cpu: "100m"
+
+#Enable software to be included.
+eric-enm-globalproperties:
+  enabled: true
+
+eric-enm-rwxpvc:
+  enabled: true
+  brAgent:
+    enabled: true
+    broServiceName: eric-ctrl-bro
+    backupTypeList:
+      - ROLLBACK
+    # Configmap for selective backups
+    backupDataModelConfig: eric-enm-rwxpvc-backup-types
+  security:
+    tls:
+      agentToBro:
+        enabled: false
+
+eric-enm-serviceroles:
+  enabled: true
+
+eric-enm-troubleshooting-utils:
+  enabled: true
+
+# CRD creation for layer 4 ingress controller
+eric-net-ingress-l4-crd:
+  enabled: true
+
+eric-oss-ingress-controller-nx:
+  enabled: true

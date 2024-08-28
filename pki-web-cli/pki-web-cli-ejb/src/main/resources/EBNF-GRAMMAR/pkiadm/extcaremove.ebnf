@@ -1,0 +1,4 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "extcaremove" (* slogan = "External Certificate Authority Removal" *) WS EXTCAREMOVE_EXT_CA_NAME
+
+EXTCAREMOVE_EXT_CA_NAME ::= ( "-n" (* hide = "true" *) | "--name" (* slogan = "Remove the Certificate by specific modeled name. Tip: -n for short" *) ) WS EXTCAREMOVE_CA_NAME_VALUE
+EXTCAREMOVE_CA_NAME_VALUE ::= <ca_name_value> (* inputType = "wrapDoubleQuotes" slogan = "Specify the name of the external CA" *)

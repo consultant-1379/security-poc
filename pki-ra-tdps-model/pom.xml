@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!--Please Use the  latest version of integration pom.xml or the one you 
+		want to reference to -->
+	<parent>
+		<groupId>com.ericsson.nms</groupId>
+		<artifactId>integration</artifactId>
+		<version>15.2.0.35</version>
+	</parent>
+
+	<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+	<artifactId>pki-ra-tdps-model</artifactId>
+	<version>1.0.2-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>[${project.artifactId}] JEE8 Project</name>
+
+	<modules>
+		<module>ERICpkiratdpsmodel_CXP9032425</module>
+		<module>pki-ra-tdps-model-jar</module>
+		<module>pki-ra-tdps-model-deploy-model</module>
+	</modules>
+
+	<properties>
+
+		<version.modeling.bom>21.0.9</version.modeling.bom>
+		<modeling-sdk.annoproc.version>3.20.2</modeling-sdk.annoproc.version>		
+		<version.sdk.event.model>1.0.20</version.sdk.event.model>
+		<version.mediation-service-model>1.0.8</version.mediation-service-model>
+		<version.model-processing>1.32.2</version.model-processing>
+		<version.network-element-definition-model>2.1.1</version.network-element-definition-model>
+		<version.service.framework>4.21.1</version.service.framework>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.sdk</groupId>
+				<artifactId>ServiceFrameworkJBossBOM</artifactId>
+				<version>${version.service.framework}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency> 
+
+			<dependency>
+				<groupId>com.ericsson.oss.itpf.modeling</groupId>
+				<artifactId>Modeling-BOM</artifactId>
+				<version>${version.modeling.bom}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.ericsson.oss.mediation</groupId>
+				<artifactId>mediation-sdk-event-models-jar</artifactId>
+				<version>${version.sdk.event.model}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.ericsson.oss.mediation.model</groupId>
+				<artifactId>mediation-service-model-jar</artifactId>
+				<version>${version.mediation-service-model}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!--This  plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.maven.plugins
+										</groupId>
+										<artifactId>
+											rstate-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0,)
+										</versionRange>
+										<goals>
+											<goal>rstate</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											build-helper-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.7,)
+										</versionRange>
+										<goals>
+											<goal>add-resource</goal>
+											<goal>regex-property</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.oss.itpf.modeling.tools
+										</groupId>
+										<artifactId>
+											model-processing-jar
+										</artifactId>
+										<versionRange>
+											[1.0.3,)
+										</versionRange>
+										<goals>
+											<goal>modelproc</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											com.ericsson.oss.itpf.modeling.tools
+										</groupId>
+										<artifactId>
+											modeling-annotation-processor-jar
+										</artifactId>
+										<versionRange>
+											[1.0.30,)
+										</versionRange>
+										<goals>
+											<goal>annoproc</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

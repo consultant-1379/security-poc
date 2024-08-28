@@ -1,0 +1,922 @@
+{{- $global := fromJson (include "eric-cnom-server.global" .) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eric-cnom-server.fullname" . }}
+  labels:
+    {{- include "eric-cnom-server.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-cnom-server.product-info" . | nindent 4 }}
+    {{- if .Values.annotations }}
+    {{- .Values.annotations | toYaml | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "eric-cnom-server.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.updateStrategy.type | quote }}
+    {{- if and (eq .Values.updateStrategy.type "RollingUpdate") .Values.updateStrategy.rollingUpdate }}
+    rollingUpdate:
+      {{- if .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+      maxUnavailable: {{ .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+      {{- end }}
+      {{- if .Values.updateStrategy.rollingUpdate.maxSurge }}
+      maxSurge: {{ .Values.updateStrategy.rollingUpdate.maxSurge }}
+      {{- end }}
+    {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "eric-cnom-server.labels" . | nindent 8 }}
+      annotations:
+        {{- include "eric-cnom-server.product-info" . | nindent 8 }}
+        {{- if .Values.annotations }}
+        {{- .Values.annotations | toYaml | nindent 8 }}
+        {{- end }}
+        kubectl.kubernetes.io/default-container: "server"
+        {{- include "eric-cnom-server.appArmorAnnotations" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "eric-cnom-server.fullname" . }}
+      {{- $pg := .Values.documentDatabasePg }}
+      {{- if and $global.security.tls.enabled (and $pg.enabled (and $pg.tls.enabled $pg.tls.sendClientCertificate)) }}
+      initContainers:
+        - name: init
+          image: {{ include "eric-cnom-server.imagePath" . }}
+          imagePullPolicy: {{ include "eric-cnom-server.imagePullPolicy" . }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - all
+            {{- if .Values.seccompProfile }}
+            {{- include "eric-cnom-server.seccompProfile" .Values.seccompProfile.init | nindent 12 }}
+            {{- end }}
+          workingDir: /cnom/scripts/prod/internal/
+          command: ["/bin/sh"]
+          args:
+           - "-c"
+           - "node --input-type=module - '{{ $pg.host }}' '{{ $pg.port }}' 'postgres' '{{ $pg.user }}' '{{ $pg.database }}' '/cert/admin' < pg-init.js"
+          resources:
+            requests:
+              {{- if .Values.resources.init.requests.memory }}
+              memory: {{ .Values.resources.init.requests.memory | quote }}
+              {{- end }}
+              {{- if .Values.resources.init.requests.cpu }}
+              cpu: {{ .Values.resources.init.requests.cpu | quote }}
+              {{- end }}
+            limits:
+              {{- if .Values.resources.init.limits.memory }}
+              memory: {{ .Values.resources.init.limits.memory | quote }}
+              {{- end }}
+              {{- if .Values.resources.init.limits.cpu }}
+              cpu: {{ .Values.resources.init.limits.cpu | quote }}
+              {{- end }}
+          volumeMounts:
+            - name: document-database-pg-admin-certs
+              mountPath: /cert/admin
+              readOnly: true
+      {{- end }}
+      containers:
+        - name: server
+          image: {{ include "eric-cnom-server.imagePath" . }}
+          imagePullPolicy: {{ include "eric-cnom-server.imagePullPolicy" . }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - all
+            {{- if .Values.seccompProfile }}
+            {{- include "eric-cnom-server.seccompProfile" .Values.seccompProfile.server | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http-api
+              containerPort: 8585
+              protocol: TCP
+            - name: http-yangstate
+              containerPort: 8586
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http-api
+            {{- toYaml .Values.probes.server.livenessProbe | nindent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: http-api
+            {{- toYaml .Values.probes.server.readinessProbe | nindent 12 }}
+          resources:
+            requests:
+              {{- if .Values.resources.server.requests.memory }}
+              memory: {{ .Values.resources.server.requests.memory | quote }}
+              {{- end }}
+              {{- if .Values.resources.server.requests.cpu }}
+              cpu: {{ .Values.resources.server.requests.cpu | quote }}
+              {{- end }}
+            limits:
+              {{- if .Values.resources.server.limits.memory }}
+              memory: {{ .Values.resources.server.limits.memory | quote }}
+              {{- end }}
+              {{- if .Values.resources.server.limits.cpu }}
+              cpu: {{ .Values.resources.server.limits.cpu | quote }}
+              {{- end }}
+          env:
+            - name: TZ
+              value: {{ $global.timezone | quote }}
+            - name: CNOM_SERVER_VARPATH
+              value: "/cnom/var/"
+            - name: CNOM_SERVER_BASEPATH
+              value: {{ .Values.server.basePath | quote }}
+            - name: CNOM_SERVER_BEHINDPROXY
+              value: {{ .Values.server.behindProxy | quote }}
+            - name: CNOM_SERVER_DOMAIN
+              value: {{ .Values.server.domain | quote }}
+            {{- if .Values.legalNotice }}
+            - name: CNOM_SERVER_LEGAL_NOTICE
+              value: {{ .Values.legalNotice | quote }}
+            {{- end }}
+            - name: CNOM_SERVER_PRODUCT_NAME
+              value: {{ .Values.productName | quote }}
+            - name: CNOM_SERVER_PRODUCT_NAME_SHORT
+              value: {{ .Values.productNameShort | quote }}
+            {{- $folders := (list "helmChartDirectImport") -}}
+            {{- range $cm := mustAppend .Values.dashboards.configMaps .Values.dashboards.configMap | mustCompact | mustUniq }}
+              {{- $folders = printf "externalConfigMap/%s" $cm | mustAppend $folders -}}
+            {{- end }}
+            - name: CNOM_DASHBOARDS_IMPORT
+              value: "{{ join "," $folders}},{{ join "," .Values.dashboards.predefined }}"
+            - name: CNOM_DASHBOARDS_WATCH
+              value: "true"
+            - name: CNOM_METRICHIERARCHY_IMPORT_DIRS
+              value: "externalConfigMap"
+            - name: CNOM_YANGSTATEDATA_IMPORT_DIRS
+              value: "externalConfigMap"
+            - name: CNOM_YANGSTATEDATA_REGISTERHOSTNAME
+              value: {{ include "eric-cnom-server.fullname" . }}
+            - name: CNOM_YANGSTATEDATA_TLS_ENABLED
+              value: {{ $global.security.tls.enabled | ternary (eq .Values.service.endpoints.yangStateData.tls.enforced "required") false | quote }}
+            - name: CNOM_YANGSTATEDATA_TLS_VERIFY_CLIENT_CERTIFICATE
+              value: {{ eq .Values.service.endpoints.yangStateData.tls.verifyClientCertificate "required" | quote }}
+            - name: CNOM_YANGSTATEDATA_TLS_CA
+              value: {{ include "eric-cnom-server.yangStateData.tls-ca" . }}
+            - name: CNOM_YANGSTATEDATA_TLS_CERTS
+              value: {{ include "eric-cnom-server.yangStateData.tls-certs" . }}
+            - name: CNOM_YANGSTATEDATA_TLS_KEYS
+              value: {{ include "eric-cnom-server.yangStateData.tls-keys" . }}
+            {{- $appConfigPaths := list -}}
+            {{- if .Values.appConfig.useStandalone }}
+              {{- $appConfigPaths = (list "/cnom/configuration/appConfig/standalone") -}}
+            {{- end }}
+            {{- range $cm := .Values.appConfig.configMaps | mustCompact | mustUniq }}
+              {{- $appConfigPaths = printf "/cnom/configuration/appConfig/externalConfigMaps/%s" $cm | mustAppend $appConfigPaths -}}
+            {{- end }}
+            - name: CNOM_CONFIGFILES_APPCONFIGPATHS
+              value: {{ $appConfigPaths | join "," | quote}}
+            {{- if .Values.demoScripts.enabled }}
+            - name: CNOM_DEMOSCRIPTS_ENABLED
+              value: "true"
+            - name: CNOM_DEMOSCRIPTS_HOST
+              value: {{ .Values.demoScripts.host | quote }}
+            - name: CNOM_DEMOSCRIPTS_USER
+              value: {{ .Values.demoScripts.user | quote}}
+            - name: CNOM_DEMOSCRIPTS_PATH
+              value: {{ .Values.demoScripts.path | quote }}
+            - name: CNOM_DEMOSCRIPTS_KEY_DIRECTORY
+              value: "/cnom/demo_scripts_key"
+            {{- end }}
+            - name: CNOM_SERVER_TLS_ENABLED
+              value: {{ $global.security.tls.enabled | ternary (eq .Values.service.endpoints.api.tls.enforced "required") false | quote }}
+            - name: CNOM_SERVER_TLS_VERIFY_CLIENT_CERTIFICATE
+              value: {{ eq .Values.service.endpoints.api.tls.verifyClientCertificate "required" | quote }}
+            - name: CNOM_SERVER_TLS_CA
+              value: {{ include "eric-cnom-server.api.tls-ca" . }}
+            - name: CNOM_SERVER_TLS_CERTS
+              value: {{ include "eric-cnom-server.api.tls-certs" . }}
+            - name: CNOM_SERVER_TLS_KEYS
+              value: {{ include "eric-cnom-server.api.tls-keys" . }}
+            - name: CNOM_SERVER_AUTHENTICATE
+              value: {{ .Values.authentication.enabled | quote }}
+            - name: CNOM_SERVER_AUTHENTICATION_PROVIDERS
+              value: {{ include "eric-cnom-server.authentication-providers" . | quote }}
+            {{- if .Values.authentication.ldap.enabled }}
+            - name: CNOM_LDAP_HOST
+              value: {{ .Values.authentication.ldap.host | quote }}
+            - name: CNOM_LDAP_PORT
+              value: {{ .Values.authentication.ldap.port | quote }}
+            - name: CNOM_LDAP_BASEPATH
+              value: {{ .Values.authentication.ldap.basePath | quote }}
+            - name: CNOM_LDAP_TLS_ENABLED
+              value: "true"
+            - name: CNOM_LDAP_TLS_VERIFY_SERVER_CERTIFICATE
+              value: {{ .Values.authentication.ldap.tls.verifyServerCertificate | quote }}
+            - name: CNOM_LDAP_TLS_SEND_CLIENT_CERTIFICATE
+              value: "true"
+            - name: CNOM_LDAP_TLS_CA
+              value: /cnom/certificates/ldap/cacertbundle.pem
+            - name: CNOM_LDAP_TLS_KEY
+              value: /cnom/certificates/ldap/key.pem
+            - name: CNOM_LDAP_TLS_CERT
+              value: /cnom/certificates/ldap/cert.pem
+            - name: CNOM_LDAP_ROLEMAPPING
+              value: {{ toJson .Values.authentication.ldap.roleMapping | squote }}
+            {{- end }}
+            - name: CNOM_SERVER_METAFILE_PATH
+              value: "/cnom/configuration/metafiles"
+            - name: CNOM_SERVER_LOGGING
+              value: {{ .Values.logging.logshipper.enabled | ternary (mustAppend .Values.logging.output "file") .Values.logging.output | mustCompact | mustUniq | join "," | quote }}
+            - name: CNOM_SERVER_LOGGING_AUDIT
+              value: {{ .Values.logging.logshipper.enabled | ternary (mustAppend .Values.logging.outputAudit "file") .Values.logging.outputAudit | mustCompact | mustUniq | join "," | quote }}
+            - name: CNOM_SERVER_LOGGING_JSON
+              value: {{ eq .Values.logging.format "json" | quote }}
+            - name: CNOM_SERVER_LOGGING_DEBUG
+              value: {{ .Values.logging.debug | quote }}
+            {{- if .Values.logging.logshipper.enabled }}
+            - name: CNOM_SERVER_LOGGING_PATH
+              value: "/logs/"
+            - name: CNOM_SERVER_LOGGING_AUDIT_PATH
+              value: "/logs/"
+            - name: CNOM_SERVER_LOGGING_ROTATION_ENABLED
+              value: "true"
+            {{- end }}
+            - name: CNOM_SERVER_ENCRYPTION_KEY_PATH
+              value: /cnom/encryption_keys/encryption_key
+            - name: CNOM_RATELIMIT_ENABLED
+              value: {{ .Values.rateLimit.enabled | quote }}
+            - name: CNOM_MONGODB_ENABLED
+              value: {{ .Values.documentDatabase.enabled | quote }}
+            - name: CNOM_MONGODB_HOSTS
+              value: {{ join "," .Values.documentDatabase.hosts | quote }}
+            - name: CNOM_MONGODB_REPLICA_SET_NAME
+              value: {{ ternary "rs0" "" (gt (len .Values.documentDatabase.hosts) 1) | quote }}
+            - name: CNOM_MONGODB_PASSWORD_ENABLED
+              value: {{ .Values.documentDatabase.password.enabled | quote }}
+            {{- if and .Values.documentDatabase.enabled .Values.documentDatabase.password.enabled }}
+            - name: CNOM_MONGODB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.documentDatabase.password.secret | quote }}
+                  key: "mongodb-user"
+            - name: CNOM_MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.documentDatabase.password.secret | quote }}
+                  key: "mongodb-password"
+            {{- end }}
+            - name: CNOM_POSTGRES_ENABLED
+              value: {{ .Values.documentDatabasePg.enabled | quote }}
+            - name: CNOM_POSTGRES_HOST
+              value: {{ .Values.documentDatabasePg.host | quote }}
+            - name: CNOM_POSTGRES_PORT
+              value: {{ .Values.documentDatabasePg.port | quote }}
+            - name: CNOM_POSTGRES_DATABASE
+              value: {{ .Values.documentDatabasePg.database | quote }}
+            {{- if and $global.security.tls.enabled (and .Values.documentDatabasePg.tls.enabled .Values.documentDatabasePg.tls.sendClientCertificate) }}
+            - name: CNOM_POSTGRES_USER
+              value: {{ .Values.documentDatabasePg.user | quote }}
+            {{- else if .Values.documentDatabasePg.enabled }}
+            - name: CNOM_POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "documentDatabasePg.secret is required when not using mTLS toward Document Database PG" .Values.documentDatabasePg.secret | .Values.documentDatabasePg.secret | quote }}
+                  key: {{ .Values.documentDatabasePg.secretUsernameKey | quote }}
+            - name: CNOM_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "documentDatabasePg.secret is required when not using mTLS toward Document Database PG" .Values.documentDatabasePg.secret | .Values.documentDatabasePg.secret | quote }}
+                  key: {{ .Values.documentDatabasePg.secretPasswordKey | quote }}
+            {{- end }}
+            - name: CNOM_POSTGRES_TLS_ENABLED
+              value: {{ and $global.security.tls.enabled .Values.documentDatabasePg.tls.enabled | quote }}
+            - name: CNOM_POSTGRES_TLS_VERIFY_SERVER_CERTIFICATE
+              value: {{ .Values.documentDatabasePg.tls.verifyServerCertificate | quote }}
+            - name: CNOM_POSTGRES_TLS_SEND_CLIENT_CERTIFICATE
+              value: {{ .Values.documentDatabasePg.tls.sendClientCertificate | quote }}
+            - name: CNOM_POSTGRES_TLS_CA
+              value: /cnom/certificates/postgres/cacertbundle.pem
+            - name: CNOM_POSTGRES_TLS_KEY
+              value: /cnom/certificates/postgres/key.pem
+            - name: CNOM_POSTGRES_TLS_CERT
+              value: /cnom/certificates/postgres/cert.pem
+            - name: CNOM_MESSAGEQUEUE_ENABLED
+              value: {{ .Values.dataIngester.enabled | quote }}
+            - name: CNOM_MESSAGEQUEUE_SERVERS
+              value: {{ .Values.messageBusKF.servers | quote }}
+            - name: CNOM_MESSAGEQUEUE_NUMPARTITIONS
+              value: {{ .Values.messageBusKF.topic.numPartitions | quote }}
+            - name: CNOM_MESSAGEQUEUE_REPLICATIONFACTOR
+              value: {{ .Values.messageBusKF.topic.replicationFactor | quote }}
+            - name: CNOM_WORKER_ENABLED
+              value: {{ .Values.dataIngester.enabled | quote }}
+            - name: CNOM_WORKER_HOST
+              value: {{ .Values.dataIngester.host | quote }}
+            - name: CNOM_WORKER_PORT
+              value: {{ .Values.dataIngester.port | quote }}
+            - name: CNOM_SUPERVISOR_HOST
+              value: {{ .Values.dataIngester.host | quote }}
+            - name: CNOM_SUPERVISOR_PORT
+              value: {{ .Values.dataIngester.supervisor.port | quote }}
+            - name: CNOM_SUPERVISOR_CHILD_STDOUT_LOGFILE
+              value: "/dev/stdout"
+            - name: CNOM_SUPERVISOR_CHILD_STDERR_LOGFILE
+              value: "/dev/stderr"
+            - name: CNOM_PROMETHEUS_HOST
+              value: {{ .Values.pmServer.host | quote }}
+            - name: CNOM_PROMETHEUS_PORT
+              value: {{ empty .Values.pmServer.port | ternary (and $global.security.tls.enabled .Values.pmServer.tls.enabled | ternary 9089 9090) .Values.pmServer.port | quote }}
+            - name: CNOM_PROMETHEUS_BASEPATH
+              value: {{ .Values.pmServer.basePath | quote }}
+            - name: CNOM_PROMETHEUS_TLS_ENABLED
+              value: {{ and $global.security.tls.enabled .Values.pmServer.tls.enabled | quote }}
+            - name: CNOM_PROMETHEUS_TLS_VERIFY_SERVER_CERTIFICATE
+              value: {{ .Values.pmServer.tls.verifyServerCertificate | quote }}
+            - name: CNOM_PROMETHEUS_TLS_SEND_CLIENT_CERTIFICATE
+              value: {{ .Values.pmServer.tls.sendClientCertificate | quote }}
+            - name: CNOM_PROMETHEUS_TLS_CA
+              value: /cnom/certificates/prometheus/cacertbundle.pem
+            - name: CNOM_PROMETHEUS_TLS_KEY
+              value: /cnom/certificates/prometheus/key.pem
+            - name: CNOM_PROMETHEUS_TLS_CERT
+              value: /cnom/certificates/prometheus/cert.pem
+            - name: CNOM_PROMETHEUS_ADDRESS_WHITELIST
+              value: {{ join "," .Values.pmServer.addressWhitelist | quote }}
+            - name: CNOM_ALARMHANDLER_HOST
+              value: {{ .Values.alarmHandler.host | quote }}
+            - name: CNOM_ALARMHANDLER_PORT
+              value: {{ empty .Values.alarmHandler.port | ternary (and $global.security.tls.enabled .Values.alarmHandler.tls.enabled | ternary 5006 5005) .Values.alarmHandler.port | quote }}
+            - name: CNOM_ALARMHANDLER_BASEPATH
+              value: {{ .Values.alarmHandler.basePath | quote }}
+            - name: CNOM_ALARMHANDLER_TLS_ENABLED
+              value: {{ and $global.security.tls.enabled .Values.alarmHandler.tls.enabled | quote }}
+            - name: CNOM_ALARMHANDLER_TLS_VERIFY_SERVER_CERTIFICATE
+              value: {{ .Values.alarmHandler.tls.verifyServerCertificate | quote }}
+            - name: CNOM_ALARMHANDLER_TLS_SEND_CLIENT_CERTIFICATE
+              value: {{ .Values.alarmHandler.tls.sendClientCertificate | quote }}
+            - name: CNOM_ALARMHANDLER_TLS_CA
+              value: /cnom/certificates/alarmhandler/cacertbundle.pem
+            - name: CNOM_ALARMHANDLER_TLS_KEY
+              value: /cnom/certificates/alarmhandler/key.pem
+            - name: CNOM_ALARMHANDLER_TLS_CERT
+              value: /cnom/certificates/alarmhandler/cert.pem
+            - name: CNOM_ALARMHANDLER_ADDRESS_WHITELIST
+              value: {{ join "," .Values.alarmHandler.addressWhitelist | quote }}
+            - name: CNOM_CMMEDIATOR_HOST
+              value: {{ .Values.cmMediator.host | quote }}
+            - name: CNOM_CMMEDIATOR_PORT
+              value: {{ empty .Values.cmMediator.port | ternary (and $global.security.tls.enabled .Values.cmMediator.tls.enabled | ternary 5004 5003) .Values.cmMediator.port | quote }}
+            - name: CNOM_CMMEDIATOR_BASEPATH
+              value: {{ .Values.cmMediator.basePath | quote }}
+            - name: CNOM_CMMEDIATOR_TLS_ENABLED
+              value: {{ and $global.security.tls.enabled .Values.cmMediator.tls.enabled | quote }}
+            - name: CNOM_CMMEDIATOR_TLS_VERIFY_SERVER_CERTIFICATE
+              value: {{ .Values.cmMediator.tls.verifyServerCertificate | quote }}
+            - name: CNOM_CMMEDIATOR_TLS_SEND_CLIENT_CERTIFICATE
+              value: {{ .Values.cmMediator.tls.sendClientCertificate | quote }}
+            - name: CNOM_CMMEDIATOR_TLS_CA
+              value: /cnom/certificates/cmmediator/cacertbundle.pem
+            - name: CNOM_CMMEDIATOR_TLS_KEY
+              value: /cnom/certificates/cmmediator/key.pem
+            - name: CNOM_CMMEDIATOR_TLS_CERT
+              value: /cnom/certificates/cmmediator/cert.pem
+            - name: CNOM_SNMPALARMPROVIDER_HOST
+              value: {{ .Values.snmpAlarmProvider.host | quote }}
+            - name: CNOM_SNMPALARMPROVIDER_PORT
+              value: {{ .Values.snmpAlarmProvider.port | quote }}
+            - name: CNOM_SNMPALARMPROVIDER_BASEPATH
+              value: {{ .Values.snmpAlarmProvider.basePath | quote }}
+            - name: CNOM_SNMPALARMPROVIDER_ADDRESS_WHITELIST
+              value: {{ join "," .Values.snmpAlarmProvider.addressWhitelist | quote }}
+            - name: CNOM_ELASTICSEARCH_HOST
+              value: {{ and $global.security.tls.enabled .Values.searchEngine.tls.enabled | ternary "-tls" "" | printf "%s%s" .Values.searchEngine.host | quote }}
+            - name: CNOM_ELASTICSEARCH_PORT
+              value: {{ .Values.searchEngine.port | quote }}
+            - name: CNOM_ELASTICSEARCH_BASEPATH
+              value: {{ .Values.searchEngine.basePath | quote }}
+            - name: CNOM_ELASTICSEARCH_TLS_ENABLED
+              value: {{ and $global.security.tls.enabled .Values.searchEngine.tls.enabled | quote }}
+            - name: CNOM_ELASTICSEARCH_TLS_VERIFY_SERVER_CERTIFICATE
+              value: {{ .Values.searchEngine.tls.verifyServerCertificate | quote }}
+            - name: CNOM_ELASTICSEARCH_TLS_SEND_CLIENT_CERTIFICATE
+              value: {{ .Values.searchEngine.tls.sendClientCertificate | quote }}
+            - name: CNOM_ELASTICSEARCH_TLS_CA
+              value: /cnom/certificates/elasticsearch/cacertbundle.pem
+            - name: CNOM_ELASTICSEARCH_TLS_KEY
+              value: /cnom/certificates/elasticsearch/key.pem
+            - name: CNOM_ELASTICSEARCH_TLS_CERT
+              value: /cnom/certificates/elasticsearch/cert.pem
+            - name: CNOM_ELASTICSEARCH_ADDRESS_WHITELIST
+              value: {{ join "," .Values.searchEngine.addressWhitelist | quote }}
+            - name: CNOM_CENTRALCONFIGURATIONREPOSITORY_HOST
+              value: {{ .Values.centralConfigurationRepository.host | quote }}
+            - name: CNOM_CENTRALCONFIGURATIONREPOSITORY_PORT
+              value: {{ empty .Values.centralConfigurationRepository.port | ternary (and $global.security.tls.enabled .Values.centralConfigurationRepository.tls.enabled | ternary 443 80) .Values.centralConfigurationRepository.port | quote }}
+            - name: CNOM_CENTRALCONFIGURATIONREPOSITORY_BASEPATH
+              value: {{ .Values.centralConfigurationRepository.basePath | quote }}
+            - name: CNOM_CENTRALCONFIGURATIONREPOSITORY_TLS_ENABLED
+              value: {{ and $global.security.tls.enabled .Values.centralConfigurationRepository.tls.enabled | quote }}
+            - name: CNOM_CENTRALCONFIGURATIONREPOSITORY_TLS_VERIFY_SERVER_CERTIFICATE
+              value: {{ .Values.centralConfigurationRepository.tls.verifyServerCertificate | quote }}
+            - name: CNOM_CENTRALCONFIGURATIONREPOSITORY_TLS_SEND_CLIENT_CERTIFICATE
+              value: {{ .Values.centralConfigurationRepository.tls.sendClientCertificate | quote }}
+            - name: CNOM_CENTRALCONFIGURATIONREPOSITORY_TLS_CA
+              value: /cnom/certificates/centralconfigurationrepository/cacertbundle.pem
+            - name: CNOM_CENTRALCONFIGURATIONREPOSITORY_TLS_KEY
+              value: /cnom/certificates/centralconfigurationrepository/key.pem
+            - name: CNOM_CENTRALCONFIGURATIONREPOSITORY_TLS_CERT
+              value: /cnom/certificates/centralconfigurationrepository/cert.pem
+            - name: CNOM_CENTRALCONFIGURATIONREPOSITORY_ADDRESS_WHITELIST
+              value: {{ join "," .Values.centralConfigurationRepository.addressWhitelist | quote }}
+            - name: CNOM_KUBERNETESAPI_USE_SERVICEACCOUNT
+              value: "true"
+            - name: CNOM_NRFPROVISION_HOST
+              value: {{ .Values.nrfProvision.host | quote }}
+            - name: CNOM_NRFPROVISION_PORT
+              value: {{ .Values.nrfProvision.port | quote }}
+            - name: CNOM_NSSFPROVISION_HOST
+              value: {{ .Values.nssfProvision.host | quote }}
+            - name: CNOM_NSSFPROVISION_PORT
+              value: {{ .Values.nssfProvision.port | quote }}
+            - name: CNOM_FEATURES_ABOUT
+              value: {{ .Values.features.about | quote }}
+            - name: CNOM_FEATURES_APPLICATIONTRACE
+              value: {{ .Values.features.applicationTrace | quote }}
+            - name: CNOM_FEATURES_SETTINGS
+              value: {{ .Values.features.settings | quote }}
+            - name: CNOM_FEATURES_USER_MANAGEMENT
+              value: {{ and .Values.authentication.enabled .Values.authentication.local.enabled | quote }}
+            - name: CNOM_FEATURES_NETWORKMONITOR
+              value: {{ .Values.features.networkMonitor | quote }}
+            - name: CNOM_FEATURES_CNOMHEALTHCHECK
+              value: "false"
+            - name: CNOM_FEATURES_CDAHEALTHCHECK
+              value: "false"
+            - name: CNOM_FEATURES_HEALTHCHECK
+              value: {{ .Values.features.healthCheck | quote }}
+            - name: CNOM_FEATURES_TROUBLESHOOTING
+              value: {{ .Values.features.troubleShooting | quote }}
+            - name: CNOM_FEATURES_TRACING
+              value: {{ .Values.features.tracing | quote }}
+            - name: CNOM_FEATURES_PERFORMANCEMONITOR
+              value: {{ .Values.features.performanceMonitor | quote }}
+            - name: CNOM_FEATURES_BCAT
+              value: {{ .Values.features.bcat | quote }}
+            - name: CNOM_FEATURES_DCM
+              value: {{ .Values.features.dcm | quote }}
+            - name: CNOM_FEATURES_GRAPHANALYSIS
+              value: {{ .Values.features.graphAnalysis | quote }}
+            - name: CNOM_FEATURES_ITC
+              value: {{ .Values.features.itc | quote }}
+            - name: CNOM_FEATURES_STATUS_OVERVIEW
+              value: {{ .Values.features.statusOverview | quote }}
+            - name: CNOM_FEATURES_ALARM_VIEWER
+              value: {{ .Values.features.alarmViewer | quote }}
+            - name: CNOM_FEATURES_LOG_VIEWER
+              value: {{ .Values.features.logViewer | quote }}
+            - name: CNOM_FEATURES_NRFPROVISION
+              value: {{ .Values.features.nrfProvisionUeGroupProfile | or .Values.features.nrfProvisionUeIndividualProfile | or .Values.features.nrfProvisionNfProfile | or .Values.features.nrfProvisionNrfAddress | or .Values.features.nrfProvisionSnssaiUutMapping | or .Values.features.nrfEmbeddedDnsView | or .Values.features.nrfEmbeddedDnsAddress | or .Values.features.nrfEmbeddedDnsZone | or .Values.features.nrfEmbeddedDnsRootServer | quote }}
+            - name: CNOM_FEATURES_NRF_PROVISION_UE_GROUP_PROFILE
+              value: {{ .Values.features.nrfProvisionUeGroupProfile | quote }}
+            - name: CNOM_FEATURES_NRF_PROVISION_UE_INDIVIDUAL_PROFILE
+              value: {{ .Values.features.nrfProvisionUeIndividualProfile | quote }}
+            - name: CNOM_FEATURES_NRF_PROVISION_NF_PROFILE
+              value: {{ .Values.features.nrfProvisionNfProfile | quote }}
+            - name: CNOM_FEATURES_NRF_PROVISION_NRF_ADDRESS
+              value: {{ .Values.features.nrfProvisionNrfAddress | quote }}
+            - name: CNOM_FEATURES_NRF_PROVISION_SNSSAI_UUT_MAPPING
+              value: {{ .Values.features.nrfProvisionSnssaiUutMapping | quote }}
+            - name: CNOM_FEATURES_NRF_EMBEDDED_DNS_VIEW
+              value: {{ .Values.features.nrfEmbeddedDnsView | quote }}
+            - name: CNOM_FEATURES_NRF_EMBEDDED_DNS_ADDRESS
+              value: {{ .Values.features.nrfEmbeddedDnsAddress | quote }}
+            - name: CNOM_FEATURES_NRF_EMBEDDED_DNS_ZONE
+              value: {{ .Values.features.nrfEmbeddedDnsZone | quote }}
+            - name: CNOM_FEATURES_NRF_EMBEDDED_DNS_ROOT_SERVER
+              value: {{ .Values.features.nrfEmbeddedDnsRootServer | quote }}
+            - name: CNOM_FEATURES_NSSFPROVISION
+              value: {{ .Values.features.nssfProvision | quote }}
+            - name: CNOM_FEATURES_HEALTH_CHECK_VIEWER
+              value: {{ .Values.features.healthCheckViewer | quote }}
+            - name: CNOM_FEATURES_METRIC_VIEWER
+              value: {{ .Values.features.metricViewer | quote }}
+            - name: CNOM_FEATURES_CENTRALCONFIGURATIONREPOSITORY
+              value: {{ .Values.features.centralConfigurationRepository | quote }}
+            - name: CNOM_FEATURES_SWITCHBRANDBASEONROLE
+              value: {{ .Values.features.switchBrandBaseOnRole | quote }}
+            - name: CNOM_FEATURES_NODE_MONITOR
+              value: "false"
+            - name: CNOM_FEATURES_YANGSTATEDATA
+              value: {{ .Values.features.yangStateData | quote }}
+            - name: CNOM_FEATURES_KPIMANAGEMENT
+              value: {{ .Values.features.kpiManagement | quote }}
+            - name: CNOM_FEATURES_BRANDSWITCH
+              value: {{ .Values.features.brandSwitch | quote }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp/
+            - name: cnom-varpath
+              mountPath: /cnom/var/
+            {{- range $cm := mustAppend .Values.dashboards.configMaps .Values.dashboards.configMap | mustCompact | mustUniq }}
+            - name: {{ $cm }}-dashboards-configmap
+              mountPath: {{ printf "/cnom/configuration/models/externalConfigMap/%s" $cm -}}
+            {{- end }}
+            - name: cnom-dashboards-import
+              mountPath: /cnom/configuration/models/helmChartDirectImport
+            {{- range $cm := .Values.appConfig.configMaps | mustCompact | mustUniq }}
+            - name: {{ $cm }}-appconfig-configmap
+              mountPath: {{ printf "/cnom/configuration/appConfig/externalConfigMaps/%s" $cm -}}
+            {{- end }}
+            - name: cnom-metrics-hierarchy-configmap
+              mountPath: /cnom/configuration/metrics/hierarchy/externalConfigMap
+            - name: cnom-yang-state-data-api-configmap
+              mountPath: /cnom/configuration/yangStateData/externalConfigMap
+            {{- if .Values.dataIngester.enabled }}
+            - name: cnom-encryption-key
+              mountPath: /cnom/encryption_keys
+              readOnly: true
+            {{- end }}
+            {{- if .Values.demoScripts.enabled }}
+            - name: demo-scripts-key
+              mountPath: /cnom/demo_scripts_key
+            {{- end }}
+            {{- if $global.security.tls.enabled }}
+            {{- range $ca := .Values.service.endpoints.api.tls.ca }}
+            - name: {{ printf "api-%s-mount" $ca.name }}
+              mountPath: {{ printf "/cnom/certificates/api/%s" $ca.name }}
+              readOnly: true
+            {{- end }}
+            {{- if .Values.features.yangStateData -}}
+            {{- range $ca := .Values.service.endpoints.yangStateData.tls.ca }}
+            - name: {{ printf "yangstatedata-%s-mount" $ca.name }}
+              mountPath: {{ printf "/cnom/certificates/yangStateData/%s" $ca.name }}
+              readOnly: true
+            {{- end }}
+            {{- end }}
+            {{- if and .Values.service.endpoints.api.tls.key .Values.service.endpoints.api.tls.cert }}
+            - name: manually-created-certificate-secret
+              mountPath: /cnom/certificates/api/manually_created_secret
+              readOnly: true
+            {{- end }}
+            {{- if and (not .Values.service.endpoints.api.tls.disableSipTls) (or (.Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalUserCA") (.Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalCertificate")) }}
+            - name: sip-tls-api-secret
+              mountPath: /cnom/certificates/api/sip_tls
+              readOnly: true
+            {{- end }}
+            {{- if and .Values.ingress.enabled .Values.ingress.certificates.enabled .Values.ingress.tls.passthrough }}
+            - name: certm-certificate-secret
+              mountPath: /cnom/certificates/api/certm
+              readOnly: true
+            {{- end }}
+            {{- $yangStateDataTLS := and .Values.features.yangStateData (not .Values.service.endpoints.yangStateData.tls.disableSipTls) }}
+            {{- if and $yangStateDataTLS (or (.Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalUserCA") (.Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalCertificate")) }}
+            - name: sip-tls-yang-state-data-secret
+              mountPath: /cnom/certificates/yangStateData/sip_tls
+              readOnly: true
+            {{- end }}
+            {{- if and .Values.documentDatabasePg.enabled .Values.documentDatabasePg.tls.enabled }}
+            - name: document-database-pg-certs
+              mountPath: /cnom/certificates/postgres
+              readOnly: true
+            {{- end }}
+            {{- if .Values.searchEngine.tls.enabled }}
+            - name: searchengine-certs
+              mountPath: /cnom/certificates/elasticsearch
+              readOnly: true
+            {{- end }}
+            {{- if .Values.alarmHandler.tls.enabled }}
+            - name: alarm-handler-certs
+              mountPath: /cnom/certificates/alarmhandler
+              readOnly: true
+            {{- end }}
+            {{- if .Values.cmMediator.tls.enabled }}
+            - name: cmmediator-certs
+              mountPath: /cnom/certificates/cmmediator
+              readOnly: true
+            {{- end }}
+            {{- if .Values.pmServer.tls.enabled }}
+            - name: pm-server-certs
+              mountPath: /cnom/certificates/prometheus
+              readOnly: true
+            {{- end }}
+            {{- if .Values.centralConfigurationRepository.tls.enabled }}
+            - name: central-configuration-repository-certs
+              mountPath: /cnom/certificates/centralconfigurationrepository
+              readOnly: true
+            {{- end }}
+            {{- end }}
+            {{- if .Values.authentication.ldap.enabled }}
+            # $global.security.tls.enabled set to false should not disable LDAP since the default
+            # ADP LDAP Server used has a hard requirement on having TLS enabled
+            - name: ldap-certs
+              mountPath: /cnom/certificates/ldap
+              readOnly: true
+            {{- end }}
+            {{- if .Values.logging.logshipper.enabled }}
+            {{- include "eric-cnom-server.logshipper-storage-path" . | indent 12 }}
+            {{- end }}
+        {{- if .Values.logging.logshipper.enabled }}
+        {{- include "eric-cnom-server.logshipper-container" . | indent 8 }}
+        {{- end }}
+      volumes:
+        {{- if .Values.logging.logshipper.enabled }}
+        {{- include "eric-cnom-server.logshipper-volume" . | indent 8 }}
+        {{- end }}
+        - name: tmp
+          emptyDir: {}
+        - name: cnom-varpath
+        {{- if and .Values.dataIngester.enabled .Values.dataIngester.sharedVolume.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.dataIngester.sharedVolume.claimName | quote }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        {{- if .Values.dataIngester.enabled }}
+        - name: cnom-encryption-key
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.dataIngester.encryptionKey.secret | quote }}
+                items:
+                  - key: encryption-key
+                    path: "encryption_key"
+        {{- end }}
+        {{- range $cm := mustAppend .Values.dashboards.configMaps .Values.dashboards.configMap | mustCompact | mustUniq }}
+        - name: {{ $cm }}-dashboards-configmap
+          configMap:
+            name: {{ $cm }}
+        {{- end }}
+        - name: cnom-dashboards-import
+          configMap:
+            name: {{ include "eric-cnom-server.fullname" . }}-dashboards-import
+        {{- range $cm := .Values.appConfig.configMaps | mustCompact | mustUniq }}
+        - name: {{ $cm }}-appconfig-configmap
+          configMap:
+            name: {{ $cm }}
+        {{- end }}
+        - name: cnom-metrics-hierarchy-configmap
+        {{- if .Values.metrics.hierarchy.configMap }}
+          configMap:
+            name: {{ .Values.metrics.hierarchy.configMap | quote }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        - name: cnom-yang-state-data-api-configmap
+        {{- if .Values.yangStateData.configMap }}
+          configMap:
+            name: {{ .Values.yangStateData.configMap | quote }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+        {{- if .Values.demoScripts.enabled }}
+        - name: demo-scripts-key
+          secret:
+            secretName: {{ .Values.demoScripts.keySecret | quote }}
+        {{- end }}
+        {{- if $global.security.tls.enabled }}
+        {{- range $ca := .Values.service.endpoints.api.tls.ca }}
+        - name: {{ printf "api-%s-mount" $ca.name }}
+          secret:
+            secretName: {{ $ca.name }}
+        {{- end }}
+        {{- if .Values.features.yangStateData }}
+        {{- range $ca := .Values.service.endpoints.yangStateData.tls.ca }}
+        - name: {{ printf "yangstatedata-%s-mount" $ca.name }}
+          secret:
+            secretName: {{ $ca.name }}
+        {{- end }}
+        {{- end }}
+        {{- if and .Values.service.endpoints.api.tls.key .Values.service.endpoints.api.tls.cert }}
+        - name: manually-created-certificate-secret
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.service.endpoints.api.tls.key | quote }}
+                items:
+                - key: key.pem
+                  path: key.pem
+            - secret:
+                name: {{ .Values.service.endpoints.api.tls.cert | quote }}
+                items:
+                - key: cert.pem
+                  path: cert.pem
+        {{- end }}
+        {{- if and (not .Values.service.endpoints.api.tls.disableSipTls) (or (.Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalUserCA") (.Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalCertificate")) }}
+        - name: sip-tls-api-secret
+          projected:
+            sources:
+            {{- if .Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalUserCA"}}
+            - secret:
+                name: {{ include "eric-cnom-server.fullname" . }}-api-ca
+            {{- end }}
+            {{- if .Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalCertificate"}}
+            - secret:
+                name: {{ include "eric-cnom-server.fullname" . }}-api-cert
+            {{- end }}
+        {{- end }}
+        {{- if and .Values.ingress.enabled .Values.ingress.certificates.enabled .Values.ingress.tls.passthrough }}
+          {{- if or .Values.service.endpoints.api.tls.key .Values.service.endpoints.api.tls.cert }}
+            {{ fail "You cannot configure ingress.tls.passthrough when service.endpoints.api.tls.key (and cert) has been set " }}
+          {{- end }}
+        - name: certm-certificate-secret
+          projected:
+            sources:
+            - secret:
+                name: {{ (printf "%s-certm-ca-certificates-secret" (include "eric-cnom-server.fullname" .)) | quote }}
+            - secret:
+                name: {{ (printf "%s-certm-certificate-secret" (include "eric-cnom-server.fullname" .)) | quote }}
+        {{- end }}
+        {{- $yangStateDataTLS := and .Values.features.yangStateData (not .Values.service.endpoints.yangStateData.tls.disableSipTls) -}}
+        {{- if and $yangStateDataTLS (or (.Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalUserCA") (.Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalCertificate")) }}
+        - name: sip-tls-yang-state-data-secret
+          projected:
+            sources:
+            {{- if .Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalUserCA"}}
+            - secret:
+                name: {{ .Values.cmYangProvider.host }}-ca-secret
+            {{- end }}
+            {{- if .Capabilities.APIVersions.Has "siptls.sec.ericsson.com/v1/InternalCertificate"}}
+            - secret:
+                name: {{ include "eric-cnom-server.fullname" . }}-yang-state-data-cert
+            {{- end }}
+        {{- end }}
+        {{- if and .Values.documentDatabasePg.enabled .Values.documentDatabasePg.tls.enabled }}
+        - name: document-database-pg-admin-certs
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.documentDatabasePg.tls.adminCa | quote }}
+            - secret:
+                name: {{ .Values.documentDatabasePg.tls.adminKey | default (printf "%s-document-database-pg-admin-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: key.pem
+                  path: key.pem
+            - secret:
+                name: {{ .Values.documentDatabasePg.tls.adminCert | default (printf "%s-document-database-pg-admin-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: cert.pem
+                  path: cert.pem
+        - name: document-database-pg-certs
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.documentDatabasePg.tls.ca | quote }}
+            - secret:
+                name: {{ .Values.documentDatabasePg.tls.key | default (printf "%s-document-database-pg-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: key.pem
+                  path: key.pem
+            - secret:
+                name: {{ .Values.documentDatabasePg.tls.cert | default (printf "%s-document-database-pg-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: cert.pem
+                  path: cert.pem
+        {{- end }}
+        {{- if .Values.searchEngine.tls.enabled }}
+        - name: searchengine-certs
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.searchEngine.tls.ca | quote }}
+            - secret:
+                name: {{ .Values.searchEngine.tls.key | default (printf "%s-searchengine-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: key.pem
+                  path: key.pem
+            - secret:
+                name: {{ .Values.searchEngine.tls.cert | default (printf "%s-searchengine-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: cert.pem
+                  path: cert.pem
+        {{- end }}
+        {{- if .Values.alarmHandler.tls.enabled }}
+        - name: alarm-handler-certs
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.alarmHandler.tls.ca | quote }}
+            - secret:
+                name: {{ .Values.alarmHandler.tls.key | default (printf "%s-alarm-handler-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: key.pem
+                  path: key.pem
+            - secret:
+                name: {{ .Values.alarmHandler.tls.cert | default (printf "%s-alarm-handler-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: cert.pem
+                  path: cert.pem
+        {{- end }}
+        {{- if .Values.cmMediator.tls.enabled }}
+        - name: cmmediator-certs
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.cmMediator.tls.ca | quote }}
+            - secret:
+                name: {{ .Values.cmMediator.tls.key | default (printf "%s-cmmediator-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: key.pem
+                  path: key.pem
+            - secret:
+                name: {{ .Values.cmMediator.tls.cert | default (printf "%s-cmmediator-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: cert.pem
+                  path: cert.pem
+        {{- end }}
+        {{- if .Values.pmServer.tls.enabled }}
+        - name: pm-server-certs
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.pmServer.tls.ca | quote }}
+            - secret:
+                name: {{ .Values.pmServer.tls.key | default (printf "%s-pm-server-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: key.pem
+                  path: key.pem
+            - secret:
+                name: {{ .Values.pmServer.tls.cert | default (printf "%s-pm-server-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: cert.pem
+                  path: cert.pem
+        {{- end }}
+        {{- if .Values.centralConfigurationRepository.tls.enabled }}
+        - name: central-configuration-repository-certs
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.centralConfigurationRepository.tls.ca | quote }}
+            - secret:
+                name: {{ .Values.centralConfigurationRepository.tls.key | default (printf "%s-central-configuration-repository-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: key.pem
+                  path: key.pem
+            - secret:
+                name: {{ .Values.centralConfigurationRepository.tls.cert | default (printf "%s-central-configuration-repository-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: cert.pem
+                  path: cert.pem
+        {{- end }}
+        {{- end }}
+        {{- if .Values.authentication.ldap.enabled }}
+        # $global.security.tls.enabled set to false should not disable LDAP since the default
+        # ADP LDAP Server used has a hard requirement on having TLS enabled
+        - name: ldap-certs
+          projected:
+            sources:
+            - secret:
+                name: {{ .Values.authentication.ldap.tls.ca | quote }}
+            - secret:
+                name: {{ .Values.authentication.ldap.tls.key | default (printf "%s-ldap-server-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: key.pem
+                  path: key.pem
+            - secret:
+                name: {{ .Values.authentication.ldap.tls.cert | default (printf "%s-ldap-server-client-cert" (include "eric-cnom-server.fullname" .)) | quote }}
+                items:
+                - key: cert.pem
+                  path: cert.pem
+        {{- end }}
+      {{- if include "eric-cnom-server.pullSecret" . }}
+      imagePullSecrets:
+        - name: {{ include "eric-cnom-server.pullSecret" . }}
+      {{- end }}
+      {{- if (or .Values.nodeSelector $global.nodeSelector) }}
+      nodeSelector:
+        {{- include "eric-cnom-server.nodeSelector" . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          {{- if eq .Values.affinity.podAntiAffinity "hard" }}
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - {{ include "eric-cnom-server.fullname" . }}
+            topologyKey: "kubernetes.io/hostname"
+          {{- else if eq .Values.affinity.podAntiAffinity  "soft" }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ include "eric-cnom-server.fullname" . }}
+              topologyKey: "kubernetes.io/hostname"
+          {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- if .Values.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml .Values.topologySpreadConstraints | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,3 @@
+- name: omnidaemon
+  port: 9229
+  targetPort: 9229

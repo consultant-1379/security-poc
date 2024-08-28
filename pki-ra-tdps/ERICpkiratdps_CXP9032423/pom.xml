@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>pki-ra-tdps</artifactId>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>ERICpkiratdps_CXP9032423</artifactId>
+	<name>[${project.parent.artifactId}] CXP module</name>
+	<packaging>${rpm.packaging}</packaging>
+
+	<properties>
+		<publish_artifact>true</publish_artifact>
+		<media.category>service</media.category>
+		<com.ericsson.oss.rpm.architecture>noarch</com.ericsson.oss.rpm.architecture>
+		<rpm-root>opt</rpm-root>
+		<comp-name>ericsson</comp-name>
+		<install-path>ERICpkiratdps</install-path>
+		<consolidated.jacoco.path>${project.basedir}/../target/jacoco.exec</consolidated.jacoco.path>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-ear</artifactId>
+			<version>${project.version}</version>
+			<type>ear</type>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>rpm-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<skip>true</skip>
+					<inherited>true</inherited>
+					<copyright>2015 Ericsson AB All rights reserved</copyright>
+					<description>${ericsson.rstate}</description>
+					<group>ERI-NMS</group>
+					<vendor>Ericsson AB</vendor>
+					<url>www.ericsson.com</url>
+					<mappings>
+						<mapping>
+							<directory>${vm.install-path}</directory>
+							<filemode>775</filemode>
+							<username>root</username>
+							<groupname>root</groupname>
+							<configuration>true</configuration>
+							<directoryIncluded>false</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<dependency>
+								<includes>
+									<include>${project.groupId}:${project.parent.artifactId}-ear</include>
+								</includes>
+							</dependency>
+							<sources>
+								<source>
+									<location>src/main/scripts/</location>
+									<includes>
+										<include>*.*</include>
+									</includes>
+								</source>
+							</sources>
+						</mapping>
+					</mappings>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

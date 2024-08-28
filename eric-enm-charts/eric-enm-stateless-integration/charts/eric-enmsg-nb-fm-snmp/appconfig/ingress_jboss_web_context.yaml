@@ -1,0 +1,21 @@
+- backend:
+    service:
+      name: nbfmsnmp
+      port:
+        number: 443
+  path: /nb-fm-snmp-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nbfmsnmp
+      port:
+        number: 443
+  path: /nb-fm-snmp-service/rest/version1/dump/dps
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nbfmsnmp
+      port:
+        number: 443
+  path: /nb-fm-snmp-service/rest/version1/dump/cache
+  pathType: ImplementationSpecific

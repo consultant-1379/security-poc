@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{.Values.service.name}}-certrequest-job
+  labels:
+    {{ .Values.service.labels }}
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 1
+#  ttlSecondsAfterFinished: 30
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: {{.Values.service.name}}-credm-controller-certrequest
+        image: "{{ .Values.global.registry.url }}/{{ .Values.imageCredentials.repoPath }}/{{ .Values.jobs.certRequest.imageName }}:{{ .Values.jobs.certRequest.tag }}"
+        imagePullPolicy: {{.Values.jobs.certRequest.pullPolicy}}
+        command:
+        env:
+        - name: CONTROLLER_NAME
+          value: {{ .Values.credmController.name  | quote }}
+        - name: CONTROLLER_PORT
+          value: {{ .Values.credmController.port  | quote }}
+        - name: SERVICENAME
+          value: {{ .Values.service.name }}
+        - name: HOOKACTION
+          value: {{ .Values.jobs.jobAction }}
+        - name: HOOKNAME
+          value: "mainservice"

@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+		<artifactId>credential-manager-service</artifactId>
+		<version>1.0.6-SNAPSHOT</version>
+	</parent>
+	<artifactId>credential-manager-service-xmlbeans</artifactId>
+	<name>[${project.parent.artifactId}] XMLBeans JAR module</name>
+	<dependencies>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>${version.jaxb-api}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>${version.jaxb-impl}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- <dependency> <groupId>com.ericsson.oss.itpf.poc.security</groupId> <artifactId>credential-manager-service-jar</artifactId> 
+			<version>${project.version}</version> </dependency> -->
+	</dependencies>
+	<build>
+		<plugins>
+
+
+			<!-- JAXB xjc plugin that invokes the xjc compiler to compile XML schema 
+				into Java classes. -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+				<!--
+					<includeBindings>
+						<includeBinding>${basedir}/src/main/resources/ProfilesSchemaPrefix.xjb</includeBinding>
+					</includeBindings>
+				-->
+					<schemaDirectory>${basedir}/src/main/resources</schemaDirectory>
+					<packageName>com.ericsson.oss.itpf.security.credmservice.model.xmlbeans</packageName>
+					<outputDirectory>${basedir}/src/main/java</outputDirectory>
+					<clearOutputDir>false</clearOutputDir>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<configuration>
+					<excludeRoots>
+						<excludeRoot>src/main/java</excludeRoot>
+					</excludeRoots>
+				</configuration>
+			</plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>properties-maven-plugin</artifactId>
+              <version>1.0.0</version>
+              <executions>
+                <execution>
+                   <goals>
+                     <goal>set-system-properties</goal>
+                   </goals>
+                   <configuration>
+                      <properties>
+                        <property>
+                          <name>javax.xml.accessExternalSchema</name>
+                          <value>all</value>
+                        </property>
+                      </properties>
+                    </configuration>
+                </execution>
+              </executions>
+            </plugin>
+		</plugins>
+	</build>
+</project>

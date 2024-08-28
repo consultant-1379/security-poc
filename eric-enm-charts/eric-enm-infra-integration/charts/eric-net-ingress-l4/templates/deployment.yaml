@@ -1,0 +1,181 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ template "eric-net-ingress-l4.fullname" . }}"
+  labels:
+    {{- include "eric-net-ingress-l4.labels" . | nindent 4 }}
+  annotations:
+    {{- include "eric-net-ingress-l4.product-info" . | nindent 4 }}
+spec:
+  replicas: {{ template "eric-net-ingress-l4.replicas" . }}
+  selector:
+    matchLabels:
+      app: "{{ template "eric-net-ingress-l4.fullname" . }}"
+      control-plane: {{ template "eric-net-ingress-l4.fullname" . }}
+      lvs-controller-tools.k8s.io: "{{ .Chart.AppVersion }}"
+{{- if .Values.updateStrategy }}
+  strategy:
+    type: {{ .Values.updateStrategy.type }}
+    rollingUpdate:
+{{ toYaml .Values.updateStrategy.rollingUpdate | indent 6 }}
+{{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "eric-net-ingress-l4.labels" . | nindent 8 }}
+      annotations:
+        {{- include "eric-net-ingress-l4.product-info" . | nindent 8 }}
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      containers:
+        - name: {{ template "eric-net-ingress-l4.fullname" . }}
+{{- if .Values.dev }}
+          image: {{ template "eric-net-ingress-l4.registryUrl" . }}/{{ .Values.imageCredentials.devRepoPath }}/{{ index .Values "images" "eric-net-ingress-l4" "name" }}:{{ index .Values "images" "eric-net-ingress-l4" "tag" }}
+{{- else }}
+          image: {{ include "eric-net-ingress-l4.registryUrlPath" . }}/{{ index .Values "images" "eric-net-ingress-l4" "name" }}:{{ index .Values "images" "eric-net-ingress-l4" "tag" }}
+{{- end }}
+          imagePullPolicy: {{ template "eric-net-ingress-l4.imagePullPolicy" . }}
+          securityContext:
+            privileged: true
+{{- if or .Values.resources.requests.enabled .Values.resources.limits.enabled }}
+          resources:
+{{- if .Values.resources.limits.enabled }}
+            limits:
+{{- if .Values.resources.limits.memory }}
+              memory: {{ .Values.resources.limits.memory | quote }}
+{{- end }}
+{{- if .Values.resources.limits.cpu }}
+              cpu: {{ .Values.resources.limits.cpu | quote }}
+{{- end }}
+{{- end }}
+{{- if .Values.resources.requests.enabled }}
+            requests:
+{{- if .Values.resources.requests.memory }}
+              memory: {{ .Values.resources.requests.memory | quote }}
+{{- end }}
+{{- if .Values.resources.requests.cpu }}
+              cpu: {{ .Values.resources.requests.cpu | quote }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if .Values.lifecycle }}
+          lifecycle:
+{{ toYaml .Values.lifecycle | indent 12 }}
+{{- end }}
+{{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            {{- if .Values.vipManagement }}
+            httpGet:
+              path: {{ .Values.startupProbe.httpGet.path }}
+              port: {{ .Values.startupProbe.httpGet.port }}
+              httpHeaders:
+                - name: {{ .Values.startupProbe.httpGet.httpHeaders.name }}
+                  value: {{ .Values.startupProbe.httpGet.httpHeaders.value }}
+            {{- else }}
+            tcpSocket:
+              port: {{ .Values.metricsPort }}
+            {{- end }}
+            initialDelaySeconds: {{ .Values.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+{{- end }}
+{{- if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            {{- if .Values.vipManagement }}
+            httpGet:
+              path: {{ .Values.livenessProbe.httpGet.path }}
+              port: {{ .Values.livenessProbe.httpGet.port }}
+              httpHeaders:
+                - name: {{ .Values.livenessProbe.httpGet.httpHeaders.name }}
+                  value: {{ .Values.livenessProbe.httpGet.httpHeaders.value }}
+            {{- else }}
+            tcpSocket:
+              port: {{ .Values.metricsPort }}
+            {{- end }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+{{- end }}
+{{- if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            {{- if .Values.vipManagement }}
+            httpGet:
+              path: {{ .Values.readinessProbe.httpGet.path }}
+              port: {{ .Values.readinessProbe.httpGet.port }}
+              httpHeaders:
+                - name: {{ .Values.readinessProbe.httpGet.httpHeaders.name }}
+                  value: {{ .Values.readinessProbe.httpGet.httpHeaders.value }}
+            {{- else }}
+            tcpSocket:
+              port: {{ .Values.metricsPort }}
+            {{- end }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+{{- end }}
+          volumeMounts:
+          {{- if has "stream" .Values.log.outputs }}
+          {{- include "eric-net-ingress-l4.logshipper-storage-path" . | indent 10 }}
+          {{- end }}
+          - name: scripts-vol
+            mountPath: /scripts
+          - name: scripts-exec-vol
+            mountPath: /scripts-exec
+          env:
+{{ $root := .}}
+{{ range $path, $bytes :=  .Files.Glob  "appconfig/envvars/*.yaml" }}
+{{ tpl ($root.Files.Get $path) $root | nindent 10 }}
+{{ end }}
+{{- if has "stream" .Values.log.outputs }}
+{{- include "eric-net-ingress-l4.logshipper-container" . | indent 8 }}
+{{- end }}
+{{- if index  .Values "sidecars" }}
+{{- include "eric-net-ingress-l4.sidecars" . | nindent 8 }}
+{{- end }}
+      volumes:
+{{- if has "stream" .Values.log.outputs }}
+  {{- include "eric-net-ingress-l4.logshipper-volume" . | indent 8 }}
+{{- end }}
+        - name: scripts-vol
+          configMap:
+            name: "{{ include "eric-net-ingress-l4.fullname" . }}-cfg"
+        - name: scripts-exec-vol
+          emptyDir:
+            sizeLimit: "5Mi"
+{{- range $pvol, $pvolval := index .Values "volumes" }}
+        - name: {{ $pvolval.name }}
+          persistentVolumeClaim:
+            claimName: {{ $pvolval.persistentVolumeClaim.claimName }}
+{{- end }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+{{- if .Values.affinity }}
+      affinity:
+        podAntiAffinity:
+          {{ .Values.affinity }}:
+          - labelSelector:
+              matchExpressions:
+              - key: "app.kubernetes.io/name"
+                operator: In
+                values:
+                -  {{ template "eric-net-ingress-l4.fullname" . }}
+            topologyKey: "kubernetes.io/hostname"
+{{- end }}
+{{- if or .Values.nodeSelector .Values.global.nodeSelector }}
+      nodeSelector:
+{{- if .Values.nodeSelector }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- else }}
+{{ toYaml .Values.global.nodeSelector | indent 8 }}
+{{- end }}
+{{- end }}
+{{- if include "eric-net-ingress-l4.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-net-ingress-l4.pullSecrets" . }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+      serviceAccountName: "{{ template "eric-net-ingress-l4.serviceAccount" . }}"

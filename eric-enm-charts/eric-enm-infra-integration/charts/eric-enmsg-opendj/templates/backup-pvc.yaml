@@ -1,0 +1,17 @@
+{{- if .Values.brAgent.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: eric-enmsg-opendj-backup
+  labels:
+    app.kubernetes.io/name: "{{ .Values.service.name }}"
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ template "eric-enmsg-opendj.chart" . }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.persistentVolumeClaim.size }}
+  storageClassName: {{ .Values.global.rwx.storageClass | quote }}
+{{- end }}

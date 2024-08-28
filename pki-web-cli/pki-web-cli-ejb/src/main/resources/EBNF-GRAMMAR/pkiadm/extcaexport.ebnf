@@ -1,0 +1,4 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "extcaexport" (* slogan = "Export a certificate associated to an external CA into pem format" *) EXTCAEXPORT_NAME [ EXTCAEXPORT_SERIAL_NUMBER ]
+
+EXTCAEXPORT_NAME ::= WS ( "--name" (* slogan = "Define the external CA with the certificate to be exported. Tip: -n for short" *) | "-n" (* hide = "true" *) ) WS <ca_name_value> (* inputType = "wrapDoubleQuotes" slogan = "Specify the name of the certificate to be exported" *)
+EXTCAEXPORT_SERIAL_NUMBER ::= WS ( "--serialnumber" (* slogan = "Define the serial number of the certificate to be exported. Tip: -sn for short" *) | "-sn" (* hide = "true" *) ) WS <serial_number_value> (* slogan = "Specify the serial number of the certificate to be exported" *)

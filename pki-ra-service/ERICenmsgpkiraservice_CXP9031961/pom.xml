@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.ericsson.oss.poc.servicegroupcontainers</groupId>
+		<artifactId>pki-ra-service</artifactId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+
+	<groupId>com.ericsson.oss.poc.servicegroupcontainers</groupId>
+	<artifactId>ERICenmsgpkiraservice_CXP9031961</artifactId>
+	<packaging>${rpm.packaging}</packaging>
+	<name>pki-ra-service feature CXP module</name>
+
+	<properties>
+		<com.ericsson.oss.rpm.architecture>noarch</com.ericsson.oss.rpm.architecture>
+		<rpm-root>ericsson</rpm-root>
+		<comp-name>enm</comp-name>
+		<install-path>jboss</install-path>
+		<publish_artifact>true</publish_artifact>
+
+		<!-- this is in the integration pom, which needs to be merged -->
+		<vm.jboss-install-path>/ericsson/3pp/jboss</vm.jboss-install-path>
+		<media.category>service</media.category>
+		<version.bcprov>1.52</version.bcprov>
+		<version.bcpkix>1.52</version.bcpkix>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>${version.bcprov}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15on</artifactId>
+			<version>${version.bcpkix}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.ericsson.oss.itpf.deployment</groupId>
+				<artifactId>deployment-descriptor-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>configurable-entity</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<configEntity>
+						<stereotype>SERVICE_PKG</stereotype>
+						<parameters>
+							<property name="vm_service_name" defaultValue="pkiraserv" />
+							<itemType name="vm-package">
+								<property name="name" defaultValue="ERICenmsgpkiraservice_CXP9031961" />
+							</itemType>
+						</parameters>
+						<deploymentDependencies>
+							<deploymentDependency>
+								<groupId>com.ericsson.oss.itpf.deployment.tools</groupId>
+								<artifactId>virtual-machine</artifactId>
+								<qualifier>CONTAINER</qualifier>
+								<alias>vm</alias>
+							</deploymentDependency>
+							<deploymentDependency>
+								<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+								<artifactId>ERICpkirascepmodel_CXP9032006</artifactId>
+								<alias>pkirascepmodel</alias>
+							</deploymentDependency>
+							<deploymentDependency>
+								<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+								<artifactId>ERICpkiracmpmodel_CXP9032010</artifactId>
+								<alias>pkiracmpmodel</alias>
+							</deploymentDependency>
+							<deploymentDependency>
+								<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+								<artifactId>ERICpkiratdpsmodel_CXP9032425</artifactId>
+								<alias>pkiratdpsmodel</alias>
+							</deploymentDependency>
+							<deploymentDependency>
+								<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+								<artifactId>ERICpkicdpsmodel_CXP9032532</artifactId>
+								<alias>pkicdpsmodel</alias>
+							</deploymentDependency>
+							<deploymentDependency>
+								<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+								<artifactId>ERICpkicommonmodel_CXP9035977</artifactId>
+								<alias>pkicommonmodel</alias>
+							</deploymentDependency>
+							<deploymentDependency>
+								<groupId>com.ericsson.oss.itpf.poc.security</groupId>
+								<artifactId>ERICsecurityconfigmodel_CXP9038616</artifactId>
+								<alias>securityconfigmodel</alias>
+							</deploymentDependency>
+							<deploymentDependency>
+								<groupId>com.ericsson.oss.itpf.common</groupId>
+								<artifactId>ERICpibmodel_CXP9030858</artifactId>
+								<alias>pibmodels</alias>
+							</deploymentDependency>
+							<deploymentDependency> <!--Global config variables go into here -->
+								<groupId>com.ericsson.oss.itpf</groupId>
+								<artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+								<alias>pkiraservConfig1</alias>
+							</deploymentDependency>
+							<deploymentDependency> <!--Global config variables go into here -->
+								<groupId>com.ericsson.oss.itpf</groupId>
+								<artifactId>ERIClitpconfigmanagerapi_CXP9031613</artifactId>
+								<alias>pkiraservConfig2</alias>
+							</deploymentDependency>
+						</deploymentDependencies>
+
+						<assignments>
+							<assign>
+								<path>vm</path>
+								<itemType name="vm-service">
+									<property name="service_name" value="pkiraserv" />
+									<property name="cpus" value="2" />
+
+									<property name="ram" value="5120M" />
+									<property name="image_name" value="rhel7-jboss-image" />
+								</itemType>
+								<itemType name="vcs-clustered-service">
+									<property name="active" value="2" />
+									<property name="dependency_list" value="sps" />
+									<property name="offline_timeout" value="300" />
+									<property name="online_timeout" value="600" />
+									<property name="standby" value="0" />
+								</itemType>
+							</assign>
+							<assign>
+								<path>vm</path>
+								<scope>CLOUD</scope>
+								<itemType name="vm-service">
+									<property name="cpus" value="2" />
+									<property name="ram" value="5120M" />
+								</itemType>
+							</assign>
+							<assign>
+								<path>pkiraservConfig1</path>
+								<itemType name="config-manager-property">
+									<property name="key" value="pkiraserv1" />
+									<property name="value" value="%%pkiraserv_1_ip_internal%%" />
+								</itemType>
+							</assign>
+							<assign>
+								<path>pkiraservConfig2</path>
+								<itemType name="config-manager-property">
+									<property name="key" value="pkiraserv2" />
+									<property name="value" value="%%pkiraserv_2_ip_internal%%" />
+								</itemType>
+							</assign>
+							<assign>
+								<path>vm</path>
+								<scope>PHYSICAL_PRODUCTION</scope>
+								<itemType name="vcs-clustered-service">
+									<property name="active" value="${(maxCells == 60000 and geoMetro == 1) ? ':8' : maxCells == 60000 ? ':4' : 2}" />
+									<property name="standby" value="0" />
+								</itemType>
+							</assign>
+						</assignments>
+					</configEntity>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>rpm-maven-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<skip>true</skip>
+					<inherited>true</inherited>
+					<copyright>2014 Ericsson AB All rights reserved</copyright>
+					<description>${ericsson.rstate}</description>
+					<group>ERI-NMS</group>
+					<vendor>Ericsson AB</vendor>
+					<url>www.ericsson.com</url>
+					<requires>
+						<!--The following is an example, non-exhaustive or specific list of
+							required RPM's for most JEE Service Groups -->
+						<require>EXTRserverjre_CXP9035480</require>
+						<require>EXTReap7_CXP9037438</require>
+						<require>ERICeap7config_CXP9037440</require>
+						<require>ERICpostgresqljdbc_CXP9031176</require>
+						<require>ERICpostgresqlclient_CXP9034390</require>
+						<require>ERICpostgresutils_CXP9038493</require>
+						<require>ERICpkiservicedb_CXP9031995</require>
+						<require>ERICserviceframework4_CXP9037454</require>
+						<require>ERICserviceframeworkmodule4_CXP9037453</require>
+						<require>ERICpib2_CXP9037459</require>
+						<require>ERICmodelserviceapi_CXP9030594</require>
+						<require>ERICmodelservice_CXP9030595</require>
+						<require>ERICpkirascep_CXP9031951</require>
+						<require>ERICpkiracmp_CXP9031945</require>
+						<require>ERICpkiratdps_CXP9032423</require>
+						<require>ERICpkicdps_CXP9032210</require>
+						<require>ERICddc_CXP9030294</require>
+						<require>ERICcredentialmanagercli_CXP9031389</require>
+						<require>ERICvaultloginmodule_CXP9036201</require>
+						<!--Include the remainder of the dependent RPMs -->
+					</requires>
+					<mappings>
+						<mapping>
+							<directory>${vm.jboss-install-path}/modules/org/bouncycastle/main</directory>
+							<filemode>775</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>true</configuration>
+							<dependency>
+								<includes>
+									<include>org.bouncycastle:bcprov-jdk15on</include>
+									<include>org.bouncycastle:bcpkix-jdk15on</include>
+								</includes>
+							</dependency>
+
+							<sources>
+								<source>
+									<location>src/main/resources/bouncycastle/main</location>
+									<includes>
+										<include>module.xml</include>
+									</includes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>${vm.jboss-install-path}/bin/pre-start</directory>
+							<filemode>755</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>false</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts</location>
+									<includes>
+										<include>oomKillerTuning.sh</include>
+									</includes>
+								</source>
+							</sources>
+						</mapping>
+
+						<mapping>
+							<directory>${vm.jboss-install-path}</directory>
+							<filemode>755</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>false</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/resources</location>
+									<includes>
+										<include>jboss-as.conf</include>
+									</includes>
+								</source>
+								<source>
+									<location>src/main/resources/jboss-as.conf</location>
+									<destination>jboss-as-flavour-2G.conf</destination>
+								</source>
+								<source>
+									<location>src/main/resources/jboss-as.conf</location>
+									<destination>jboss-as-flavour-4G.conf</destination>
+								</source>
+								<source>
+									<location>src/main/resources/jboss-as.conf</location>
+									<destination>jboss-as-flavour-6G.conf</destination>
+								</source>
+								<source>
+									<location>src/main/resources/jboss-as.conf</location>
+									<destination>app-server.conf</destination>
+							</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>${vm.jboss-install-path}/bin/cli/services/</directory>
+							<filemode>550</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<sources>
+								<source>
+									<location>src/main/resources/cli</location>
+									<includes>
+										<include>create_security_domain.cli</include>
+										<include>create_jms_queue.cli</include>
+										<include>standard_sockets_and_undertow.cli</include>
+									</includes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>${vm.jboss-install-path}/bin/pre-start</directory>
+							<filemode>755</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>false</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/pre_start</location>
+									<includes>
+										<include>copy_cache_replication_config_xml_files.sh</include>
+										<include>secure_pkicdps_db.sh</include>
+										<include>secure_pkiracmp_db.sh</include>
+										<include>secure_pkirascep_db.sh</include>
+										<include>secure_pkiratdps_db.sh</include>
+									</includes>
+								</source>
+							</sources>
+                        </mapping>
+                        <mapping>
+                            <directory>/ericsson/pkira/data/scripts</directory>
+                            <filemode>755</filemode>
+                            <username>${jboss-username}</username>
+                            <groupname>${jboss-groupname}</groupname>
+                            <configuration>false</configuration>
+                            <directoryIncluded>false</directoryIncluded>
+                            <recurseDirectories>false</recurseDirectories>
+                            <sources>
+                                <source>
+                                    <location>src/main/scripts</location>
+                                    <includes>
+                                        <include>ConfigTlsPib.sh</include>
+                                    </includes>
+                                </source>
+                            </sources>
+                        </mapping>
+						<mapping>
+							<directory>${vm.jboss-install-path}/bin/pre-stop</directory>
+							<filemode>755</filemode>
+							<username>${jboss-username}</username>
+							<groupname>${jboss-groupname}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>false</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/scripts/pre_stop</location>
+									<includes>
+										<include>cacheReplicationStateCheck.sh</include>
+									</includes>
+								</source>
+							</sources>
+						</mapping>
+						<mapping>
+							<directory>/${rpm-root}/${comp-name}/${install-path}</directory>
+							<filemode>755</filemode>
+							<username>${super-user}</username>
+							<groupname>${super-group}</groupname>
+							<configuration>false</configuration>
+							<directoryIncluded>false</directoryIncluded>
+							<recurseDirectories>false</recurseDirectories>
+							<sources>
+								<source>
+									<location>src/main/resources</location>
+									<includes>
+										<include>CrlCacheConfig.xml</include>
+										<include>ScepCrlCacheConfig.xml</include>
+									</includes>
+								</source>
+							</sources>
+						</mapping>
+					</mappings>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+

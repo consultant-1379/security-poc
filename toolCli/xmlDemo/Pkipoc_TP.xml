@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Profiles>
+    <TrustProfile Name="Pkipoc_TP">
+        <Active>true</Active>
+        <Modifiable>true</Modifiable>
+        <TrustCAChain>
+            <IsChainRequired>false</IsChainRequired>
+            <InternalCA>
+                <PublishCertificatetoTDPS>false</PublishCertificatetoTDPS>
+                <CertificateAuthority>
+                    <Name>DEMO_Root_CA</Name>
+                    <IsRootCA>false</IsRootCA>
+                    <CAStatus>NEW</CAStatus>
+                    <PublishToCDPS>false</PublishToCDPS>
+                    <IsIssuerExternalCA>false</IsIssuerExternalCA>
+                </CertificateAuthority>
+            </InternalCA>
+        </TrustCAChain>
+    </TrustProfile>
+</Profiles>

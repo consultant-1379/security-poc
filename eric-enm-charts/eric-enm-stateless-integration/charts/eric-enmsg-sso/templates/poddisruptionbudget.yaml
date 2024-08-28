@@ -1,0 +1,5 @@
+{{- if .Values.podDisruptionBudget -}}
+{{- template "eric-enm-common-helmchart-library.poddisruptionbudget" (list . "eric-enmsg-sso.poddisruptionbudget") -}}
+{{- end -}}
+{{- define "eric-enmsg-sso.poddisruptionbudget" -}}
+{{- end -}}

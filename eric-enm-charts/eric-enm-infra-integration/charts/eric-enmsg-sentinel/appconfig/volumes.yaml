@@ -1,0 +1,16 @@
+- name: gp
+  configMap:
+    name: gpcloud
+- name: data
+  persistentVolumeClaim:
+    claimName: data
+- name: sentinel
+  persistentVolumeClaim:
+    claimName: sentinel
+- name: dumps
+  persistentVolumeClaim:
+    claimName: hcdumps
+- name: sentinel-bragent-config
+  configMap:
+    name: sentinel-bragent-config
+

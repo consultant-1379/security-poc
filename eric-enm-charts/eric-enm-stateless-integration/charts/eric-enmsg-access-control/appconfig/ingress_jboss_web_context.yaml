@@ -1,0 +1,7 @@
+- backend:
+    service:
+      name: accesscontrol
+      port:
+        number: 443
+  path: /access-control-service/
+  pathType: ImplementationSpecific

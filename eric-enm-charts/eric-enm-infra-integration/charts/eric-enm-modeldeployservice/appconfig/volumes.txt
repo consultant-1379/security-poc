@@ -1,0 +1,12 @@
+- name: gp
+  configMap:
+    name: gpcloud
+- name: mdt
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-mdt
+- name: dumps
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-hcdumps
+- name: configmgtupgind
+  persistentVolumeClaim:
+    claimName: eric-enm-rwxpvc-upgind

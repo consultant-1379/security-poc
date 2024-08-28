@@ -1,0 +1,28 @@
+- backend:
+    service:
+      name: nodecli
+      port:
+        number: 443
+  path: /neconnection-service/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodecli
+      port:
+        number: 443
+  path: /nodecli/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodecli
+      port:
+        number: 443
+  path: /locales/en-us/nodecli/
+  pathType: ImplementationSpecific
+- backend:
+    service:
+      name: nodecli
+      port:
+        number: 443
+  path: /help/en-us/nodecli/
+  pathType: ImplementationSpecific

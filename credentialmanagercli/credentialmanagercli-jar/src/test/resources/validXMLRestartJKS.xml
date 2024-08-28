@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<applications xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="CertificateRequest.xsd">
+	<application>
+		<certificates>
+			<certificate>
+			
+				<tbscertificate>
+					<subject>
+						<!--  <entityname>atclvm387##HOSTNAME##</entityname> -->
+						<entityname>atclvm387##HOSTNAME##</entityname>
+						<distinguishname>CN=##HOSTNAME##_atclvm387, O=ericsson, OU=enm, C=SE</distinguishname>
+					</subject>
+				</tbscertificate>
+				
+				<endentityprofilename>CMPRA_EP</endentityprofilename>
+				
+				<keystore>
+					<jkskeystore>
+						<storealias>teste</storealias >
+						<storelocation>certs/TestRestart.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkskeystore>
+				</keystore>							
+				
+				<oncheckresult>
+                     <actionlist>
+                            <checkcause>certificateUpdate</checkcause>
+                            <action>HTTPSConnectorRestart</action>
+							<command>
+								<pathname>Mandatory_because_of_ xsd_but_not_used_for_Connectors</pathname>
+								<parameter>
+									<name>port</name>
+									<value>1024</value>
+								</parameter>
+							</command>
+                      </actionlist>      
+                </oncheckresult>			
+
+			</certificate>
+			
+			<certificate>
+			
+				<tbscertificate>
+					<subject>
+						<!--  <entityname>atclvm387##HOSTNAME##</entityname> -->
+						<entityname>atclvm3872##HOSTNAME##</entityname>
+						<distinguishname>CN=##HOSTNAME##_atclvm3872, O=ericsson, OU=enm, C=SE</distinguishname>
+					</subject>
+				</tbscertificate>
+				
+				<endentityprofilename>CMPRA_EP</endentityprofilename>
+				
+				<keystore>
+					<jkskeystore>
+						<storealias>teste</storealias >
+						<storelocation>certs/TestRestart2.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkskeystore>
+				</keystore>							
+				
+				<oncheckresult>
+                     <actionlist>
+                            <checkcause>certificateUpdate</checkcause>
+                            <action>HTTPSConnectorRestart</action>
+							<command>
+								<pathname>Mandatory_because_of_ xsd_but_not_used_for_Connectors</pathname>
+								<parameter>
+									<name>port</name>
+									<value>1024</value>
+								</parameter>
+								<parameter>
+									<name>offset</name>
+									<value>100</value>
+								</parameter>
+							</command>
+                      </actionlist>      
+                </oncheckresult>			
+
+			</certificate>
+			
+			<certificate>
+			
+				<tbscertificate>
+					<subject>
+						<!--  <entityname>atclvm387##HOSTNAME##</entityname> -->
+						<entityname>atclvm3873##HOSTNAME##</entityname>
+						<distinguishname>CN=##HOSTNAME##_atclvm3873, O=ericsson, OU=enm, C=SE</distinguishname>
+					</subject>
+				</tbscertificate>
+				
+				<endentityprofilename>CMPRA_EP</endentityprofilename>
+				
+				<keystore>
+					<jkskeystore>
+						<storealias>teste</storealias >
+						<storelocation>certs/TestRestart3.JKS</storelocation>
+						<storepassword></storepassword>
+					</jkskeystore>
+				</keystore>							
+				
+				<oncheckresult>
+                     <actionlist>
+                            <checkcause>certificateUpdate</checkcause>
+                            <action>HTTPSConnectorRestart</action>
+							<command>
+								<pathname>Mandatory_because_of_ xsd_but_not_used_for_Connectors</pathname>
+								<parameter>
+									<name>port</name>
+									<value>1024</value>
+								</parameter>
+								<parameter>
+									<name>host</name>
+									<value>192.168.1.1</value>
+								</parameter>
+								<parameter>
+									<name>managementport</name>
+									<value>2222</value>
+								</parameter>							</command>
+                      </actionlist>      
+                </oncheckresult>			
+
+			</certificate>
+			
+		</certificates>
+		
+			<crlupdatemode>CrlSelfManaged</crlupdatemode>
+			
+			
+			
+	</application>
+	<user>
+		<!-- keep in the same line to allow grep researches -->
+		<username>myUser</username>
+		<usergroup>myGroup</usergroup>
+	</user>
+</applications>

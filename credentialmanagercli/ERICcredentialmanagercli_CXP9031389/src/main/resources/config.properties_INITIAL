@@ -1,0 +1,7 @@
+# setting root logger level to DEBUG with CONSOLE_APPENDER
+address=svc-1-sps:8080,svc-2-sps:8080,localhost:8080,svc-3-sps:8080,svc-4-sps:8080
+# for security sandbox
+#address=10.247.246.152:8080,10.247.246.153:8080,localhost:8180
+
+# algorithm used to crypt Private Key in PEM format
+pemEncryption=AES-128-CFB

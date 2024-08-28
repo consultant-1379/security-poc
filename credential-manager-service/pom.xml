@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--Please Use the latest version of integration pom.xml or the one you want to reference to -->
+    <parent>
+        <groupId>com.ericsson.nms</groupId>
+        <artifactId>integration</artifactId>
+        <version>15.2.0.35</version>
+    </parent>
+
+    <groupId>com.ericsson.oss.itpf.poc.security</groupId>
+    <artifactId>credential-manager-service</artifactId>
+    <version>1.0.6-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>[${project.artifactId}] JEE6 Project</name>
+
+    <url>http://www.ericsson.com</url>
+    <organization>
+        <name>Ericsson</name>
+    </organization>
+
+    <prerequisites>
+        <maven>3.0.3</maven>
+    </prerequisites>
+
+    <properties>
+        <!-- Do not use JBoss community version, use EAP version. The property values of the "jboss_managed_local" profile in testsuite/jee need to be 
+            updated, when this JBoss version is changed. -->
+        <version.jboss.as>7.2.5</version.jboss.as>
+        <version.resteasy>2.3.7.Final</version.resteasy>
+
+        <!-- When you want to switch to new Service Framework version only change value below. -->
+        <version.service.framework>4.10.5</version.service.framework>
+
+        <version.credm.model>1.0.1-SNAPSHOT</version.credm.model>
+        <!-- Version of Model Service BOM. Annotation Processor and Model-Deployment-Tool need to be explicitly defined as they are required in build phase. 
+            Be sure to always have alignment between each version below. If the BOM version changes, the Annotation Processor / Model-Deployment-Tool versions may 
+            have to change as well. See Modeling BOM in confluence page for the correct versions to use. -->
+        <version.modeling.bom>21.2.9</version.modeling.bom>
+
+        <version.weld>1.1.13.Final</version.weld>
+        <version.ejb>3.1</version.ejb>
+        <version.jee>8</version.jee>
+        <version.mockito>1.10.19</version.mockito>
+        <version.powermock>1.6.6</version.powermock>
+
+        <version.jboss.as.arquillian>7.2.0.Final</version.jboss.as.arquillian>
+        <version.arquillian-junit-container>1.0.0.Final</version.arquillian-junit-container>
+        <version.arquillian.bom>1.1.15.Final</version.arquillian.bom>
+        <version.arquillian-weld-se-embedded>1.0.0.CR8</version.arquillian-weld-se-embedded>
+        <version.pkimanagerapi>1.0.1-SNAPSHOT</version.pkimanagerapi>
+        <version.mockpki>1.2.4</version.mockpki>
+        <version.keymanagement>1.10.1</version.keymanagement>
+
+        <!-- http client - the version should be aligned with the one shipped by jboss EAP 7 as module -->
+        <version.httpclient>4.5.4</version.httpclient>
+
+        <!-- Version of credential-manager-service-interface to change everytime the interface is changed -->
+        <version.credential.manager.service.interface>1.1.2</version.credential.manager.service.interface>
+
+        <version.slf4j.simple>1.7.32</version.slf4j.simple>
+        <version.jacoco>0.8.4</version.jacoco>
+
+
+        <!-- jaxb-api and jaxb-impl version -->
+        <version.jaxb-impl>2.2.5</version.jaxb-impl>
+        <version.jaxb-api>2.2.5</version.jaxb-api>
+
+        <!-- jackson lib version -->
+        <version.jackson-lib>2.9.5</version.jackson-lib>
+
+        <!-- Properties for testsuite -->
+
+        <project.ear.defaultLibBundleDir>lib</project.ear.defaultLibBundleDir>
+         <!-- used in  credential-manager-service-ejb and  credential-manager-service-pki-config-ejb/ -->
+        <version.maven-ejb-plugin>2.3</version.maven-ejb-plugin>
+        <version.maven.antrun.plugin>1.7</version.maven.antrun.plugin>
+
+
+        <!-- JBoss modules your service will automatically add to classpath -->
+
+        <project.ear.Dependencies>org.slf4j,org.apache.httpcomponents.core,org.apache.commons.codec</project.ear.Dependencies>
+        </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- ServiceFrameworkJBossBOM only imports the Service Framework API modules and the service-framework-dist module. No Service Framework implementation 
+                module is imported with this BOM. -->
+            <dependency>
+                <groupId>com.ericsson.oss.itpf.sdk</groupId>
+                <artifactId>ServiceFrameworkJBossBOM</artifactId>
+                <version>${version.service.framework}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Model Service BOM. It is required by Service Framework, and for anyone who is using Model Service. Do not remove it. -->
+            <dependency>
+                <groupId>com.ericsson.oss.itpf.modeling</groupId>
+                <artifactId>Modeling-BOM</artifactId>
+                <version>${version.modeling.bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Arquillian BOM. It is used in JEE/JEE Cluster integration tests. -->
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version.arquillian.bom}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- The service-framework-dist encapsulates the MANIFEST dependency to Service Framework JBoss module, which is the only Service Framework dependency 
+            required in this pom.xml. Do not add any other Service Framework dependency here. -->
+
+        <!-- The dependency is needed when "JSR-330: Dependency Injection" is used (e.g. @Inject, @Qualifier etc.) -->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- The dependency is needed when CDI (Contexts and Dependency Injection) is used. -->
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Dependency for Bean validation -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Dependency for SLF4J logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Dependency for system recording -->
+        <dependency>
+            <groupId>com.ericsson.oss.itpf.sdk</groupId>
+            <artifactId>sdk-recording-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Dependency for JUnit tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>${version.jacoco}</version>
+            <classifier>runtime</classifier>
+            <scope>test</scope>
+        </dependency>
+        <!-- Dependency for mocking in Unit tests -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${version.mockito}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${version.powermock}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${version.powermock}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${version.jackson-lib}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${version.jackson-lib}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${version.jackson-lib}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-dependency-plugin</artifactId>
+                                        <versionRange>[2.4,)</versionRange>
+                                        <goals>
+                                            <goal>analyze-dep-mgt</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-ear-plugin</artifactId>
+                                        <versionRange>[2.7,)</versionRange>
+                                        <goals>
+                                            <goal>generate-application-xml</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>com.ericsson.maven.plugins</groupId>
+                                        <artifactId>rstate-maven-plugin</artifactId>
+                                        <versionRange>[1.0,)</versionRange>
+                                        <goals>
+                                            <goal>rstate</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-enforcer-plugin</artifactId>
+                                        <versionRange>[1.1,)</versionRange>
+                                        <goals>
+                                            <goal>enforce</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>build-helper-maven-plugin</artifactId>
+                                        <versionRange>[1.7,)</versionRange>
+                                        <goals>
+                                            <goal>regex-property</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.jboss.as.plugins</groupId>
+                <artifactId>jboss-as-maven-plugin</artifactId>
+                <configuration>
+                    <filename>${project.parent.artifactId}.${project.packaging}</filename>
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${version.jacoco}</version>
+                <executions>
+                    <execution>
+                        <id>default-instrument</id>
+                        <goals>
+                            <goal>instrument</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>default-restore-instrumented-classes</id>
+                        <goals>
+                            <goal>restore-instrumented-classes</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/coverage.exec</dataFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!--Profiles for site documentation -->
+
+    <!--Profile to deploy latest site -->
+    <profiles>
+        <profile>
+            <id>site_latest</id>
+            <distributionManagement>
+                <site>
+                    <id>site</id>
+                    <name>Site</name>
+                    <url>${site.url}/${project.artifactId}/latest</url>
+                </site>
+            </distributionManagement>
+        </profile>
+
+        <!--Profile to stage site for review -->
+
+        <profile>
+            <id>site_review</id>
+            <distributionManagement>
+                <site>
+                    <id>site</id>
+                    <name>Site</name>
+                    <url>${site.url}</url>
+                </site>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+    <!--Deployment of versioned documentation -->
+    <distributionManagement>
+        <site>
+            <id>site</id>
+            <name>Site</name>
+            <url>${site.url}/${project.artifactId}/${project.version}</url>
+        </site>
+    </distributionManagement>
+
+    <modules>
+        <module>ERICcredentialmanagerservice_CXP9031868</module>
+        <module>credential-manager-service-interface</module>
+        <module>credential-manager-service-xmlbeans</module>
+        <module>credential-manager-service-entity-xmlbeans</module>
+        <module>credential-manager-service-category-xmlbeans</module>
+        <module>credential-manager-service-jar</module>
+        <module>credential-manager-service-interface-ejb</module>
+        <module>credential-manager-service-ejb</module>
+        <module>credential-manager-service-pki-config-ejb</module>
+        <module>credential-manager-service-war</module>
+        <module>credential-manager-service-ear</module>
+    </modules>
+
+  <scm>
+    <tag>credential-manager-service-1.56.1</tag>
+  </scm>
+</project>

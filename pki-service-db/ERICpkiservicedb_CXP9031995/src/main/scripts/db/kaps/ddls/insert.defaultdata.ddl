@@ -1,0 +1,2 @@
+INSERT INTO keypair_status(id,status_name) SELECT 1,'ACTIVE' WHERE NOT EXISTS(SELECT * FROM keypair_status WHERE id=1);
+INSERT INTO keypair_status(id,status_name) SELECT 2,'INACTIVE' WHERE NOT EXISTS(SELECT * FROM keypair_status WHERE id=2);

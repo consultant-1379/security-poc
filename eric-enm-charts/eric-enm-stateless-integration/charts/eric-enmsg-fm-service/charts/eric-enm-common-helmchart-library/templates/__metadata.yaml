@@ -1,0 +1,17 @@
+{{- /*
+common.metadata creates a standard metadata header
+Note:
+Metadata for configmap is resides inside _configmap.yaml
+If any change in the below metadata. Its Mandatory to change in the _configmap.yaml and __metadat_stateful.yaml
+*/ -}}
+{{ define "eric-enm-common-helmchart-library.metadata" -}}
+name: {{ .Values.service.name  }}
+labels:
+{{- if index .Values "service" "sgname" }}
+  sgname: {{ .Values.service.sgname | quote }}
+{{- end }}
+  heritage: {{ .Release.Service | quote }}
+{{- include "eric-enm-common-helmchart-library.metadata_app_labels" . | indent 2 }}
+annotations:
+{{- include "eric-enm-common-helmchart-library.product-info" . | indent 2 }}
+{{- end -}}

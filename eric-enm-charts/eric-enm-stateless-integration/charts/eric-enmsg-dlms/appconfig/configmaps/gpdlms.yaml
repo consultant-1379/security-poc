@@ -1,0 +1,5 @@
+global.properties: |
+  pmicNfsShareList={{ .Values.global.enmProperties.pmicNfsShareList }}
+  hqs_persistence_provider={{ .Values.global.enmProperties.hqs_persistence_provider }}
+  hqs_persistence_provider_port={{ .Values.global.enmProperties.hqs_persistence_provider_port }}
+  hqs_persistence_provider_es={{ .Values.global.enmProperties.hqs_persistence_provider_es }}

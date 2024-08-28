@@ -1,0 +1,7 @@
+/core-service=vault:add(vault-options=[("KEYSTORE_URL" => "/ericsson/security/data/vault/vault.keystore"),("KEYSTORE_PASSWORD" => "MASK-3QCW1EmpaFJDuRlvwz4Jd7"),("KEYSTORE_ALIAS" => "vault"),("SALT" => "saltpswd"),("ITERATION_COUNT" => "8"),("ENC_FILE_DIR" => "/ericsson/security/data/vault")])
+
+/system-property=CMP_VENDOR_TRUST_PASSWORD_PROPERTY:add(value=$${VAULT::CMP_VAULT::VENDOR_TRUST_CMP::1})
+
+/system-property=CMP_CA_TRUST_PASSWORD_PROPERTY:add(value=$${VAULT::CMP_VAULT::CA_TRUST_CMP::1})
+
+/system-property=CMP_RA_KEYSTORE_PASSWORD_PROPERTY:add(value=$${VAULT::CMP_VAULT::RA_KEYSTORE_CMP::1})

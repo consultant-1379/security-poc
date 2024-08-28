@@ -1,0 +1,6 @@
+## eric-net-ingress-l4-crd image version
+productInfo:
+  # R-State of the product. R State should match helm chart version (3.1.0 -> R2A)
+  # To automate it when packaging the helm chart rstate can be generated
+  # and below value replaced with correct R-State
+  rstate: R2A

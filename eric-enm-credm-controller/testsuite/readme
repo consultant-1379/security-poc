@@ -1,0 +1,21 @@
+
+testsuite to allow CREDM CONTROLLER to run in a test environment
+================================================================
+
+simpleSPS: create a service with PODs with the credm-api.version label
+it allows credm-controller to pass init-container
+to run : ./helm.sh start
+Once launched, credm-controller will pass init and become ready
+
+NOTE: to be used also to see how to configure label in SPS deployment
+
+service: create a simple service running 5 PODs and with the required certReqSecret and tlsSecret
+it also run a postinstall hook job sending the "Install" REST to credm-controller
+this job waits until receive answer from credm-controller
+the PODs will stay in init phase until the certReqSecret does not contain the "ready" state
+
+each area contain the image and the chart to install it separately
+
+test_install contains copies of charts to install them all together
+
+

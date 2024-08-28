@@ -1,0 +1,294 @@
+# Global Docker image parameters
+# Please, note that this will override the image parameters, including
+# dependencies, configured to use the global value
+# global:
+#   # The timezone. See the tz database (a.k.a. IANA time zone database) for valid names.
+#   timezone: UTC
+#   registry:
+#     # Global docker registry url
+#     url: selndocker.mo.sw.ericsson.se
+#     # Global image pull policy
+#     imagePullPolicy: IfNotPresent
+#   # Pull Secret used to pull from private image registries.
+#   pullSecret: ""
+#   # A map of key-value pairs of node selectors
+#   nodeSelector:
+#   # The IP family the service belongs to when service.type is set to ClusterIP.
+#   # Options are: IPv4, IPv6
+#   internalIPFamily:
+
+imageCredentials:
+  repoPath: proj-pc-released
+  registry:
+    # Docker registry url. Overrides global.registry.url
+    url:
+    # Docker image pull policy. Overrides global.registry.imagePullPolicy
+    imagePullPolicy:
+  # Pull Secret used to pull from private image registries. Overrides global.pullSecret
+  pullSecret: ""
+
+images:
+  mongodb:
+    name: eric-cnom-document-database-mg
+    tag: 1.5.14-4
+  brAgent:
+    name: eric-cnom-document-database-mg-bragent
+    tag: 1.5.14-4
+  logshipper:
+    name: eric-log-shipper
+    tag: 7.1.0-22
+
+# String to override eric-cnom-document-database-mg.name template
+nameOverride:
+
+## Enable authentication
+## Must be enabled if replicaSet.enabled is true.
+usePassword: true
+# existingSecret: name-of-existing-secret
+
+## MongoDB admin password. Will auto-generate one if omitted.
+# mongodbRootPassword:
+
+## MongoDB custom user
+mongodbUsername: cnom-user
+## Custom password. Will auto-generate one if omitted.
+# mongodbPassword: password
+
+## Whether enable/disable IPv6 on MongoDB
+mongodbEnableIPv6: true
+
+## Whether enable/disable DirectoryPerDB on MongoDB
+##
+mongodbDirectoryPerDB: false
+
+## MongoDB System Log configuration
+##
+mongodbSystemLogVerbosity: 0
+mongodbDisableSystemLog: true
+
+## MongoDB additional command line flags
+##
+## Can be used to specify command line flags, for example:
+##
+## mongodbExtraFlags:
+##  - "--wiredTigerCacheSizeGB=2"
+mongodbExtraFlags: []
+
+## Kubernetes Cluster Domain
+clusterDomain: cluster.local
+
+# A map of key-value pairs of node selectors
+nodeSelector: {}
+
+# An existing service account to use. Will auto-generate one if omitted.
+serviceAccountName:
+
+## Kubernetes service type
+service:
+  ## Specify an explicit service name.
+  # name: svc-mongo
+  ## Provide any additional annotations which may be required.
+  ## The value is evaluated as a template, so, for example, the value can depend on .Release or .Chart
+  annotations: {}
+  # clusterIP: None
+  port: 27017
+
+## Setting up replication
+#
+replicaSet:
+  ## Whether to create a MongoDB replica set for high availability or not
+  ## If enabled, usePassword should be set to true and mongodbRootPassword should be provided
+  enabled: false
+  useHostnames: true
+
+  ## Key used for replica set authentication
+  ##
+  # key: key
+
+  ## Number of replicas
+  ##
+  replicaCount: 3
+
+  updateStrategy:
+    type: RollingUpdate
+
+  ## Pod Disruption Budget
+  pdb:
+    enabled: true
+    minAvailable: 1
+    # maxUnavailable: 1
+
+# Annotations to be added to the deployment or statefulsets
+annotations: {}
+
+# Additional labels to apply to the deployment or statefulsets
+labels: {}
+
+# Annotations to be added to MongoDB pods
+podAnnotations: {}
+
+# Additional pod labels to apply
+podLabels: {}
+
+## Use an alternate scheduler, e.g. "stork".
+##
+# schedulerName:
+
+## Configure resource requests and limits
+##
+resources:
+  mongodb:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+  logshipper:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
+  brAgent:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+## Pod priority
+# priorityClassName: ""
+
+## Affinity
+affinity:
+  ## Inter-pod anti-affinity policy for replication
+  ## Options are: hard, soft
+  podAntiAffinity: hard
+
+## Tolerations
+tolerations: []
+
+## Update Strategy
+updateStrategy:
+  type: Recreate
+  bragent:
+    type: Recreate
+
+## Enable persistence using Persistent Volume Claims
+##
+persistence:
+  enabled: true
+  ## A manually managed Persistent Volume and Claim
+  ## Requires persistence.enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  ##
+  # existingClaim:
+
+  ## The path the volume will be mounted at, useful when using different
+  ## MongoDB images.
+  ##
+  mountPath: /mongodb/data/db
+
+  ## The subdirectory of the volume to mount to, useful in dev environments
+  ## and one PV for multiple services.
+  ##
+  subPath: eric-cnom-document-database-mg
+
+  ## mongodb data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  annotations: {}
+
+logging:
+  # Where to output logs. Options are: stdout, file
+  # If 'file' is included, the logs end up in the directory /logs
+  # Enabling 'logging.logshipper.enabled' automatically adds the 'file' output.
+  output:
+    - stdout
+  logshipper:
+    enabled: false
+
+logshipper:
+  logplane: adp-app-logs
+  storageAllocation: 100Mi
+  logtransformer:
+    host: eric-log-transformer
+
+brAgent:
+  enabled: false
+  broServiceName: eric-ctrl-bro
+  backupTypeList:
+
+## Configure extra options for liveness and readiness probes
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+
+productInfo:
+  # The date when the product has been released
+  productionDate: 2021-11-04T14:17:01Z
+
+# Define custom config map with init scripts
+initConfigMap: {}
+#  name: "init-config-map"
+
+configmap:
+#  # where and how to store data.
+#  storage:
+#    dbPath: /mongodb/data/db
+#    journal:
+#      enabled: true
+#    directoryPerDB: false
+#  # where to write logging data.
+#  systemLog:
+#    destination: file
+#    quiet: false
+#    logAppend: true
+#    logRotate: reopen
+#    path: /opt/ericsson/mongodb/logs/mongodb.log
+#    verbosity: 0
+#  # network interfaces
+#  net:
+#    port: 27017
+#    unixDomainSocket:
+#      enabled: true
+#      pathPrefix: /opt/ericsson/mongodb/tmp
+#    ipv6: true
+#    bindIpAll: true
+#  # replica set options
+#  #replication:
+#    #replSetName: replicaset
+#    #enableMajorityReadConcern: true
+#  # process management options
+#  processManagement:
+#     fork: false
+#     pidFilePath: /opt/ericsson/mongodb/tmp/mongodb.pid
+#  # set parameter options
+#  setParameter:
+#     enableLocalhostAuthBypass: true
+#  # security options
+#  security:
+#    authorization: disabled
+#    #keyFile: /opt/ericsson/mongodb/conf/keyfile

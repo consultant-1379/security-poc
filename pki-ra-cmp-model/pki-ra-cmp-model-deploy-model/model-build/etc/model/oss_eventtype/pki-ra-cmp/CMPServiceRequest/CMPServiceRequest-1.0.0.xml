@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+
+*******************************************************************************
+* COPYRIGHT Ericsson LMI 2022. All rights reserved.
+*
+* No part of this document may be reproduced in any form without the
+* written permission of the copyright owner.The contents of this document
+* are subject to revision without notice due to continued progress in
+* methodology, design and manufacturing. Ericsson shall have no liability
+* for any error or damage of any kind resulting from the use of this document.
+*
+*******************************************************************************
+
+
+--><ns2:EventTypeDefinition xmlns:ns1="urn:com:ericsson:schema:xml:oss:oss_common" xmlns:ns2="urn:com:ericsson:schema:xml:oss:oss_eventtype" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" defaultChannelUrn="//global/ClusteredCMPServiceRequestChannel" eventPersistence="NON_PERSISTENT" ns1:lifeCycle="CURRENT" ns1:name="CMPServiceRequest" ns1:ns="pki-ra-cmp" ns1:version="1.0.0" priority="4" timeToLive="0">
+  <ns1:modelCreationInfo author="egiator" creationDate="Tue Jun 07 16:00:44 CEST 2022">
+    <ns1:designedModel className="com.ericsson.oss.itpf.security.pki.ra.cmp.model.events.CMPServiceRequest" componentId="pki-ra-cmp-model-jar"/>
+  </ns1:modelCreationInfo>
+  <ns1:desc>CMPServiceRequest Event sends the required information to Pki-manager for certificate generation.</ns1:desc>
+  <ns2:attribute filterable="false" immutable="false" key="false" mandatory="false" ns1:lifeCycle="CURRENT" ns1:name="transactionID" sensitive="false">
+    <ns1:desc>This attribute is a Base64 encoded TransactionId and is maintained across a transaction initiated from Node, i.e from IR till PKIConf message</ns1:desc>
+    <ns1:type xsi:type="ns1:stringType"/>
+  </ns2:attribute>
+  <ns2:attribute filterable="false" immutable="false" key="false" mandatory="false" ns1:lifeCycle="CURRENT" ns1:name="cmpRequest" sensitive="false">
+    <ns1:desc>This is the actual PKIMessage which is to be sent over the queue CMPMessage is modeled as a ComplexDataType which consists of Encoded PKIMessage sent from EventSender</ns1:desc>
+    <ns1:type modelUrn="//pki-ra-cmp/CMPRequest/1.0.0" xsi:type="ns1:complexRefType"/>
+  </ns2:attribute>
+  <ns2:attribute filterable="false" immutable="false" key="false" mandatory="false" ns1:lifeCycle="CURRENT" ns1:name="syncRequest" sensitive="false">
+    <ns1:desc>This boolean attribute conveys whether node expects a synchronous response or an asynchronous response.</ns1:desc>
+    <ns1:type xsi:type="ns1:booleanType">
+      <ns1:notNullConstraint/>
+    </ns1:type>
+  </ns2:attribute>
+</ns2:EventTypeDefinition>

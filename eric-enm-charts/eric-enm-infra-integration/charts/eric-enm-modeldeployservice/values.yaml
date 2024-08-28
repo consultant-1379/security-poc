@@ -1,0 +1,112 @@
+# Default values for modeldeployservice.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  pullSecret:
+  registry:
+    url: armdocker.rnd.ericsson.se
+  persistentVolumeClaim:
+    storageClass: ""
+  timezone: UTC
+
+### R-State of the product. R State should match helm chart version (3.1.0 -> R2A)
+# To automate it when packaging the helm chart rstate can be generated
+# and below value replaced with correct R-State
+productRevision: R28K
+productNumber: "CXC 174 2967"
+
+testEnvironment:
+  enabled: false
+  image:
+    repoPath: proj_oss_releases/enm
+    tag: latest
+
+images:
+  eric-enm-modeldeployservice:
+    name: eric-enm-modeldeployservice
+    tag: 1.27.9-1
+  waitInitContainer:
+    enabled: true
+    name: eric-enm-init-container
+    tag: 1.27.9-1
+    command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s jms01,kvstore' ]"
+
+imageCredentials:
+  pullSecret:
+  repoPath: proj-enm
+  pullPolicy: Always
+  registry:
+    url:
+
+service:
+  name: modeldeployservice
+  annotations: {}
+  label: {}
+
+resources:
+  modeldeployservice:
+    requests:
+      enabled: true
+      memory: 8192Mi
+      cpu: 2000m
+    limits:
+      enabled: true
+      memory: 8192Mi
+      cpu: 4000m
+
+probes:
+  eric-enm-modeldeployservice:
+    startupProbe:
+      enabled: true
+      command: "[ '/usr/bin/nice', '-n', '-17', '/opt/ericsson/ERICmodeldeployment/scripts/modeldeployservice', 'status' ]"
+      initialDelaySeconds: 10
+      periodSeconds: 30
+      timeoutSeconds: 25
+      failureThreshold: 20
+
+    readinessProbe:
+      enabled: true
+      command: "[ '/usr/bin/nice', '-n', '-17', '/opt/ericsson/ERICmodeldeployment/scripts/modeldeployservice', 'status' ]"
+      initialDelaySeconds: 10
+      periodSeconds: 30
+      timeoutSeconds: 25
+      failureThreshold: 20
+
+    livenessProbe:
+      enabled: true
+      command: "[ '/usr/bin/nice', '-n', '-17', '/opt/ericsson/ERICmodeldeployment/scripts/modeldeployservice', 'status' ]"
+      initialDelaySeconds: 30
+      periodSeconds: 30
+      timeoutSeconds: 25
+      failureThreshold: 1
+
+# Add in volumeMounts(rwx etc), read from appconfig/volumeMounts.txt
+extraVolumeMounts:
+  enabled: true
+
+# Add in volumes(rwx etc), read from appconfig/volumes.txt
+extraVolumes:
+  enabled: true
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    partition: 0
+
+brAgent:
+  enabled: false
+  backupTypeList:
+
+terminationGracePeriodSeconds: 30
+
+env:
+  runningInCloudNative: true
+
+nodeSelector: {}
+
+tolerations: []
+
+labels: {}
+
+podAnnotations: {}

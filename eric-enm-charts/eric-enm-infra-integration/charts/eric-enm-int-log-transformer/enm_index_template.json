@@ -1,0 +1,5 @@
+{
+  "index_patterns": ["enm_*"],
+  "composed_of": ["enm_index_component_template"],
+  "priority": 5
+}

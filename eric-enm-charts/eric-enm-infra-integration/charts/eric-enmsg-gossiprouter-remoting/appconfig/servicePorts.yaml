@@ -1,0 +1,6 @@
+- name: remoting
+  port: 12001
+  targetPort: 12001
+- name: metrics
+  port: 9600
+  targetPort: 9600

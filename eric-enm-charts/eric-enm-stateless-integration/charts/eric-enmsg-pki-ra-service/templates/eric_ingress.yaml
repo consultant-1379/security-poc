@@ -1,0 +1,27 @@
+{{- if .Values.global.ericIngress.enabled }}
+apiVersion: routing.ericingress.ericsson.com/v1alpha1
+kind: EricIngress
+metadata:
+  name: pkiraserv
+spec:
+  virtualServiceIP: {{ .Values.global.vips.cm_vip_address }}
+  backends:
+    name: pkiraserv
+    config:
+      - ports:
+          vipPort: 8090
+          svcPort: 8090
+        protocol: tcp
+        algo: sh
+        mode: nat
+      - portRange:
+          vipPortRange:
+            start: 8091
+            end: 8093
+          svcPortRange:
+            start: 8091
+            end: 8093
+        protocol: tcp
+        algo: rr
+        mode: nat
+{{- end }}

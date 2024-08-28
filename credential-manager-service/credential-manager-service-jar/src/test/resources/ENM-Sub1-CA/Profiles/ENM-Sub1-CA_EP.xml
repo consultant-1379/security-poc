@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ProfileSchema.xsd">
+<Entity-Profiles>
+	
+	<EntityProfile Name="NE CA EP" >
+	                <Subject>
+                        <SubjectDN>
+                                <SubjectEntry>
+                                        <Type>COMMON_NAME</Type>
+                                        <Value>?</Value>
+                                </SubjectEntry>
+                                <SubjectEntry>
+                                        <Type>ORGANIZATION_UNIT</Type>
+                                        <Value>BUCI_DUAC_NAM</Value>
+                                </SubjectEntry>
+                                <SubjectEntry>
+                                        <Type>ORGANIZATION</Type>
+                                        <Value>ERICSSON</Value>
+                                </SubjectEntry>
+                                <SubjectEntry>
+                                        <Type>COUNTRY_NAME</Type>
+                                        <Value>SE</Value>
+                                </SubjectEntry>
+                        </SubjectDN>
+                </Subject>
+	
+		<CertificateProfileName>NE CA CP</CertificateProfileName>
+	</EntityProfile>	
+
+	<EntityProfile Name="ENM CA EP" >
+		<CertificateProfileName>ENM CA CP</CertificateProfileName>
+	</EntityProfile>	
+
+</Entity-Profiles>	
+</Profiles>
+
+
+
+

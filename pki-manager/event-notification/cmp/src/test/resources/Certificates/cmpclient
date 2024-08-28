@@ -1,0 +1,36 @@
+#!/sbin/sh
+
+JAVA_HOME=/usr/jdk/latest
+
+##################
+# CLASSPATH
+##################
+CLASSPATH=/var/tmp/cmptest/cmpclient.jar
+CLASSPATH=${CLASSPATH}:/opt/ericsson/racrs/domains/racrs/applications/cmpra/WEB-INF/lib/bcprov-jdk15on-147.jar
+CLASSPATH=${CLASSPATH}:/opt/ericsson/racrs/domains/racrs/applications/cmpra/WEB-INF/lib/bcpkix-jdk14-1.47.jar
+CLASSPATH=${CLASSPATH}:/opt/ericsson/racrs/domains/racrs/applications/cmpra/WEB-INF/lib/cmpra.jar
+CLASSPATH=${CLASSPATH}:/opt/ericsson/racrs/domains/racrs/applications/cmpra/WEB-INF/lib/pkitools.jar
+JAVAFLAGS=""
+
+##################
+# REMOTEDEBUG
+REMOTEDEBUG_S="-Xdebug -Xrunjdwp:transport=dt_socket,address=8002,server=y,suspend=y"
+REMOTEDEBUG_NS="-Xdebug -Xrunjdwp:transport=dt_socket,address=8002,server=y,suspend=n"
+##################
+
+##################
+# MAIN class
+##################
+if [ -z "${MAIN}" ]; then
+  case "`basename $0`" in
+    cmpclient)
+                MAIN=se.ericsson.security.cmpclient.Main
+                #JAVAFLAGS="$REMOTEDEBUG_S $JAVAFLAGS"
+                ;;
+  esac
+fi
+
+##################
+# Launch
+##################
+exec "${JAVA_HOME}/bin/java" -cp "${CLASSPATH}" ${JAVAFLAGS} "${MAIN}" ${ARG} "$@"

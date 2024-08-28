@@ -1,0 +1,10 @@
+{{- template "eric-enm-common-helmchart-library.service" (list . "eric-enmsg-saserv.service") -}}
+{{- define "eric-enmsg-saserv.service" -}}
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9600"
+spec:
+  clusterIP: None
+  sessionAffinity: None
+{{- end -}}

@@ -1,0 +1,14 @@
+{{- template "eric-enm-common-helmchart-library.statefulset" (list . "eric-enmsg.statefulset") -}}
+{{- define "eric-enmsg.statefulset" -}}
+{{- if .Values.brAgent.enabled }}
+spec:
+  template:
+    metadata:
+      labels:
+        adpbrlabelkey: {{ .Values.service.name }}-bragent
+{{- if .Values.brAgent.backupTypeList }}
+      annotations:
+        backupType: {{ template "{{.Chart.Name}}.backupTypes" . }}
+{{- end }}
+{{- end }}
+{{- end -}}

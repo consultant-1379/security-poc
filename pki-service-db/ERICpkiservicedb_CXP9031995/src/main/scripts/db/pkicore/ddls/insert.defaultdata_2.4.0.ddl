@@ -1,0 +1,2 @@
+INSERT INTO algorithm(id,key_size, name, oid, is_supported, type_id) SELECT 47,521, 'ECDSA', '2.23.42.9.11.4.1', TRUE, 3 WHERE NOT EXISTS (SELECT * FROM algorithm WHERE name = 'ECDSA' and key_size=521);
+INSERT INTO algorithm_algorithmcategory(algorithm_id,category_id) SELECT 47, 1 WHERE NOT EXISTS (SELECT * FROM algorithm_algorithmcategory WHERE algorithm_id = 47);

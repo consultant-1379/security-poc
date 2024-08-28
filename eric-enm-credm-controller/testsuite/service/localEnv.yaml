@@ -1,0 +1,35 @@
+## simple service local env data
+
+# Local Environment (MINIKUBE) mode
+localEnv:
+  enabled: true
+
+image:
+#  credmControllerName: 172.17.0.11
+#  credmControllerPort: 5001
+  moresecrets: true
+
+imageCredentials:
+  tag: latest
+  #repoPath: proj_oss_releases/enm
+  #pullPolicy: Always
+  repoPath: proj-enm
+  pullPolicy: Never
+
+images:
+  waitForCertificatesContainer:
+    enabled: true
+    name: enm-wait-for-certificates-container
+    tag: latest
+
+hooks:
+  postInstall:
+    pullPolicy: Never
+    tag: latest
+
+jobs:
+  jobAction: certrequest
+  certRequest:
+    imageName: enm-certrequestjob-container
+    pullPolicy: Never
+    tag: latest

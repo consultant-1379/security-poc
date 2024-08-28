@@ -1,0 +1,6 @@
+"pkiadm" (* slogan = "Perform CRUD operations on profiles, entities and certificates" *) WS "extcaimport" (* slogan = "Import an external CA certificate" *) EXTCAIMPORT_CERTIFICATE_FILE EXTCAIMPORT_CHAIN_REQUIRED [ EXTCAIMPORT_NAME ] [ RFC_VALIDATION ]
+
+EXTCAIMPORT_CHAIN_REQUIRED ::= WS ( "--chainrequired" (* slogan = "Defines whether to start or skip chain building" *) | "-cr" (* hide = "true"  *) ) WS ( "true" (* slogan = "Start chain building validation" *) | "false" (* slogan = "Skip chain building validation" *) )
+EXTCAIMPORT_CERTIFICATE_FILE ::= WS ( "--filename" (* slogan = "Defines the name of the certificate file (.pem format) to be imported" *) | "-fn" (* hide = "true"  *) ) WS "file:" <file_name> (* inputType = "fileName" slogan = "Specify the name of the certificate file to be imported" *)
+EXTCAIMPORT_NAME ::= WS ( "--name" (* slogan = "Define the name of the external CA" *) | "-n" (* hide = "true" *) ) WS <ca_name_value> (* slogan = "Specify the name of the external CA" *)
+RFC_VALIDATION ::= WS ( "-rv" (* hide = "true" *) | "--rfcvalidation" (* slogan = "Import Certificate with RFC Validation. Tip: -rv for short" *) ) WS ( "true" (* slogan = "Set RFC Validation as True" *) | "false" (* slogan = "Set RFC Validation as False" *) )

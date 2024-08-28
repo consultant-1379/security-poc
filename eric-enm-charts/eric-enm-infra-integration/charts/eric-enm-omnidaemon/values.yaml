@@ -1,0 +1,147 @@
+## eric-enm-omnidaemon image version
+
+global:
+    pullSecret:
+    registry:
+        url: armdocker.rnd.ericsson.se
+    ingress:
+        enmHost:
+    persistentVolumeClaim:
+        storageClass:
+
+persistentVolumeClaim:
+    enabled: true
+    storageClass: "network-block"
+    accessMode: ReadWriteOnce
+    omnidaemonPVSize: 1Gi
+    mountPath: /ericsson/enm/alex/
+    annotations: {}
+
+productRevision: R28K
+productionDate: 2022-06-21T12:27:26Z
+revision: 1.27.9-1
+productNumber: CXP 903 8962
+labels: {}
+
+# Number of replicas(pods) to deploy
+replicas-eric-enm-omnidaemon: 1
+
+images:
+    eric-enm-omnidaemon:
+        name: eric-enm-omnidaemon
+        tag: 1.27.9-1
+    waitInitContainer:
+        enabled: true
+        name: eric-enm-init-container
+        tag: 1.27.9-1
+        command: "[ '/bin/sh', '-c', 'bash /var/tmp/check_service.sh -s gossiprouter-cache,gossiprouter-remoting' ]"
+    brAgent:
+        name: backup-restore-agent
+        tag: 2.0.6-2
+        entrypoint: "/opt/ericsson/backup-restore-agent/bragent"
+
+imageCredentials:
+    repoPath: proj-enm
+    pullPolicy: Always
+    pullSecret:
+    registry:
+        url:
+
+eric-enm-common-helmchart-library:
+    enabled: true
+
+## Configure the service
+service:
+    name: omnidaemon
+    sgname: elexomnidaemon
+    annotations: {}
+    labels: {}
+
+ingress:
+    enabled: true
+
+servicePorts:
+    enabled: true
+
+ingress_jboss_web_context:
+    enabled: false
+    annotations:
+        ingress.kubernetes.io/ssl-passthrough: "true"
+        nginx.ingress.kubernetes.io/secure-backends: "true"
+
+
+## Configure resource requests and limits
+resources:
+    requests:
+        enabled: true
+        memory: 1000Mi
+        cpu: 200m
+    limits:
+        enabled: true
+        memory: 2000Mi
+        cpu: 500m
+    brAgent:
+        requests:
+            cpu: "100m"
+            memory: "64Mi"
+        limits:
+            cpu: "1000m"
+            memory: "256Mi"
+
+## LivenessProbe Health Check configuration.
+startupProbe:
+    enabled: true
+    command: "pidof"
+    arguments: "omnidaemon"
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    failureThreshold: 2
+livenessProbe:
+    enabled: true
+    command: "pidof"
+    arguments: "omnidaemon"
+    initialDelaySeconds: 10
+    periodSeconds: 30
+    failureThreshold: 2
+
+readinessProbe:
+    enabled: true
+    command: "pidof"
+    arguments: "omnidaemon"
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    failureThreshold: 2
+
+# Extra Annotations to be added to pod
+podAnnotations: {}
+
+## Tolerations for pod assignment
+tolerations: []
+
+## Affinity for pod assignment
+affinity: {}
+
+# Constrain which nodes your pod is eligible to be scheduled on
+nodeAffinity: {}
+
+lifecycle:
+  handler:
+    enabled: true
+
+priorityClassName: ""
+
+## Node selector
+nodeSelector: {}
+
+updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+        partition: 0
+
+timezone: UTC
+
+brAgent:
+    enabled: true
+    broServiceName: eric-ctrl-bro
+    connectRetryCount: 3
+    backupTypeList:

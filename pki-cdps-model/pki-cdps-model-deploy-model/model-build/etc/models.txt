@@ -1,0 +1,14 @@
+/oss_cdt/pki-cdps/CACertificateInfo/1.0.0
+/oss_cdt/pki-cdps/CRLInfo/1.0.0
+/oss_channel/global/ClusteredCRLNotificationChannel
+/oss_channel/global/ClusteredCRLRequestChannel
+/oss_channel/global/ClusteredCRLResponseAckChannel
+/oss_channel/global/ClusteredCRLResponseChannel
+/oss_edt/pki-cdps/CDPSOperationType/1.0.0
+/oss_edt/pki-cdps/CDPSResponseType/1.0.0
+/oss_edt/pki-cdps/UnpublishReasonType/1.0.0
+/oss_eventtype/pki-cdps/CRLNotificationMessage/1.0.0
+/oss_eventtype/pki-cdps/CRLNotificationRequestMessage/1.0.0
+/oss_eventtype/pki-cdps/CRLRequestMessage/1.0.0
+/oss_eventtype/pki-cdps/CRLResponseAckMessage/1.0.0
+/oss_eventtype/pki-cdps/CRLResponseMessage/1.0.0

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Profiles xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ProfilesSchema.xsd">
+  <Trust-Profiles>
+    <TrustProfile Name="demo15">
+    	<ExternalCA>externalCA-1</ExternalCA>
+        <ExternalCA>externalCA-2</ExternalCA>
+    </TrustProfile>
+ </Trust-Profiles>
+</Profiles> 

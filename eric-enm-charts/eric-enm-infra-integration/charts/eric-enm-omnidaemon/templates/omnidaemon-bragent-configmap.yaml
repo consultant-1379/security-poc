@@ -1,0 +1,36 @@
+{{- if .Values.brAgent.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.service.name }}-bragent-config
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    chart: {{ template "eric-enm-common-helmchart-library.chart" . }}
+    app.kubernetes.io/name: {{ template "eric-enm-common-helmchart-library.name" . }}
+    app.kubernetes.io/version: {{ template "{{.Chart.Name}}.version" . }}
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+data:
+  config.yaml: |
+    agent:
+      registration:
+        name: {{ .Values.service.name }}-bragent
+        {{- if .Values.brAgent.backupTypeList }}
+        scopes: {{- template "{{.Chart.Name}}.backupTypes" . }}
+        {{- end }}
+    backup:
+      paths:
+        - path: "/ericsson/enm/alex/writable"
+          compression: none
+        - path: "/ericsson/enm/alex/libraries"
+          compression: none
+    softwareVersion:
+      description: "ENM Document Library"
+      productName: {{ template "eric-enm-common-helmchart-library.name" . }}
+      productNumber: {{ .Values.productNumber | quote }}
+      productionDate: {{ .Values.productionDate | quote }}
+      revision: {{ .Values.revision | quote }}
+      type: "ENM_Document_Library"
+    bro:
+      host: {{ .Values.brAgent.broServiceName | quote }}
+      connectRetryCount: {{ .Values.brAgent.connectRetryCount }}
+{{- end}}
